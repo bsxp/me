@@ -1,0 +1,38 @@
+#root {
+  background-color: #e9f0f1;
+  width: 100svw;
+  overflow: hidden;
+  /* max-width: 1280px; */
+
+}
+
+.app {
+  max-width: 1280px;
+  width: 100svw;
+  height: 100svh;
+  /* margin: 0 auto; */
+}
+
+@keyframes blob1Opacity {
+  0% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.1;
+  }
+}
+
+@keyframes blob2Opacity {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.1;
+  }
+  100% {
+    opacity: 1;
+  }
+}

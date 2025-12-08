@@ -1,0 +1,108 @@
+import { createElement, useState } from "react";
+import { cn } from "@/lib/utils";
+import { useDisplayDesign } from "@/hooks/use-display-design";
+
+type TypographyVariants =
+  | "h1"
+  | "h2"
+  | "h3"
+  | "h4"
+  | "h5"
+  | "h6"
+  | "p"
+  | "span"
+  | "div"
+  | "eyebrow"
+  | "caption";
+
+const validVariants = [
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "p",
+  "span",
+  "div",
+  "eyebrow",
+  "caption",
+];
+
+const variantElements = {
+  h1: "h1",
+  h2: "h2",
+  h3: "h3",
+  h4: "h4",
+  h5: "h5",
+  h6: "h6",
+  p: "p",
+  span: "span",
+  div: "div",
+  eyebrow: "span",
+  caption: "p",
+};
+
+function Typography({
+  variant = "p",
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"p"> & { variant: TypographyVariants }) {
+  const [hovered, setHovered] = useState<boolean>(false);
+  const { displayElementName } = useDisplayDesign();
+
+  if (!validVariants.includes(variant)) {
+    throw new Error(`Invalid typography variant: ${variant}`);
+  }
+
+  const handleHover = () => {
+    setHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setHovered(false);
+  };
+
+  let childrenArray = Array.isArray(children) ? children : [children];
+
+  if (displayElementName && hovered) {
+    childrenArray.push(
+      createElement("span", {
+        className:
+          "text-white text-xs text-right absolute -top-6 right-0 bg-blue-500 px-1 py-0.5 normal-case",
+        children: variant,
+      })
+    );
+  }
+
+  const baseElement = createElement(
+    variantElements[variant],
+    {
+      className: cn(
+        "inline-block w-auto",
+        variant === "eyebrow" &&
+          "text-xs font-medium uppercase tracking-widest",
+        variant === "caption" && "text-sm text-gray-500",
+        variant === "h1" && "font-[Outfit] text-6xl font-bold",
+        variant === "h2" && "font-[Outfit] text-5xl font-bold",
+        variant === "p" && "font-[Inter] text-xl font-semibold",
+        className,
+
+        // If diplsayElementName is true, if the user hovers over the element then we'll highlight and show its name
+        displayElementName &&
+          "hover:bg-primary/10 hover:shadow-[0_0_0_1px_#3b82f6] relative"
+      ),
+
+      // Handle making the tag appear
+      onMouseEnter: handleHover,
+      onMouseLeave: handleMouseLeave,
+      ...props,
+    },
+    childrenArray
+  );
+
+  return baseElement;
+}
+
+export { Typography, type TypographyVariants };
