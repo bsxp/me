@@ -9,7 +9,7 @@ const GUTTER_SIZE = 16;
 
 export function HomePage() {
   return (
-    <div className="grid w-[calc(100svw-32px)] h-[calc(100svh-32px)] grid-cols-12 grid-rows-12 gap-4 m-4 min-w-[1280px] overflow-hidden">
+    <div id="main-grid" className="grid w-[calc(100svw-32px)] h-[calc(100svh-32px)] grid-cols-12 grid-rows-12 gap-4 m-4 min-w-[1280px]">
       <div id="intro-panel-wrapper"className="col-span-4 row-span-12">
         <IntroPanel />
       </div>
@@ -40,7 +40,7 @@ function ProjectsPanel() {
         src={TransitNight}
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full object-cover z-10 brightness-75"
       />
-      <Typography className="z-50 text-white" variant="h2">
+      <Typography className="z-50 text-white relative" variant="h2">
         PROJECTS
       </Typography>
     </div>

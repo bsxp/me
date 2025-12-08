@@ -66,15 +66,16 @@ function Typography({
 
   let childrenArray = Array.isArray(children) ? children : [children];
 
-  if (displayElementName && hovered) {
-    childrenArray.push(
-      createElement("span", {
-        className:
-          "text-white text-xs text-right absolute -top-6 right-0 bg-blue-500 px-1 py-0.5 normal-case",
-        children: variant,
-      })
-    );
-  }
+  // TODO do as pseudo classes
+  // if (displayElementName && hovered) {
+  //   childrenArray.push(
+  //     createElement("span", {
+  //       className:
+  //         "text-white text-xs text-right absolute -top-6 right-0 bg-blue-500 px-1 py-0.5 normal-case",
+  //       children: variant,
+  //     })
+  //   );
+  // }
 
   const baseElement = createElement(
     variantElements[variant],
@@ -90,8 +91,9 @@ function Typography({
         className,
 
         // If diplsayElementName is true, if the user hovers over the element then we'll highlight and show its name
-        displayElementName &&
-          "hover:bg-primary/10 hover:shadow-[0_0_0_1px_#3b82f6] relative"
+        // TODO: use pseudo classes
+        // displayElementName &&
+        //   "hover:bg-primary/10 hover:shadow-[0_0_0_1px_#3b82f6] relative"
       ),
 
       // Handle making the tag appear
