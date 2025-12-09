@@ -94,3 +94,36 @@ function AboutPanel() {
     </div>
   );
 }
+
+
+// 
+  // const handleElementClick = () => {
+
+  //   console.log('Animating element expanding');
+  //   const tl = gsap.timeline();
+
+  //   tl.to("#main-grid", {
+  //     // top: '-16px',
+  //     marginTop: 0,
+  //     marginBottom: 32,
+  //     duration: 0.5,
+  //     ease: "power2.inOut",
+  //   }, "0")
+
+  //   tl.to(chipRef.current, {
+  //     borderRadius: `0 0 16px 16px`,
+  //     duration: 0.25,
+  //     ease: "power2.inOut",
+  //   }, "0")
+
+  //   tl.to(chipRef.current, {
+  //     top: '-32px',
+  //     left: "50%",
+  //     transform: "translateX(-50%)",
+  //     width: '100svw',
+  //     height: 140,
+  //     duration: 0.5,
+  //     ease: "power2.inOut",
+  //   }, "0")
+    
+  // }
