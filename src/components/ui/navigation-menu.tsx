@@ -139,6 +139,7 @@ function NavigationMenuLink({
 
 function NavigationMenuIndicator({
   className,
+  children,
   ...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Indicator>) {
   return (
@@ -150,7 +151,7 @@ function NavigationMenuIndicator({
       )}
       {...props}
     >
-      <div className="bg-border relative top-[60%] h-2 w-2 rotate-45 rounded-tl-sm shadow-md" />
+      {children ?? <div className="bg-border relative top-[60%] h-4 w-4 rotate-45 rounded-tl-sm shadow-md" />}
     </NavigationMenuPrimitive.Indicator>
   )
 }

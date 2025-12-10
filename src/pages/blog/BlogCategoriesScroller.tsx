@@ -13,7 +13,7 @@ import gsap from "gsap";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function BlogCategoriesScroller({ interactive }: { interactive: boolean }) {
+function BlogCategoriesScroller({ interactive, initialOpacity = 0.0001 }: { interactive: boolean; initialOpacity?: number }) {
   const containerRef = useRef<HTMLDivElement>(null);
   useGSAP(
     () => {
@@ -89,7 +89,7 @@ function BlogCategoriesScroller({ interactive }: { interactive: boolean }) {
         // +1
         tl.fromTo(
           `#category-${i + 1}`,
-          { opacity: 1, y: START_Y + GAP_Y, scale: 0.9 },
+          { opacity: 1, y: START_Y + GAP_Y - 2, scale: 0.9 },
           {
             opacity: 1,
             y: Math.min(2, i + 2) * GAP_Y + START_Y,
@@ -104,7 +104,7 @@ function BlogCategoriesScroller({ interactive }: { interactive: boolean }) {
           `#category-${i + 2}`,
           { y: START_Y, scale: 0.8 },
           {
-            y: GAP_Y + START_Y,
+            y: GAP_Y + START_Y - 2,
             scale: 0.9,
             duration: 1,
           },
@@ -138,7 +138,7 @@ function BlogCategoriesScroller({ interactive }: { interactive: boolean }) {
         scrollbarWidth: "none",
         willChange: "transform, opacity",
         // height: 500,
-        opacity: 0.0001, // Not 0 so the calculations for placement can run before the animation starts
+        opacity: initialOpacity, // Not 0 so the calculations for placement can run before the animation starts
         pointerEvents: interactive ? "auto" : "none",
       }}
       ref={containerRef}
@@ -146,7 +146,7 @@ function BlogCategoriesScroller({ interactive }: { interactive: boolean }) {
       <div
         className="relative w-full"
         id="trigger-container"
-        style={{ height: SCROLL_HEIGHT, backgroundColor: "blue" }}
+        style={{ height: SCROLL_HEIGHT }}
       >
         <BlogCategoryChip
           category={BLOG_CATEGORIES[0]}

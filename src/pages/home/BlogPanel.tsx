@@ -6,10 +6,12 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { CIRCLE_DIAMETER } from "../blog/config";
 import { BlogCategoriesScroller } from "../blog/BlogCategoriesScroller";
 import { PlusCircleButton } from "../blog/PlusCircleButton";
+import { useNavigate } from "react-router-dom";
 
 gsap.registerPlugin(ScrollTrigger);
 
 function BlogPanel() {
+  const navigate = useNavigate();
   const tl = gsap.timeline();
   const [expanded, setExpanded] = useState<boolean>(false);
 
@@ -30,7 +32,6 @@ function BlogPanel() {
         duration: 0.5,
         borderRadius: CIRCLE_DIAMETER / 2,
         ease: "power2.inOut",
-        paddingTop: 16,
         z: 100,
       });
 
@@ -54,12 +55,16 @@ function BlogPanel() {
         ease: "power2.inOut",
       });
 
-      gsap.to("#chris-label", {
-        duration: 0.5,
-        opacity: 1,
-        delay: 0.25,
-        ease: "power2.inOut",
-      });
+      gsap
+        .to("#chris-label", {
+          duration: 0.5,
+          opacity: 1,
+          delay: 0.25,
+          ease: "power2.inOut",
+        })
+        .then(() => {
+          navigate("/blog")
+        });
 
       gsap.to("#root", {
         backgroundColor: "#050509",
@@ -145,13 +150,13 @@ function BlogPanel() {
   return (
     <div
       id="blog-panel"
-      className="absolute top-0 right-0 h-full w-full p-12 space-y-4 bg-[#060610] text-white border border-white/10"
+      className="absolute top-0 right-0 h-full w-full p-12 bg-[#060610] text-white border border-white/10"
       style={{
         borderRadius: `16px ${CIRCLE_DIAMETER / 2}px 16px 16px`,
       }}
       // onMouseMove={handleMouseMove}
     >
-      <div className="flex justify-between items-center relative w-full h-12">
+      <div className="flex justify-between items-center relative w-full h-12 ">
         <Typography
           id="blog-label"
           className="z-50 absolute top-0 left-0"
@@ -188,6 +193,5 @@ function BlogPanel() {
     </div>
   );
 }
-
 
 export { BlogPanel };
