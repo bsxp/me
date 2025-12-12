@@ -315,7 +315,7 @@ function IntroPanel() {
             CHRIS PORTER
           </Typography>
           <Typography variant="h1" className="font-bold text-black">
-            SOFTWARE ENGINEER & ENTREPENEUR
+            SOFTWARE ENGINEER & URBANIST
           </Typography>
           <Typography variant="caption">
             I'm on a mission to make cities more human-centric

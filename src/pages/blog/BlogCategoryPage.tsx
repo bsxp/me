@@ -13,9 +13,16 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 // Fake articles data
-const FAKE_ARTICLES = [
+export const FAKE_ARTICLES = [
   {
     id: 1,
     title: "How to build a human-centric city",
@@ -237,27 +244,56 @@ function BlogCategoryPage() {
                 date={article.date}
               />
             ))}
-            <div className="flex items-center gap-x-4 py-8">
-              <Button
-                variant="ghost"
-                onClick={handlePrevious}
-                disabled={currentPage === 1}
-                className="text-white disabled:opacity-50"
-              >
-                Previous
-              </Button>
-              <Typography variant="caption" className="text-white">
-                {currentPage} of {totalPages}
-              </Typography>
-              <Button
-                variant="ghost"
-                onClick={handleNext}
-                disabled={currentPage === totalPages}
-                className="text-white disabled:opacity-50"
-              >
-                Next
-              </Button>
-            </div>
+            <Pagination className="mt-4 mr-auto">
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={handlePrevious}
+                    aria-disabled={currentPage === 1}
+                    className={
+                      currentPage === 1
+                        ? "pointer-events-none opacity-50 text-white"
+                        : "text-white"
+                    }
+                  >
+                    Previous
+                  </PaginationPrevious>
+                </PaginationItem>
+
+                {Array.from({ length: totalPages }, (_, idx) => (
+                  <PaginationItem key={idx + 1}>
+                    <Button
+                      variant={currentPage === idx + 1 ? "default" : "ghost"}
+                      className={
+                        currentPage === idx + 1
+                          ? "bg-white text-black"
+                          : "text-white"
+                      }
+                      onClick={() => setCurrentPage(idx + 1)}
+                      aria-current={
+                        currentPage === idx + 1 ? "page" : undefined
+                      }
+                    >
+                      {idx + 1}
+                    </Button>
+                  </PaginationItem>
+                ))}
+
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={handleNext}
+                    aria-disabled={currentPage === totalPages}
+                    className={
+                      currentPage === totalPages
+                        ? "pointer-events-none opacity-50 text-white"
+                        : "text-white"
+                    }
+                  >
+                    Next
+                  </PaginationNext>
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
             <Typography variant="caption" className="mt-24 text-white">
               Interested in working with me? Get in touch
             </Typography>
@@ -279,8 +315,14 @@ function BlogPostPreview({
   tags: string[];
   date: Date;
 }) {
+  const [hovered, setHovered] = useState<boolean>(false);
+
   return (
-    <div className="flex flex-col gap-4 text-white border-b-[0.5px] border-white/50 py-12">
+    <div
+      className="flex flex-col gap-4 text-white border-b-[0.5px] border-white/50 py-12"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
       <Typography variant="caption">
         {date.toLocaleDateString("en-US", {
           year: "numeric",
@@ -288,7 +330,10 @@ function BlogPostPreview({
           day: "numeric",
         })}
       </Typography>
-      <Typography variant="h6" className="font-semibold text-xl">
+      <Typography
+        variant="h6"
+        className={cn("font-semibold text-xl", hovered && "text-sky-400")}
+      >
         {title}
       </Typography>
       <Typography variant="p" className="font-light text-md">

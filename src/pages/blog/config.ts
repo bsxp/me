@@ -11,21 +11,25 @@ const BLOG_CATEGORIES = [
     label: "Urbanism",
     image: PatternImage1,
     textColor: "black",
+    description: "My musings on how to make cities better for people"
   },
   {
     label: "Travel",
     image: PatternImage2,
     textColor: "white",
+    description: "My adventures around the world"
   },
   {
     label: "Engineering",
     image: PatternImage3,
     textColor: "white",
+    description: "My musings on how to make cities better for people"
   },
   {
     label: "Design",
     image: PatternImage4,
     textColor: "white",
+    description: "My musings on how to make cities better for people"
   },
 ];
 

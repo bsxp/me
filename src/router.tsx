@@ -1,9 +1,10 @@
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import { HomePage } from "./pages/home/HomePage";
-import { BlogCategoryPage } from "./pages/blog/BlogCategoryPage";
+// import { BlogCategoryPage } from "./pages/blog/BlogCategoryPage";
+
 import { BlogPage } from "./pages/blog/BlogPage";
 import { BlogPostPage } from "./pages/blog/BlogPostPage";
-
+import { BlogCategoryPageRevamp } from "./pages/blog/BlogCategoryPageRevamp";
 // Root layout component
 function RootLayout() {
   return (
@@ -29,7 +30,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "blog/categories/:category",
-        element: <BlogCategoryPage />,
+        element: <BlogCategoryPageRevamp />,
       },
       {
         path: "blog/posts/:postId",
