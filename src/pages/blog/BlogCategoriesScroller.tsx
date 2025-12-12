@@ -76,11 +76,12 @@ function BlogCategoriesScroller({ interactive, initialOpacity = 0.0001 }: { inte
         // Animate +0 furthest down fading out
         tl.fromTo(
           `#category-${i}`,
-          { opacity: 1, y: START_Y + 2 * GAP_Y },
+          { opacity: 1, y: START_Y + 2 * GAP_Y, pointerEvents: "auto" },
           {
             opacity: 0,
             y: Math.max(6, i + 3) * GAP_Y + START_Y, // min (4 * gap y)
             duration: 1,
+            pointerEvents: "none",
           },
           `label-${i}`
         );

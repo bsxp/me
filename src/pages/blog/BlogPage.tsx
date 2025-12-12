@@ -16,9 +16,9 @@ export function BlogPage() {
           <div className="col-span-6  h-full">
             <BlogCategoriesScroller interactive={true} initialOpacity={1} />
           </div>
-          <div className="col-span-4  h-full"></div>
+          <div className="col-span-4 h-full"></div>
         </div>
-        {/* <div className="flex justify-between items-center relative w-full h-12 ">
+        <div className="flex justify-between items-center absolute top-12 left-12 right-12 h-12">
           <Typography
             id="chris-label"
             className="z-50 font-light absolute top-1/2 -translate-y-1/2 left-0 text-white"
@@ -30,7 +30,7 @@ export function BlogPage() {
             chris porter
           </Typography>
           <PlusCircleButton handleClick={() => {}} expanded={true} />
-        </div> */}
+        </div>
         {/* <ShortBlogPostPreview
         title="How to build a human-centric city"
         date="2025-01-01"

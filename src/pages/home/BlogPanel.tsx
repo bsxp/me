@@ -172,7 +172,7 @@ function BlogPanel() {
             letterSpacing: "-0.7px",
           }}
         >
-          Chris Porter
+          chris porter
         </Typography>
         <PlusCircleButton
           handleClick={handleToggleBlogPanel}

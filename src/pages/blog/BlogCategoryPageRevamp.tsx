@@ -5,13 +5,16 @@ import { ChevronUp, ChevronDown, ArrowRight } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { BLOG_CATEGORIES, LETTER_SPACING } from "./config";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { PlusCircleButton } from "./PlusCircleButton";
 
 gsap.registerPlugin(useGSAP);
 
 function BlogCategoryPageRevamp() {
+  const navigate = useNavigate();
+  const { category } = useParams<{ category: string }>();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
   const rotationRef = useRef({ angle: 0 });
@@ -23,6 +26,39 @@ function BlogCategoryPageRevamp() {
   const radius = Math.round(
     cellHeight / 2 / Math.tan(Math.PI / Math.ceil(cellCount * 2.5))
   );
+
+  // Animate fading in of the carousel and navigators
+  useGSAP(() => {
+    gsap.fromTo(
+      "#article-navigators",
+      {
+        opacity: 0,
+        duration: 0.5,
+        ease: "power2.inOut",
+      },
+      {
+        opacity: 1,
+        duration: 0.5,
+        ease: "power2.inOut",
+      }
+    );
+
+    gsap.fromTo(
+      "#carousel-scene",
+      {
+        opacity: 0,
+        x: 100,
+        duration: 0.5,
+        ease: "power2.inOut",
+      },
+      {
+        opacity: 1,
+        x: 0,
+        duration: 0.5,
+        ease: "power2.inOut",
+      }
+    );
+  }, []);
 
   // Animate carousel rotation with GSAP
   useGSAP(() => {
@@ -73,9 +109,45 @@ function BlogCategoryPageRevamp() {
     }
   };
 
+  const handleNavigateBacktoCategories = () => {
+    gsap.to("#carousel-scene", {
+      opacity: 0,
+      duration: 0.5,
+      ease: "power2.inOut",
+    });
+
+    gsap.to("#article-navigators", {
+      opacity: 0,
+      duration: 0.5,
+      ease: "power2.inOut",
+    });
+
+    gsap.to("#category-description", {
+      opacity: 0,
+      duration: 0.5,
+      ease: "power2.inOut",
+    });
+  };
+
   return (
     <div className="bg-black w-full h-full flex flex-col overflow-hidden relative">
       <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center px-16">
+        <div className="flex justify-between items-center absolute top-16 left-16 right-12 h-12">
+          <Typography
+            id="chris-label"
+            className="z-50 font-light absolute top-1/2 -translate-y-1/2 left-0 text-white"
+            variant="p"
+            style={{
+              letterSpacing: "-0.7px",
+            }}
+          >
+            chris porter
+          </Typography>
+          <PlusCircleButton
+            handleClick={handleNavigateBacktoCategories}
+            expanded={true}
+          />
+        </div>
         <div className="grid grid-cols-14 w-full">
           <div className="col-span-4 h-[calc(100svh-129px)] flex flex-col items-end justify-center gap-y-4 ">
             <div className="flex items-end justify-end gap-x-1 w-full h-12">
@@ -89,37 +161,42 @@ function BlogCategoryPageRevamp() {
               >
                 {
                   BLOG_CATEGORIES.find(
-                    (category) => category.label === "Urbanism"
+                    (_category) => _category.label === category
                   )?.label
                 }
               </Typography>
               <img
                 src={
                   BLOG_CATEGORIES.find(
-                    (category) => category.label === "Urbanism"
+                    (_category) => _category.label === category
                   )?.image
                 }
                 alt={
                   BLOG_CATEGORIES.find(
-                    (category) => category.label === "Urbanism"
+                    (_category) => _category.label === category
                   )?.label
                 }
                 className="w-3 h-3 object-cover rounded-full mb-1.5"
               />
             </div>
             <Typography
+              id="category-description"
               variant="caption"
               className="text-white/60 text-right max-w-48 h-12"
             >
               {
-                BLOG_CATEGORIES.find((category) => category.label === "Design")
-                  ?.description
+                BLOG_CATEGORIES.find(
+                  (_category) => _category.label === category
+                )?.description
               }
             </Typography>
           </div>
           <div className="col-span-6 h-full"></div>
           <div className="col-span-4 h-full flex items-center">
-            <div className="flex flex-col gap-4 items-center z-50">
+            <div
+              id="article-navigators"
+              className="flex flex-col gap-4 items-center z-50"
+            >
               <button
                 onClick={handlePrevious}
                 className="p-3 rounded-full bg-white/0 hover:bg-white/10 text-white transition-colors backdrop-blur-sm cursor-pointer"
@@ -145,10 +222,10 @@ function BlogCategoryPageRevamp() {
           </div>
         </div>
       </div>
-      {/* Navigation Controls */}
 
       {/* 3D Carousel Scene */}
       <div
+        id="carousel-scene"
         className="scene flex-1 flex items-center justify-center"
         onWheel={handleWheel}
         style={{

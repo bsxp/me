@@ -1,10 +1,11 @@
 import { Typography } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 import {
+  BLOG_CATEGORIES,
+  BLOG_CATEGORIES_FULL,
   CHIP_HEIGHT,
   CHIP_WIDTH,
   LETTER_SPACING,
-  type BLOG_CATEGORIES,
 } from "./config";
 import { useRef, useState } from "react";
 import gsap from "gsap";
@@ -28,12 +29,9 @@ function BlogCategoryChip({
   const chipRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  const handleNavigate = () => {
-    navigate(`/blog/categories/${encodeURIComponent(category.label)}`);
-    handleElementClick();
-  };
-
-  const handleElementClick = () => {
+  const handleElementClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
     const tl = gsap.timeline();
 
     // Float the chip and expand it at the top of the screen
@@ -42,18 +40,7 @@ function BlogCategoryChip({
 
     animateCategoryLabelMove({ timeline: tl, index: index });
 
-    // Remove margins so the image can stretch to the edges of the screen
-    tl.to(
-      "#main-grid",
-      {
-        margin: 0,
-        width: "100svw",
-        height: "100svh",
-        duration: 0.5,
-        ease: "power2.inOut",
-      },
-      "0"
-    );
+    animateOtherChipsFadingOut({ timeline: tl, index: index });
 
     // Make the animation container fill the whole screen
     tl.to(
@@ -65,25 +52,9 @@ function BlogCategoryChip({
         ease: "power2.inOut",
       },
       "0"
-    )
-    .then(() => {
+    ).then(() => {
       navigate(`/blog/categories/${encodeURIComponent(category.label)}`);
     });
-
-    // tl.to(
-    //   `#category-label-${index}`,
-    //   {
-    //     position: "fixed",
-    //     fontSize: "8rem",
-    //     top: '50%',
-    //     left: '33%',
-    //     transform: 'translate(0%, -50%)',
-    //     color: "white",
-    //     duration: 0.5,
-    //     ease: "power2.inOut",
-    //   },
-    //   "+=0.1"
-    // );
 
     setExpanded(true);
   };
@@ -118,7 +89,7 @@ function BlogCategoryChip({
       <Typography
         id={`category-label-${index}`}
         variant="h3"
-        className="text-center z-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        className="text-center z-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-[Outfit]"
       >
         {category.label}
       </Typography>
@@ -143,15 +114,15 @@ function animateImageMove({
 
   const targetX = 32 + widthOfTargetSegment - targetElementWidth;
 
-  const lateralMovement = targetX - currentX;
+  const lateralMovement = targetX - currentX - 2;
 
   timeline.to(
     imageElement,
     {
       x: lateralMovement,
-      top: "calc(50% - 8px - 4px - 8px)",
-      width: 10,
-      height: 10,
+      top: "calc(50% - 8px - 4px - 8px - 4px)",
+      width: 12,
+      height: 12,
       duration: 0.5,
       ease: "power2.inOut",
     },
@@ -176,14 +147,18 @@ function animateCategoryLabelMove({
   const currentX = labelElement?.getBoundingClientRect().x;
   const targetElementWidth = 211;
   const offset = 12;
-  const middleSegmentWidth = (window.innerWidth - 64) * 6 / 14;
+  const middleSegmentWidth = ((window.innerWidth - 64) * 6) / 14;
   // const segmentDistanceFromRightSideOfScreen =
   //   ((window.innerWidth - 64) * 10) / 14;
 
-  const sideSegmentWidth = (window.innerWidth - 64) * 4 / 14;
+  const sideSegmentWidth = ((window.innerWidth - 64) * 4) / 14;
   // const lateralMovement = -(elementOffset + (sideSegmentWidth / 2) +(middleSegmentWidth / 2));
 
-  const lateralMovement = -((middleSegmentWidth / 2) - 11 + targetElementWidth + 12)
+  const lateralMovement = -(
+    middleSegmentWidth / 2 -
+    2 +
+    targetElementWidth / 2
+  );
 
   console.table({
     currentX,
@@ -192,22 +167,46 @@ function animateCategoryLabelMove({
     targetElementWidth,
     offset,
     // segmentDistanceFromRightSideOfScreen,
-  })
+  });
 
   timeline.to(
     `#category-label-${index}`,
     {
       x: lateralMovement,
       position: "fixed",
-      top: "calc(50% - 8px - 4px - 16px)",
+      top: "calc(50% - 8px - 4px - 16px - 2px)",
       fontSize: "3rem",
       fontWeight: 700,
+      letterSpacing: LETTER_SPACING,
       duration: 0.5,
       color: "white",
       ease: "power2.inOut",
     },
     "0"
   );
+
+  // timeline.add((() => null), "+=10")
+}
+
+function animateOtherChipsFadingOut({
+  timeline,
+  index,
+}: {
+  timeline: GSAPTimeline;
+  index: number;
+}) {
+  BLOG_CATEGORIES_FULL.forEach((category: string, categoryIndex: number) => {
+    if (categoryIndex === index) {
+      console.log("Skipping category", categoryIndex);
+      return;
+    }
+    console.log("Fading out category", categoryIndex);
+    timeline.to(
+      `#category-${categoryIndex}`,
+      { filter: "brightness(0%)", duration: 0.5, ease: "power2.inOut" },
+      "0"
+    );
+  });
 }
 
 export { BlogCategoryChip };
