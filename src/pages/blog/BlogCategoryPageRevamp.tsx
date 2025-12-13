@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { ChevronUp, ChevronDown, ArrowRight } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { BLOG_CATEGORIES, LETTER_SPACING } from "./config";
+import { BLOG_CATEGORIES, GAP_Y, LETTER_SPACING } from "./config";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -110,22 +110,68 @@ function BlogCategoryPageRevamp() {
   };
 
   const handleNavigateBacktoCategories = () => {
-    gsap.to("#carousel-scene", {
-      opacity: 0,
-      duration: 0.5,
-      ease: "power2.inOut",
-    });
+    const tl = gsap.timeline();
+    fadeOutPageComponents({ timeline: tl });
 
-    gsap.to("#article-navigators", {
-      opacity: 0,
-      duration: 0.5,
-      ease: "power2.inOut",
-    });
+    const titleElem = document.getElementById("category-label-title");
 
-    gsap.to("#category-description", {
-      opacity: 0,
-      duration: 0.5,
-      ease: "power2.inOut",
+    tl.to(
+      "#category-label-image",
+      {
+        opacity: 0,
+        duration: 0.5,
+        ease: "power2.inOut",
+      },
+      "0"
+    );
+
+    tl.fromTo(
+      "#category-label-title",
+      {
+        position: "fixed",
+        left: titleElem?.getBoundingClientRect()?.left ?? 0 + "px",
+        // top: titleElem?.getBoundingClientRect()?.top ?? 0 + "px",
+
+        duration: 0.5,
+        fontWeight: 500,
+        ease: "power2.inOut",
+      },
+      {
+        position: "fixed",
+        left: "50%",
+        // y: GAP_Y + "px",
+        duration: 0.5,
+        fontSize: "30px", // TODO convert to rem
+        ease: "power2.inOut",
+      },
+      "0"
+    );
+
+    tl.to(
+      "#category-description",
+      {
+        opacity: 0,
+        duration: 0.5,
+        ease: "power2.inOut",
+      },
+      "0"
+    );
+
+    // Delay 1 second
+    tl.add(() => {}, "+=1");
+
+    // fade out the category label
+    tl.to(
+      "#category-label-title",
+      {
+        opacity: 0,
+        duration: 0.5,
+        ease: "power2.inOut",
+      },
+      "1"
+    )
+    .then(() => {
+      navigate("/blog", { state: { category } });
     });
   };
 
@@ -152,6 +198,7 @@ function BlogCategoryPageRevamp() {
           <div className="col-span-4 h-[calc(100svh-129px)] flex flex-col items-end justify-center gap-y-4 ">
             <div className="flex items-end justify-end gap-x-1 w-full h-12">
               <Typography
+                id="category-label-title"
                 variant="h2"
                 className="text-white"
                 style={{
@@ -166,6 +213,7 @@ function BlogCategoryPageRevamp() {
                 }
               </Typography>
               <img
+                id="category-label-image"
                 src={
                   BLOG_CATEGORIES.find(
                     (_category) => _category.label === category
@@ -191,7 +239,44 @@ function BlogCategoryPageRevamp() {
               }
             </Typography>
           </div>
-          <div className="col-span-6 h-full"></div>
+          <div className="col-span-6 h-full flex justify-center items-center">
+            {/* 3D Carousel Scene */}
+            <div
+              id="carousel-scene"
+              className="scene flex-1 flex items-center justify-center"
+              onWheel={handleWheel}
+              style={{
+                perspective: "1000px",
+              }}
+            >
+              <div
+                ref={carouselRef}
+                className="carousel relative w-full max-w-2xl"
+                style={{
+                  height: `${cellHeight}px`,
+                  transformStyle: "preserve-3d",
+                  transform: `translateZ(${-radius}px) rotateX(0deg)`,
+                }}
+              >
+                {FAKE_ARTICLES.map((article, index) => {
+                  const cellAngle = -theta * index;
+                  return (
+                    <CarouselCell
+                      key={article.id}
+                      article={article}
+                      index={index}
+                      selectedIndex={selectedIndex}
+                      cellCount={cellCount}
+                      cellAngle={cellAngle}
+                      cellHeight={cellHeight}
+                      radius={radius}
+                      handleClick={() => handleSelectIndex(index)}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          </div>
           <div className="col-span-4 h-full flex items-center">
             <div
               id="article-navigators"
@@ -220,43 +305,6 @@ function BlogCategoryPageRevamp() {
               </button>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* 3D Carousel Scene */}
-      <div
-        id="carousel-scene"
-        className="scene flex-1 flex items-center justify-center"
-        onWheel={handleWheel}
-        style={{
-          perspective: "1000px",
-        }}
-      >
-        <div
-          ref={carouselRef}
-          className="carousel relative w-full max-w-2xl"
-          style={{
-            height: `${cellHeight}px`,
-            transformStyle: "preserve-3d",
-            transform: `translateZ(${-radius}px) rotateX(0deg)`,
-          }}
-        >
-          {FAKE_ARTICLES.map((article, index) => {
-            const cellAngle = -theta * index;
-            return (
-              <CarouselCell
-                key={article.id}
-                article={article}
-                index={index}
-                selectedIndex={selectedIndex}
-                cellCount={cellCount}
-                cellAngle={cellAngle}
-                cellHeight={cellHeight}
-                radius={radius}
-                handleClick={() => handleSelectIndex(index)}
-              />
-            );
-          })}
         </div>
       </div>
     </div>
@@ -409,6 +457,40 @@ function BlogPostPreview({
         </div>
       </div>
     </div>
+  );
+}
+
+function fadeOutPageComponents({ timeline }: { timeline: GSAPTimeline }) {
+  timeline.to(
+    "#carousel-scene",
+    {
+      opacity: 0,
+      duration: 0.5,
+      ease: "power2.inOut",
+    },
+    "0"
+  );
+
+  // Fade out navigators
+  timeline.to(
+    "#article-navigators",
+    {
+      opacity: 0,
+      duration: 0.5,
+      ease: "power2.inOut",
+    },
+    "0"
+  );
+
+  // Fade out description
+  timeline.to(
+    "#category-description",
+    {
+      opacity: 0,
+      duration: 0.5,
+      ease: "power2.inOut",
+    },
+    "0"
   );
 }
 

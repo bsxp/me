@@ -37,9 +37,7 @@ function BlogCategoryChip({
     // Float the chip and expand it at the top of the screen
 
     animateImageMove({ timeline: tl, index: index });
-
     animateCategoryLabelMove({ timeline: tl, index: index });
-
     animateOtherChipsFadingOut({ timeline: tl, index: index });
 
     // Make the animation container fill the whole screen

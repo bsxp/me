@@ -1,8 +1,7 @@
 import { useGSAP } from "@gsap/react";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import {
   BLOG_CATEGORIES,
-  BLOG_CATEGORIES_FULL,
   GAP_Y,
   SCROLL_HEIGHT,
   START_Y,
@@ -13,8 +12,30 @@ import gsap from "gsap";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function BlogCategoriesScroller({ interactive, initialOpacity = 0.0001 }: { interactive: boolean; initialOpacity?: number }) {
+// Rotate an array by n positions
+function rotateArray<T>(arr: T[], n: number): T[] {
+  const len = arr.length;
+  const offset = ((n % len) + len) % len; // Handle negative indices
+  return [...arr.slice(offset), ...arr.slice(0, offset)];
+}
+
+interface BlogCategoriesScrollerProps {
+  interactive: boolean;
+  initialOpacity?: number;
+  /** Starting index in the carousel (0-based, based on BLOG_CATEGORIES order) */
+  startIndex?: number;
+}
+
+function BlogCategoriesScroller({ interactive, initialOpacity = 0.0001, startIndex = 0 }: BlogCategoriesScrollerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Rotate categories to start at the desired index
+  const categories = useMemo(() => rotateArray(BLOG_CATEGORIES, startIndex), [startIndex]);
+  const categoriesFull = useMemo(() => {
+    // Rebuild BLOG_CATEGORIES_FULL with the rotated base array
+    return [...new Array(2).fill(categories).flat(), categories[0], categories[1]];
+  }, [categories]);
+
   useGSAP(
     () => {
       ScrollTrigger.normalizeScroll({
@@ -45,7 +66,7 @@ function BlogCategoriesScroller({ interactive, initialOpacity = 0.0001 }: { inte
         },
       });
 
-      for (let i = 0; i < BLOG_CATEGORIES_FULL.length - 2; i++) {
+      for (let i = 0; i < categoriesFull.length - 2; i++) {
         if (i > 0) {
           // Move the previous last category up to the top for reuse
           tl.fromTo(
@@ -60,7 +81,7 @@ function BlogCategoriesScroller({ interactive, initialOpacity = 0.0001 }: { inte
         }
 
         // on the last iteration, fade in a third just to help smooth the reset
-        if (i === BLOG_CATEGORIES_FULL.length - 3) {
+        if (i === categoriesFull.length - 3) {
           tl.fromTo(
             `#extra-category`,
             { opacity: 0, scale: 0.7, y: START_Y },
@@ -128,7 +149,7 @@ function BlogCategoriesScroller({ interactive, initialOpacity = 0.0001 }: { inte
           .add(() => {}, "+=1");
       }
     },
-    { scope: containerRef?.current ?? undefined }
+    { scope: containerRef?.current ?? undefined, dependencies: [categoriesFull] }
   );
 
   return (
@@ -150,23 +171,23 @@ function BlogCategoriesScroller({ interactive, initialOpacity = 0.0001 }: { inte
         style={{ height: SCROLL_HEIGHT }}
       >
         <BlogCategoryChip
-          category={BLOG_CATEGORIES[0]}
+          category={categories[0]}
           index={0}
           style={{ zIndex: 50 }}
         />
 
         <BlogCategoryChip
-          category={BLOG_CATEGORIES[1]}
+          category={categories[1]}
           index={1}
           style={{ zIndex: 40 }}
         />
 
         <BlogCategoryChip
-          category={BLOG_CATEGORIES[2]}
+          category={categories[2]}
           index={2}
           style={{ zIndex: 30 }}
         />
-        {BLOG_CATEGORIES_FULL.slice(3, BLOG_CATEGORIES_FULL.length).map(
+        {categoriesFull.slice(3, categoriesFull.length).map(
           (category, index) => (
             <BlogCategoryChip
               key={index}
@@ -177,7 +198,7 @@ function BlogCategoriesScroller({ interactive, initialOpacity = 0.0001 }: { inte
           )
         )}
         <BlogCategoryChip
-          category={BLOG_CATEGORIES[2]}
+          category={categories[2]}
           index={0}
           idOverride="extra-category"
           style={{ zIndex: 0 }}
