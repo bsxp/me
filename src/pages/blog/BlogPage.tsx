@@ -3,12 +3,24 @@ import { PlusCircleButton } from "./PlusCircleButton";
 import { BlogCategoriesScroller } from "./BlogCategoriesScroller";
 import { useLocation } from "react-router-dom";
 import { BLOG_CATEGORIES } from "./config";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+
+gsap.registerPlugin(useGSAP);
 
 export function BlogPage() {
   const location = useLocation();
   const selectedCategory = (location.state as { category?: string })?.category;
 
-  console.log("selectedCategory", selectedCategory);
+  useGSAP(() => {
+    gsap.fromTo("#blog-categories-scroller-container", {
+      opacity: 0,
+    }, {
+      opacity: 1,
+      duration: 1.5,
+      ease: "power2.inOut",
+    });
+  }, []);
 
   return (
     <div className="bg-black w-full h-full relative p-4">
@@ -20,8 +32,21 @@ export function BlogPage() {
       >
         <div className="grid grid-cols-14 w-full h-full">
           <div className="col-span-4 h-full"></div>
-          <div className="col-span-6  h-full">
-            <BlogCategoriesScroller interactive={true} initialOpacity={1} startIndex={selectedCategory ? BLOG_CATEGORIES.findIndex((category) => category.label === selectedCategory) : 0} />
+          <div
+            id="blog-categories-scroller-container"
+            className="col-span-6  h-full opacity-0"
+          >
+            <BlogCategoriesScroller
+              interactive={true}
+              initialOpacity={1}
+              startIndex={
+                selectedCategory
+                  ? BLOG_CATEGORIES.findIndex(
+                      (category) => category.label === selectedCategory
+                    )
+                  : 0
+              }
+            />
           </div>
           <div className="col-span-4 h-full"></div>
         </div>
