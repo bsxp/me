@@ -5,6 +5,7 @@ import { HomePage } from "./pages/home/HomePage";
 import { BlogPage } from "./pages/blog/BlogPage";
 import { BlogPostPage } from "./pages/blog/BlogPostPage";
 import { BlogCategoryPageRevamp } from "./pages/blog/BlogCategoryPageRevamp";
+import { AboutPage } from "./pages/about/AboutPage";
 // Root layout component
 function RootLayout() {
   return (
@@ -35,6 +36,10 @@ export const router = createBrowserRouter([
       {
         path: "blog/posts/:postId",
         element: <BlogPostPage />,
+      },
+      {
+        path: "about",
+        element: <AboutPage />,
       },
     ],
   },

@@ -80,6 +80,7 @@ function ProfileClock() {
 
   return (
     <div
+      id="profile-clock"
       className="relative **:z-50"
       style={{
         width: CIRCLE_DIAMETER,
@@ -87,15 +88,16 @@ function ProfileClock() {
       }}
     >
       <div
+        id="profile-clock-border"
         className="absolute top-0 left-0 z-5 rounded-full bg-white"
-        style={{ width: CIRCLE_DIAMETER, height: CIRCLE_DIAMETER, opacity: isHovered ? 0.9 : 0.3 }}
+        style={{ width: '100%', height: '100%', opacity: isHovered ? 0.9 : 0.3 }}
       />
       <div
         id="profile-circle"
-        className="absolute top-0 left-0 z-10 rounded-full duration-300 ease-in-out"
+        className="absolute top-0 left-0 z-10 rounded-full duration-300"
         style={{
-          width: CIRCLE_DIAMETER,
-          height: CIRCLE_DIAMETER,
+          width: '100%',
+          height: '100%',
           backgroundImage: `url(${ChrisPortrait})`,
           backgroundSize: "cover",
           backgroundPosition: "80% 60%",
@@ -104,8 +106,9 @@ function ProfileClock() {
         }}
       />
       <div
+        id="profile-clock-content"
         className="absolute top-0 left-0 z-20 rounded-full border border-white flex flex-col justify-center items-center"
-        style={{ width: CIRCLE_DIAMETER, height: CIRCLE_DIAMETER }}
+        style={{ width: '100%', height: '100%' }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
@@ -121,6 +124,7 @@ function ProfileClock() {
         </Typography>
       </div>
       <div
+        id="profile-clock-dots"
         className="absolute left-1/2 top-1/2 z-50"
         style={{
           width: 0,

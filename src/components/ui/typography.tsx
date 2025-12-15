@@ -87,6 +87,10 @@ function Typography({
         variant === "caption" && "text-sm text-gray-500",
         variant === "h1" && "font-[Outfit] text-6xl font-bold",
         variant === "h2" && "font-[Outfit] text-5xl font-bold",
+        variant === "h3" && "font-[Outfit] text-4xl font-bold",
+        variant === "h4" && "font-[Outfit] text-3xl font-bold",
+        variant === "h5" && "font-[Outfit] text-2xl font-bold",
+        variant === "h6" && "font-[Outfit] text-xl font-bold",
         variant === "p" && "font-[Inter] text-xl font-semibold",
         className,
 
