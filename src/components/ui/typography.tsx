@@ -93,11 +93,6 @@ function Typography({
         variant === "h6" && "font-[Outfit] text-xl font-bold",
         variant === "p" && "font-[Inter] text-xl font-semibold",
         className,
-
-        // If diplsayElementName is true, if the user hovers over the element then we'll highlight and show its name
-        // TODO: use pseudo classes
-        // displayElementName &&
-        //   "hover:bg-primary/10 hover:shadow-[0_0_0_1px_#3b82f6] relative"
       ),
 
       // Handle making the tag appear

@@ -6,10 +6,11 @@ import { BlogPage } from "./pages/blog/BlogPage";
 import { BlogPostPage } from "./pages/blog/BlogPostPage";
 import { BlogCategoryPageRevamp } from "./pages/blog/BlogCategoryPageRevamp";
 import { AboutPage } from "./pages/about/AboutPage";
+import { ProjectDetailsPage_1 } from "./pages/project/ProjectDetailsPage_1";
 // Root layout component
 function RootLayout() {
   return (
-    <div className="app w-svw h-svh">
+    <div className="app w-full min-h-svh overflow-x-hidden">
       <Outlet />
     </div>
   );
@@ -40,6 +41,10 @@ export const router = createBrowserRouter([
       {
         path: "about",
         element: <AboutPage />,
+      },
+      {
+        path: "projects/:projectId",
+        element: <ProjectDetailsPage_1 />,
       },
     ],
   },

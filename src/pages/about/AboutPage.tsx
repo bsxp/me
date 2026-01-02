@@ -1,473 +1,236 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ProfileClock } from "../home/ProfileClock";
-import AmsterdamImage from "@/assets/amsterdam.jpg";
-import AustinAerialImage from "@/assets/austin-aerial.jpg";
-import CodingImage from "@/assets/coding.jpg";
-import UiDesignImage from "@/assets/ui-design.jpg";
-import BeachImage from "@/assets/beach-small.jpg";
-import BigBenImage from "@/assets/big-ben-small.jpg";
-import BrusselsImage from "@/assets/brussels-small.jpg";
-import EdinburghImage from "@/assets/edinburgh-small.jpg";
-import LisbonImage from "@/assets/lisbon-small.jpg";
-import NeuschwansteinImage from "@/assets/neuschwanstein-small.jpg";
-import OregonImage from "@/assets/oregon-small.jpg";
-import PragueBridge from "@/assets/prague-bridge-small.jpg";
-import PragueImage from "@/assets/prague-small.jpg";
-import RainierImage from "@/assets/rainier-small.jpg";
-import ZurichImage from "@/assets/zurich-small.jpg";
-import { Typography } from "@/components/ui/typography";
-import { ArrowDown } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { aboutPageGridItems } from "./aboutPageGridItems";
+import {
+  NUM_HORIZONTAL_LINES,
+  GRID_SPACING,
+  NUM_VERTICAL_LINES,
+} from "./config";
+import { HeroPanel } from "./HeroPanel";
+import { MissionPanel } from "./MissionPanel";
+import { ProjectsPanel } from "./ProjectsPanel";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-const NUM_HORIZONTAL_LINES = 11; // Keep above 0
-const GRID_SPACING = 75;
-const GRID_HEIGHT = GRID_SPACING * NUM_HORIZONTAL_LINES;
-
-const NUM_VERTICAL_LINES = 16; // Keep above 0
-const GRID_WIDTH = GRID_SPACING * NUM_VERTICAL_LINES;
-
-const IMAGE_SCALE = 3;
-
-// Words to form:
-// Move
-// Hello
-//
-
-const items = [
-  {
-    image: AmsterdamImage,
-    top: 7.5 * GRID_SPACING,
-    left: 5.5 * GRID_SPACING,
-    type: "image",
-  },
-  {
-    image: AustinAerialImage,
-    top: 2.5 * GRID_SPACING,
-    left: 7.5 * GRID_SPACING,
-    type: "image",
-  },
-  {
-    image: CodingImage,
-    top: 4.5 * GRID_SPACING,
-    left: 4.5 * GRID_SPACING,
-    type: "image",
-  },
-  {
-    image: UiDesignImage,
-    top: 7.5 * GRID_SPACING,
-    left: 1.5 * GRID_SPACING,
-    type: "image",
-  },
-  {
-    image: BeachImage,
-    top: 2.5 * GRID_SPACING,
-    left: 5.5 * GRID_SPACING,
-    type: "image",
-  },
-  {
-    image: BigBenImage,
-    top: 3.5 * GRID_SPACING,
-    left: 9.5 * GRID_SPACING,
-    type: "image",
-  },
-  {
-    image: BrusselsImage,
-    top: 2.5 * GRID_SPACING,
-    left: 11.5 * GRID_SPACING,
-    type: "image",
-  },
-  {
-    image: EdinburghImage,
-    top: 3.5 * GRID_SPACING,
-    left: 8.5 * GRID_SPACING,
-    type: "image",
-  },
-  {
-    image: LisbonImage,
-    top: 4.5 * GRID_SPACING,
-    left: 6.5 * GRID_SPACING,
-    type: "image",
-  },
-  {
-    image: NeuschwansteinImage,
-    top: 5.5 * GRID_SPACING,
-    left: 4.5 * GRID_SPACING,
-    type: "image",
-  },
-  {
-    image: OregonImage,
-    top: 5.5 * GRID_SPACING,
-    left: 7.5 * GRID_SPACING,
-    type: "image",
-  },
-  {
-    image: PragueBridge,
-    top: 1.5 * GRID_SPACING,
-    left: 9.5 * GRID_SPACING,
-    type: "image",
-  },
-  {
-    image: PragueImage,
-    top: 6.5 * GRID_SPACING,
-    left: 3.5 * GRID_SPACING,
-    type: "image",
-  },
-  {
-    image: RainierImage,
-    top: 5.5 * GRID_SPACING,
-    left: 2.5 * GRID_SPACING,
-    type: "image",
-  },
-  {
-    image: ZurichImage,
-    top: 6.5 * GRID_SPACING,
-    left: 6.5 * GRID_SPACING,
-    type: "image",
-  },
-  {
-    type: "div",
-    top: 5.5 * GRID_SPACING,
-    left: 9.5 * GRID_SPACING,
-    content: (
-      <div id="about-me-description" className="p-1 flex flex-col gap-2">
-        <Typography variant="h6" className="z-50 font-xl">
-          About me
-        </Typography>
-        <Typography
-          variant="caption"
-          className="z-50 text-gray-700"
-          style={{ maxWidth: GRID_SPACING * 4 }}
-        >
-          I believe in the power of technology to transform our cities into
-          human-centric spaces. I build tools to help reshape the way we build
-          our world.
-        </Typography>
-      </div>
-    ),
-  },
-];
+const items = aboutPageGridItems;
 
 export function AboutPage() {
-  useGSAP(() => {
-    animateProfileClockMove();
-    animateItemsFadeIn();
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const isAutoScrollingProjectsRef = useRef(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollPosition(window.scrollY);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
-  useGSAP(() => {
-    // Animate the fading out of the images, etc as the user scrolls down the page
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: "#about-me-description",
-        start: "top bottom",
-        end: "bottom bottom",
-        scrub: true,
-      },
-    });
-  }, []);
+  // Lock scrolling until the initial fade-in animations finish
+  useEffect(() => {
+    const unlockScroll = () => {
+      document.documentElement.style.overflowY = "";
+      document.body.style.overflowY = "";
+    };
 
-  return (
-    <div className="w-full h-[10000px] relative flex items-start justify-center">
-      <div className="w-full h-svh relative p-4 flex items-center justify-center">
-        <div className="absolute top-4 left-4  z-50">
-          <ProfileClock />
-        </div>
-        <AboutPageGridBackground>
-          {items.map((item, index) => {
-            if (item.type === "image") {
-              return (
-                <img
-                  id={`about-grid-item-${index}`}
-                  src={item.image}
-                  className="relative z-40"
-                  style={{
-                    borderRadius: 0,
-                    width: GRID_SPACING,
-                    height: GRID_SPACING,
-                    margin: 0,
-                    objectFit: "cover",
-                    position: "absolute",
-                    top: item.top,
-                    left: item.left,
-                  }}
-                />
-              );
-            }
-            if (item.type === "div") {
-              return (
-                <div
-                  className="relative z-40"
-                  style={{
-                    top: item.top,
-                    left: item.left,
-                  }}
-                >
-                  {item.content}
-                </div>
-              );
-            }
-          })}
-        </AboutPageGridBackground>
-      </div>
-    </div>
-  );
-}
-
-function AboutPageGridBackground({ children }: { children: React.ReactNode }) {
-  useGSAP(() => {
-    animateGridLines();
-  }, []);
-
-  return (
-    <div
-      className="relative after:content-[''] after:block after:absolute after:inset-0 after:bg-[radial-gradient(ellipse_at_center,rgba(233,240,241,0)_25%,rgba(233,240,241,1)_70%,rgba(233,240,241,1)_100%)] after:pointer-events-none overflow-hidden"
-      style={{
-        width: `${GRID_WIDTH}px`,
-        height: `${GRID_HEIGHT}px`,
-      }}
-    >
-      {children}
-      {/* HORIZONTAL LINES */}
-      {new Array(NUM_HORIZONTAL_LINES).fill(null).map((_, index) => (
-        <div
-          id={`about-grid-horizontal-line-${index}`}
-          key={index}
-          className="absolute bg-black/20 h-[0.5px] left-0"
-          style={{
-            top: index * GRID_SPACING + GRID_SPACING / 2 + "px", // Offset by 1/2 to have overhangs on the lines
-            width: GRID_WIDTH,
-          }}
-        />
-      ))}
-
-      {/* VERTICAL LINES */}
-      {new Array(NUM_VERTICAL_LINES).fill(null).map((_, index) => (
-        <div
-          id={`about-grid-vertical-line-${index}`}
-          key={index}
-          className="absolute bg-black/20 w-[0.5px] top-0"
-          style={{
-            left: index * GRID_SPACING + GRID_SPACING / 2 + "px", // Offset by 1/2 to have overhangs on the lines
-            height: GRID_HEIGHT,
-          }}
-        />
-      ))}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-50">
-        <div className="animate-[arrow-bounce_1.6s_cubic-bezier(0.445,0.05,0.55,0.95)_infinite]">
-          <BouncingArrow direction="down" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function animateGridLines() {
-  // Draw the lines, but stagger them slightly to create a subtle drawing effect
-
-  // Start with horizontal lines
-  for (let i = 0; i < NUM_HORIZONTAL_LINES; i++) {
-    const dir = i % 2 === 0 ? "left" : "right";
-    gsap.fromTo(
-      `#about-grid-horizontal-line-${i}`,
-      {
-        x: GRID_WIDTH * (2 - Math.random()) * (dir === "left" ? -1 : 1),
-      },
-      {
-        x: 0,
-        duration: 3 + Math.random(),
-        delay: i * 0.15,
-        ease: "power2.inOut",
-      }
-    );
-
-    gsap.fromTo(
-      `#about-grid-horizontal-line-${i}`,
-      {
-        opacity: 0,
-      },
-      {
-        opacity: 1,
-        duration: 2 + Math.random(),
-        delay: i * 0.15 - 0.5,
-        ease: "power2.inOut",
-      }
-    );
-  }
-
-  for (let i = 0; i < NUM_VERTICAL_LINES; i++) {
-    const dir = i % 2 === 0 ? "up" : "down";
-
-    gsap.fromTo(
-      `#about-grid-vertical-line-${i}`,
-      {
-        y: GRID_HEIGHT * (dir === "up" ? -1 : 1),
-        opacity: 0,
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 3,
-        delay: i * 0.15,
-        ease: "power2.inOut",
-      }
-    );
-  }
-}
-
-function animateProfileClockMove() {
-  const thirdHorizontalLine = document.getElementById(
-    `about-grid-horizontal-line-1`
-  );
-  const fifthVerticalLine = document.getElementById(
-    `about-grid-vertical-line-0`
-  );
-
-  if (thirdHorizontalLine && fifthVerticalLine) {
-    gsap.fromTo(
-      "#profile-clock",
-      {
-        position: "fixed",
-        top: 16,
-        left: 16,
-      },
-      {
-        position: "fixed",
-        top: thirdHorizontalLine.getBoundingClientRect().y,
-        left: fifthVerticalLine.getBoundingClientRect().x,
-        duration: 2,
-        delay: 1.5,
-        width: GRID_SPACING * IMAGE_SCALE,
-        height: GRID_SPACING * IMAGE_SCALE,
-        ease: "power2.inOut",
-      }
-    );
-
-    gsap.fromTo(
-      "#profile-circle",
-      {
-        borderRadius: "50%",
-      },
-      {
-        borderRadius: 0,
-        duration: 2,
-        delay: 1.5,
-        ease: "power2.inOut",
-      }
-    );
-
-    gsap.fromTo(
-      "#profile-clock-content",
-      {
-        opacity: 1,
-      },
-      {
-        borderRadius: 0,
-        opacity: 0,
-        pointerEvents: "none",
-        display: "none",
-        duration: 2,
-        delay: 1.5,
-        ease: "power2.inOut",
-      }
-    );
-
-    gsap.fromTo(
-      "#profile-clock-border",
-      {
-        opacity: 1,
-      },
-      {
-        opacity: 0,
-        duration: 2,
-        delay: 1.5,
-        ease: "power2.inOut",
-      }
-    );
-
-    gsap.fromTo(
-      "#profile-clock-dots",
-      {
-        opacity: 1,
-      },
-      {
-        opacity: 0,
-        pointerEvents: "none",
-        display: "none",
-        duration: 2,
-        delay: 1.5,
-        ease: "power2.inOut",
-      }
-    );
-  }
-}
-
-function animateItemsFadeIn() {
-  items.forEach(({ top, left }, index) => {
-    gsap.fromTo(
-      `#about-grid-item-${index}`,
-      {
-        opacity: 0,
-      },
-      {
-        opacity: 1,
-        duration: 2,
-        // Compute delay based on distance from the lower left corner of the grid
-        delay:
+    // Compute the longest fade-in completion time (images + description)
+    const baseDurationSec = 2; // shared duration for fade-ins
+    let maxEndMs = 0;
+    items.forEach(({ top, left, type }) => {
+      if (type === "image") {
+        const delaySec =
           Math.sqrt(
             Math.pow(top / GRID_SPACING - (NUM_HORIZONTAL_LINES - 1), 2) +
               Math.pow(left / GRID_SPACING - 0, 2)
-          ) * 0.3, // shorter delay, relative to lower left
-        ease: "power2.inOut",
+          ) * 0.3;
+        maxEndMs = Math.max(maxEndMs, (delaySec + baseDurationSec) * 1000);
       }
-    );
-  });
-
-  gsap.fromTo(
-    "#about-me-description",
-    {
-      opacity: 0,
-    },
-    {
-      opacity: 1,
-      duration: 2,
-      delay: 3,
-      ease: "power2.inOut",
-    }
-  );
-}
-
-// Animated arrow that gently bounces up and down on a spring animation. The direction it's pointing is also the spring "direction"
-// e.g. if "down", the "hard stop" is on the bottom of the area, and would look like a ball bouncing on the ground.
-function BouncingArrow({
-  direction = "down",
-}: {
-  direction: "up" | "down" | "left" | "right";
-}) {
-  useGSAP(() => {
-    gsap.to(`#bouncing-arrow-${direction}`, {
-      y: direction === "up" ? -10 : direction === "down" ? 10 : 0,
-      duration: 1,
-      ease: "power2.inOut",
     });
+    // About description fade-in
+    maxEndMs = Math.max(maxEndMs, (3 + baseDurationSec) * 1000);
+
+    // Add a small buffer to ensure completion
+    const unlockDelayMs = maxEndMs + 300;
+
+    document.documentElement.style.overflowY = "hidden";
+    document.body.style.overflowY = "hidden";
+    const timeout = window.setTimeout(unlockScroll, unlockDelayMs);
+
+    return () => {
+      window.clearTimeout(timeout);
+      document.documentElement.style.overflowY = "";
+      document.body.style.overflowY = "";
+    };
+  }, []);
+
+  // When the projects panel is at least 25% visible, gently snap it to the top
+  useEffect(() => {
+    let releaseTimeout: number | null = null;
+
+    const trigger = ScrollTrigger.create({
+      trigger: "#about-projects",
+      start: "top bottom",
+      end: "bottom top",
+      onUpdate: (self) => {
+        if (isAutoScrollingProjectsRef.current) return;
+        const el = self.trigger as HTMLElement | null;
+        if (!el) return;
+
+        const rect = el.getBoundingClientRect();
+        const visiblePixels =
+          Math.min(window.innerHeight, rect.bottom) - Math.max(0, rect.top);
+        const visibility = Math.max(0, visiblePixels) / Math.max(rect.height, 1);
+        const isScrollingDown = self.direction === 1;
+
+        // Scrolling down: snap the panel to the top once 25% visible
+        if (isScrollingDown) {
+          if (visibility < 0.25 || rect.top <= 0) return;
+
+          const targetY = window.scrollY + rect.top;
+          if (Math.abs(targetY - window.scrollY) < 1) return;
+
+          isAutoScrollingProjectsRef.current = true;
+          window.scrollTo({ top: targetY, behavior: "smooth" });
+        } else {
+          // Scrolling up: once mostly gone (<=25% visible), finish hiding it
+          if (visibility > 0.25 || rect.bottom <= 0) return;
+
+          // Scroll so the panel's bottom aligns to the top edge, moving it fully out
+          const targetY = window.scrollY + rect.bottom;
+          if (Math.abs(targetY - window.scrollY) < 1) return;
+
+          isAutoScrollingProjectsRef.current = true;
+          window.scrollTo({ top: targetY, behavior: "smooth" });
+        }
+
+        // Release the guard shortly after the smooth scroll should finish
+        if (releaseTimeout) {
+          window.clearTimeout(releaseTimeout);
+        }
+        releaseTimeout = window.setTimeout(() => {
+          isAutoScrollingProjectsRef.current = false;
+        }, 600);
+      },
+      onLeaveBack: () => {
+        isAutoScrollingProjectsRef.current = false;
+      },
+    });
+
+    return () => {
+      if (releaseTimeout) {
+        window.clearTimeout(releaseTimeout);
+      }
+      trigger.kill();
+    };
+  }, []);
+
+  useGSAP(() => {
+    // Pin the hero and fade the grid, images, and description while scrolling
+    const itemSelectors = items.reduce<string[]>((acc, item, index) => {
+      if (item.type === "image") {
+        acc.push(`#about-grid-item-${index}`);
+      }
+      return acc;
+    }, []);
+
+    const horizontalGridLineSelectors = new Array(NUM_HORIZONTAL_LINES)
+      .fill(null)
+      .map((_, i) => `#about-grid-horizontal-line-${i}`);
+
+    const verticalGridLineSelectors = new Array(NUM_VERTICAL_LINES)
+      .fill(null)
+      .map((_, i) => `#about-grid-vertical-line-${i}`);
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#about-hero",
+        start: "top top",
+        end: "+=800", // fade over 800px of scroll
+        scrub: true,
+        pin: true,
+        anticipatePin: 0.5,
+      },
+    });
+
+    tl
+      // .fromTo(
+      //   [...itemSelectors, "#about-me-description"],
+      //   { opacity: 1, immediateRender: false },
+      //   {
+      //     opacity: 0,
+      //     duration: 1.5, // timeline is scrubbed; duration scales to scroll distance
+      //     ease: "none",
+      //   },
+      //   0
+      // )
+      .fromTo(
+        [
+          ...itemSelectors,
+          ...horizontalGridLineSelectors,
+          ...verticalGridLineSelectors.filter((_, idx) => idx % 3 !== 1),
+          "#profile-circle",
+          "#about-me-description",
+          "#about-grid-arrow",
+        ],
+        { opacity: 1, immediateRender: false },
+        {
+          opacity: 0,
+          duration: 1.5, // timeline is scrubbed; duration scales to scroll distance
+          ease: "none",
+        },
+        0
+      );
+
+    const tl2 = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#about-hero",
+        start: "200px top",
+        end: "+=300svh", // fade over 800px of scroll
+        scrub: true,
+        pin: true,
+        anticipatePin: 0.5,
+      },
+    });
+
+    tl2.fromTo(
+      "#about-mission",
+      { opacity: 0, y: 200 },
+      { opacity: 1, y: 0, duration: 0.8, ease: "none" }
+    );
+
+    // Pin and fade out #about-mission as #about-projects scrolls in
+    const projectsPanelTimeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#about-projects",
+        start: "top top",
+        end: "+=100svh", // change pin duration as needed
+        scrub: true,
+        pin: true,
+        anticipatePin: 0.5,
+      },
+    });
+
+    projectsPanelTimeline.to(
+      "#about-mission",
+      { opacity: 0, duration: 1, ease: "none" },
+      0 // start simultaneously as projects scrolls in/pins
+    );
   }, []);
 
   return (
-    <div id={`bouncing-arrow-${direction}`} className="relative">
-      <ArrowDown
-        className="size-8"
-        style={{
-          transform:
-            direction === "up"
-              ? "rotate(180deg)"
-              : direction === "down"
-              ? "rotate(0deg)"
-              : direction === "left"
-              ? "rotate(90deg)"
-              : "rotate(-90deg)",
-        }}
-      />
+    <div className="w-full h-[10000px] relative">
+      <div className="fixed top-2 right-2 z-120 bg-white/90 text-gray-800 border border-gray-200 shadow-sm px-2 py-1 rounded text-xs font-mono">
+        scrollY: {Math.round(scrollPosition)}px
+      </div>
+      <HeroPanel />
+      <MissionPanel />
+      <ProjectsPanel />
     </div>
   );
 }

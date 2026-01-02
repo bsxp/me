@@ -3,7 +3,7 @@ import { HomePage } from "./pages/home/HomePage";
 
 function App() {
   return (
-    <div className="app w-svw h-svh">
+    <div className="app w-full min-h-svh">
       <HomePage />
     </div>
   );

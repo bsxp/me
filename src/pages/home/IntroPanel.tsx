@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 import NoiseBackground from "@/assets/noise.png";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 const CIRCLE_DIAMETER = 120;
 const GUTTER_SIZE = 16;
@@ -129,6 +130,8 @@ const glassMorphism = {
 };
 
 function IntroPanel() {
+
+  const navigate = useNavigate();
   const [blob1Radii, setBlob1Radii] =
     useState<[number, number, number, number, number, number, number, number]>(
       INITIAL_BLOB_RADII
@@ -324,7 +327,7 @@ function IntroPanel() {
             <Button variant="defaultPrimary" className="rounded-full bg-[#060610]" size="lg">
               Contact me
             </Button>
-            <Button variant="ghost" className="rounded-full" size="lg">
+            <Button variant="ghost" className="rounded-full" size="lg" onClick={() => navigate("/about")}>
               About me <ArrowRight className="size-4" />
             </Button>
           </div>
