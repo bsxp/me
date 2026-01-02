@@ -21,8 +21,11 @@ const TableOfContents = forwardRef<HTMLDivElement, TableOfContentsProps>(
   function TableOfContents({ bodyRef }, ref) {
     const [sections, setSections] = useState<Section[]>([]);
     const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
+    const [reachedEnd, setReachedEnd] = useState(false);
 
     useGSAP(() => {
+      const timelines: gsap.core.Timeline[] = [];
+      const triggers: ScrollTrigger[] = [];
       const lastSectionId = sections[sections.length - 1]?.id;
 
       // As the user scrolls through the body, we should "grow" the line below the current section
@@ -31,7 +34,11 @@ const TableOfContents = forwardRef<HTMLDivElement, TableOfContentsProps>(
       // Additionally, the section that the user is currently viewing should be made bold
 
       for (const section of sections) {
-        const isLastSection = section.id === lastSectionId;
+        // Ensure highlight starts collapsed for every section
+        gsap.set(`#table-of-contents-line-highlight-${section.id}`, {
+          width: 0,
+        });
+
         // As the user scrolls into view of the section, we should "grow" the line below it in the table of contents
         const sectionTimeline = gsap.timeline({
           scrollTrigger: {
@@ -41,6 +48,7 @@ const TableOfContents = forwardRef<HTMLDivElement, TableOfContentsProps>(
             scrub: true,
           },
         });
+        timelines.push(sectionTimeline);
 
         // Expand the line as we scroll through the section
         sectionTimeline.fromTo(
@@ -63,43 +71,53 @@ const TableOfContents = forwardRef<HTMLDivElement, TableOfContentsProps>(
             opacity: 1,
           },
           {
-            opacity: isLastSection && activeSectionId === lastSectionId ? 1 : 0,
+            opacity: 0,
             ease: "power2.inout",
           },
-          !isLastSection ? "bottom-=1 bottom" : "bottom 60%"
+          "bottom-=1 bottom"
         );
 
         // Highlight the active section in the table of contents when the user is on it
         // When the user enters the section, animate the highlight expanding
-        ScrollTrigger.create({
+        const trigger = ScrollTrigger.create({
           trigger: section.element,
           start: "top 60%",
           end: "bottom 60%",
           onEnter: () => {
+            setReachedEnd(false);
             setActiveSectionId(section.id);
-            gsap.to(`#table-of-contents-line-highlight-${section.id}`, {
-              width: "100%",
-              duration: 0.4,
-              ease: "power2.inOut",
-            });
+            gsap.fromTo(
+              `#table-of-contents-line-highlight-${section.id}`,
+              { width: 0 },
+              {
+                width: "100%",
+                duration: 0.4,
+                ease: "power2.inOut",
+              }
+            );
           },
           onEnterBack: () => {
+            setReachedEnd(false);
             setActiveSectionId(section.id);
-            gsap.to(`#table-of-contents-line-highlight-${section.id}`, {
-              width: "100%",
-              duration: 0.4,
-              ease: "power2.inOut",
-            });
+            gsap.fromTo(
+              `#table-of-contents-line-highlight-${section.id}`,
+              { width: 0 },
+              {
+                width: "100%",
+                duration: 0.4,
+                ease: "power2.inOut",
+              }
+            );
           },
           onLeave: () => {
             if (section.id === lastSectionId) {
+              setReachedEnd(true);
               setActiveSectionId(section.id);
-              gsap.to(`#table-of-contents-line-highlight-${section.id}`, {
+              gsap.set(`#table-of-contents-line-highlight-${section.id}`, {
                 width: "100%",
-                duration: 0.2,
-                ease: "power2.inOut",
               });
             } else {
+              setReachedEnd(false);
               setActiveSectionId((prev) => (prev === section.id ? null : prev));
               gsap.to(`#table-of-contents-line-highlight-${section.id}`, {
                 width: 0,
@@ -110,13 +128,15 @@ const TableOfContents = forwardRef<HTMLDivElement, TableOfContentsProps>(
           },
           onLeaveBack: () => {
             if (section.id === lastSectionId) {
-              setActiveSectionId(section.id);
+              setReachedEnd(false);
+              setActiveSectionId((prev) => (prev === section.id ? null : prev));
               gsap.to(`#table-of-contents-line-highlight-${section.id}`, {
-                width: "100%",
+                width: 0,
                 duration: 0.2,
                 ease: "power2.inOut",
               });
             } else {
+              setReachedEnd(false);
               setActiveSectionId((prev) => (prev === section.id ? null : prev));
               gsap.to(`#table-of-contents-line-highlight-${section.id}`, {
                 width: 0,
@@ -126,8 +146,13 @@ const TableOfContents = forwardRef<HTMLDivElement, TableOfContentsProps>(
             }
           },
         });
+        triggers.push(trigger);
       }
-    }, [sections, activeSectionId]);
+      return () => {
+        timelines.forEach((tl) => tl.kill());
+        triggers.forEach((tr) => tr.kill());
+      };
+    }, [sections]);
 
     useLayoutEffect(() => {
       const bodyEl = bodyRef.current;
@@ -181,14 +206,21 @@ const TableOfContents = forwardRef<HTMLDivElement, TableOfContentsProps>(
                 className="hover:text-sky-700 inline-block relative"
               >
                 <span className="relative z-10">{section.title}</span>
-                {activeSectionId === section.id && (
-                  <div
-                    className="absolute left-0.5 bottom-0 h-3 bg-amber-300/60 z-0"
-                    id={`table-of-contents-line-highlight-${section.id}`}
-                  />
-                )}
                 <div
-                  className="absolute left-0 bottom-0 h-px bg-gray-400"
+                  className="absolute left-0.5 bottom-0 h-3 bg-amber-300/60 z-0 transition-opacity duration-150"
+                  id={`table-of-contents-line-highlight-${section.id}`}
+                  style={{
+                    width: 0,
+                    opacity:
+                      activeSectionId === section.id ||
+                      (reachedEnd &&
+                        section.id === sections[sections.length - 1]?.id)
+                        ? 1
+                        : 0,
+                  }}
+                />
+                <div
+                  className="absolute left-1 -bottom-1 h-px bg-gray-400"
                   id={`table-of-contents-line-${section.id}`}
                 />
               </a>

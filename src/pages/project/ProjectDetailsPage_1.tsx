@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import gsap from "gsap";
 import { TableOfContents } from "@/pages/project/TableOfContents";
 import { useRef } from "react";
+import { Footer } from "./Footer";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -67,6 +68,55 @@ function ProjectDetailsPage_1() {
       },
       "0"
     );
+
+    const tableOfContentsTimeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#about-projects-header",
+        start: "bottom bottom",
+        end: "+=100px",
+        scrub: true,
+      },
+    });
+
+    tableOfContentsTimeline.fromTo(
+      "#table-of-contents",
+      {
+        opacity: 0,
+        y: 100,
+      },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        ease: "power2.inOut",
+      },
+      "0"
+    );
+
+    // When the user scrolls to the end of the last article, we should fade in the footer
+    const footerTimeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#article-body",
+        start: "bottom bottom",
+        end: "+=300px",
+        scrub: true,
+      },
+    });
+
+    footerTimeline.fromTo(
+      "#footer",
+      {
+        autoAlpha: 0,
+        y: 100,
+      },
+      {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.5,
+        ease: "power2.inOut",
+      },
+      "0"
+    );
   }, []);
 
   if (!project) {
@@ -121,7 +171,7 @@ function ProjectDetailsPage_1() {
                 <div>
                   <Typography
                     variant="div"
-                    className="font-extralight text-md font-[Google Sans Code max-w-2xl"
+                    className="font-extralight text-md font-[Google Sans Code] max-w-2xl"
                   >
                     {project.overview}
                   </Typography>
@@ -146,13 +196,21 @@ function ProjectDetailsPage_1() {
       </div>
       <div className="w-full flex justify-center">
         <div className="w-full max-w-2xl">
-          <Typography variant="div" ref={bodyRef}>
+          <Typography
+            variant="div"
+            ref={bodyRef}
+            className="font-extralight text-md font-[Google Sans Code]"
+            id="article-body"
+          >
             {project.body}
           </Typography>
         </div>
       </div>
-      <div className="fixed right-20 top-20">
+      <div id="table-of-constents" className="fixed right-20 top-20">
         <TableOfContents bodyRef={bodyRef} />
+      </div>
+      <div id="footer" className="fixed left-1/2 -translate-1/2 bottom-4">
+        <Footer />
       </div>
     </div>
   );
