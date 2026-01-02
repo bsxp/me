@@ -1,6 +1,6 @@
 import { useGSAP } from "@gsap/react";
 import { forwardRef, useLayoutEffect, useState } from "react";
-import type { RefObject } from "react";
+import type { MouseEvent, RefObject } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -22,6 +22,21 @@ const TableOfContents = forwardRef<HTMLDivElement, TableOfContentsProps>(
     const [sections, setSections] = useState<Section[]>([]);
     const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
     const [reachedEnd, setReachedEnd] = useState(false);
+
+    const handleScrollToSection = (
+      event: MouseEvent<HTMLAnchorElement>,
+      sectionId?: string
+    ) => {
+      if (!sectionId) return;
+      event.preventDefault();
+      const target = document.getElementById(sectionId);
+      if (!target) return;
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      window.history.replaceState(null, "", `#${sectionId}`);
+    };
 
     useGSAP(() => {
       const timelines: gsap.core.Timeline[] = [];
@@ -203,6 +218,7 @@ const TableOfContents = forwardRef<HTMLDivElement, TableOfContentsProps>(
             <li key={section.id || section.title} className="relative">
               <a
                 href={section.id ? `#${section.id}` : undefined}
+                onClick={(event) => handleScrollToSection(event, section.id)}
                 className="hover:text-sky-700 inline-block relative"
               >
                 <span className="relative z-10">{section.title}</span>

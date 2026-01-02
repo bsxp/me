@@ -82,11 +82,11 @@ function ProjectDetailsPage_1() {
       "#table-of-contents",
       {
         opacity: 0,
-        y: 100,
+        x: 100,
       },
       {
         opacity: 1,
-        y: 0,
+        x: 0,
         duration: 0.5,
         ease: "power2.inOut",
       },
@@ -206,7 +206,7 @@ function ProjectDetailsPage_1() {
           </Typography>
         </div>
       </div>
-      <div id="table-of-constents" className="fixed right-20 top-20">
+      <div id="table-of-contents" className="fixed right-20 top-20">
         <TableOfContents bodyRef={bodyRef} />
       </div>
       <div id="footer" className="fixed left-1/2 -translate-1/2 bottom-4">
