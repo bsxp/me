@@ -17,6 +17,7 @@ function ProjectDetailsPage_1() {
   const project = projects.find(({ id }) => id === projectId);
   const bodyRef = useRef<HTMLDivElement>(null);
   const headerLineRef = useRef<HTMLDivElement>(null);
+  const headerLineCompleted = useRef(false);
 
   useGSAP(() => {
     const headerTimeline = gsap.timeline({
@@ -160,6 +161,9 @@ function ProjectDetailsPage_1() {
       },
 
       onComplete: () => {
+        if (headerLineCompleted.current) return;
+        headerLineCompleted.current = true;
+
         const width = headerLineRef?.current?.getBoundingClientRect().width;
 
         if (!width) return;
@@ -203,6 +207,8 @@ function ProjectDetailsPage_1() {
       },
       "0"
     );
+    
+    // Animate the full expansion across the page of the nav bar bottom border line
     headerLineTimeline2.fromTo(
       "#fixed-header-line",
       { width: "656px" },
@@ -216,7 +222,7 @@ function ProjectDetailsPage_1() {
     );
 
     // headerLineTimeline2
-  }, [headerLineRef, headerLineRef.current?.getBoundingClientRect().width]);
+  }, [headerLineRef]);
 
   if (!project) {
     return (
