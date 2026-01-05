@@ -8,6 +8,7 @@ import gsap from "gsap";
 import { TableOfContents } from "@/pages/project/TableOfContents";
 import { useRef } from "react";
 import { Footer } from "./Footer";
+import { NavBar } from "./NavBar";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,13 +16,14 @@ function ProjectDetailsPage_1() {
   const { projectId } = useParams<{ projectId: string }>();
   const project = projects.find(({ id }) => id === projectId);
   const bodyRef = useRef<HTMLDivElement>(null);
+  const headerLineRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
     const headerTimeline = gsap.timeline({
       scrollTrigger: {
         trigger: "#about-projects-header",
         start: "top top",
-        end: "+=300svh", // change pin duration as needed
+        end: "+=300px", // change pin duration as needed
         scrub: true,
         pin: true,
         anticipatePin: 0.5,
@@ -67,6 +69,32 @@ function ProjectDetailsPage_1() {
         ease: "power2.inOut",
       },
       "0"
+    );
+
+    const headerTimeline3 = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#about-projects-header",
+        start: "top top",
+        end: "+=300px", // change pin duration as needed
+        scrub: true,
+        // pin: true,
+        anticipatePin: 0.5,
+        once: true,
+      },
+    });
+
+    headerTimeline3.fromTo(
+      "#nav-bar-container",
+      { left: '5%', width: '40%' },
+      { left: '0', width: '100%', ease: "power2.inOut", duration: 0.5 },
+      "0"
+    );
+
+    headerTimeline3.fromTo(
+      "#navbar-me-label",
+      { opacity: 0 },
+      { opacity: 1 },
+      "100px"
     );
 
     const tableOfContentsTimeline = gsap.timeline({
@@ -119,6 +147,77 @@ function ProjectDetailsPage_1() {
     );
   }, []);
 
+  useGSAP(() => {
+    if (!headerLineRef.current) return;
+
+    // Expands the header line as the user scrolls down, that's it
+    const headerLineTimeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#about-projects-header",
+        start: `top+=300px 300px`,
+        end: `+=300px`, // change pin duration as needed
+        scrub: true,
+      },
+
+      onComplete: () => {
+        const width = headerLineRef?.current?.getBoundingClientRect().width;
+
+        if (!width) return;
+
+        gsap.set("#fixed-header-line", {
+          autoAlpha: 1,
+          width,
+          left: "50%",
+          transform: "translateX(-50%)",
+          top: 64,
+        });
+      },
+    });
+
+    // Animate the first expansion of the header line
+    headerLineTimeline.fromTo(
+      "#header-line",
+      { width: "100px" },
+      { width: "100%" },
+      "0"
+    );
+
+    const headerLineTimeline2 = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#about-projects-header",
+        start: `top+=600px 300px`,
+        end: `+=300px`, // change pin duration as needed
+        // scrub: true,
+        once: true,
+      },
+    });
+
+    headerLineTimeline2.set(
+      "#fixed-header-line",
+      {
+        opacity: 1,
+        position: "fixed",
+        left: "50%",
+        transform: "translateX(-50%)",
+        top: 64,
+      },
+      "0"
+    );
+    headerLineTimeline2.fromTo(
+      "#fixed-header-line",
+      { width: "656px" },
+      {
+        width: "100svw",
+        top: 64,
+        duration: 1,
+        ease: "power2.out",
+      },
+      "0"
+    );
+
+    // headerLineTimeline2
+  }, [headerLineRef, headerLineRef.current?.getBoundingClientRect().width]);
+
   if (!project) {
     return (
       <div className="w-full flex justify-center px-4 py-12">
@@ -143,10 +242,13 @@ function ProjectDetailsPage_1() {
 
   return (
     <div className="pb-[50svh]">
+      <div id="nav-bar-container" className="fixed top-0 z-999">
+        <NavBar />
+      </div>
       <div className="w-full flex justify-center">
         <div
           id="about-projects-header"
-          className="flex w-full h-svh overflow-hidden"
+          className="flex w-full h-svh overflow-hidden z-50"
         >
           <div className="flex-1 " id="title-container">
             <div className="flex flex-col justify-center items-center h-full">
@@ -154,7 +256,11 @@ function ProjectDetailsPage_1() {
                 <Typography variant="h1" className="font-medium font-[Forum]">
                   {project.title}
                 </Typography>
-                <div className="h-px w-40 bg-gray-400" />
+                <div
+                  id="header-line"
+                  className="h-px bg-gray-400"
+                  ref={headerLineRef}
+                />
                 <div className="flex">
                   <Typography
                     variant="h6"
@@ -185,11 +291,11 @@ function ProjectDetailsPage_1() {
               </div>
             </div>
           </div>
-          <div className="flex-1" id="image-container">
+          <div className="flex-1 relative" id="image-container">
             <img
               src={project.coverImage}
               alt={project.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover z-50"
             />
           </div>
         </div>
@@ -212,6 +318,13 @@ function ProjectDetailsPage_1() {
       <div id="footer" className="fixed left-1/2 -translate-1/2 bottom-4">
         <Footer />
       </div>
+      <div
+        id="fixed-header-line"
+        className="fixed top-16 h-px bg-gray-400 left-1/2 -translate-x-1/2 z-1000"
+        style={{
+          opacity: 0,
+        }}
+      />
     </div>
   );
 }
