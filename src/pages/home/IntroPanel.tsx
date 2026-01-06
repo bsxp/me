@@ -131,7 +131,8 @@ const glassMorphism = {
 };
 
 function IntroPanel() {
-  const { atLeast } = useBreakpoint();
+  const { atLeast, breakpoint } = useBreakpoint();
+  console.log(breakpoint);
   const navigate = useNavigate();
   const [blob1Radii, setBlob1Radii] =
     useState<[number, number, number, number, number, number, number, number]>(
@@ -317,8 +318,8 @@ function IntroPanel() {
         <div
           className={cn(
             "space-y-4 z-50",
-            atLeast.md ? "relative": "absolute",
-            !atLeast.md && "bottom-8",
+            atLeast.lg ? "relative": "absolute",
+            !atLeast.lg && "bottom-8",
             // !atLeast.md && `-left-[${(CIRCLE_DIAMETER + GUTTER_SIZE) / 2}px]`
             // atLeast.md && "relative": "absolute top-5/8 -translate-y-1/2",
           )}

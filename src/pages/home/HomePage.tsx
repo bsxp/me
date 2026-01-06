@@ -18,25 +18,25 @@ export function HomePage() {
     >
       <div
         id="intro-panel-wrapper"
-        className="col-span-12 md:col-span-4 row-span-30 md:row-span-12"
+        className="col-span-12 row-span-30 xl:col-span-4 xs:row-span-30 sm:row-span-27 md:row-span-10"
       >
         <IntroPanel />
       </div>
       <div
         id="projects-panel-wrapper"
-        className="col-span-12 md:col-span-4 row-span-10 md:row-span-12"
+        className="col-span-12 xl:col-span-4 row-span-10 md:row-span-12"
       >
         <ProjectsPanel />
       </div>
       <div
         id="blog-panel-wrapper"
-        className="col-span-12 md:col-span-4 row-span-10 md:row-span-7 relative"
+        className="col-span-12 xl:col-span-4 row-span-10 md:row-span-7 relative"
       >
         <BlogPanel />
       </div>
       <div
         id="about-panel-wrapper"
-        className="col-span-12 md:col-span-4 row-span-18 md:row-span-5 relative pb-4 md:pb-0"
+        className="col-span-12 xl:col-span-4 row-span-18 md:row-span-5 relative pb-4 md:pb-0"
       >
         <AboutPanel />
       </div>
