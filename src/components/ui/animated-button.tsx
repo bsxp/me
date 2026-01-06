@@ -5,7 +5,7 @@ import { ArrowUpRight, Circle } from "lucide-react";
 const CIRCLE_DIAMETER = 120;
 const GUTTER_SIZE = 16;
 
-function AnimatedButton() {
+function AnimatedButton({ handleClick }: { handleClick: () => void }) {
   // When hovering the button, the arrow shoots up and to the right at a 45° angle
 
   useGSAP(() => {
@@ -90,6 +90,7 @@ function AnimatedButton() {
       }}
       onMouseEnter={handleHoverIn}
       onMouseLeave={handleHoverOut}
+      onClick={handleClick}
     >
       <ArrowUpRight
         id="navigate-circle-arrow-offscreen"

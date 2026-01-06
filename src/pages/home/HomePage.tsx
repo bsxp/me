@@ -6,6 +6,7 @@ import { AnimatedButton } from "@/components/ui/animated-button";
 import { cn } from "@/lib/utils";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { PlusCircleButton } from "../blog/PlusCircleButton";
+import { useNavigate } from "react-router-dom";
 
 const CIRCLE_DIAMETER = 120;
 const GUTTER_SIZE = 16;
@@ -18,7 +19,7 @@ export function HomePage() {
     >
       <div
         id="intro-panel-wrapper"
-        className="col-span-12 row-span-30 xl:col-span-4 xs:row-span-30 sm:row-span-27 md:row-span-10"
+        className="col-span-12 row-span-30 xl:col-span-4 xs:row-span-30 sm:row-span-27 md:row-span-12 lg:row-span-12"
       >
         <IntroPanel />
       </div>
@@ -82,10 +83,11 @@ function ProjectsPanel() {
 function AboutPanel() {
 
   const { atLeast } = useBreakpoint();
+  const navigate = useNavigate();
 
   return (
     <div className="relative w-full h-full">
-      <AnimatedButton />
+      <AnimatedButton handleClick={() => navigate("/about")} />
       <div
         className="absolute bottom-0 right-0 bg-blue-700"
         style={{

@@ -159,16 +159,6 @@ export function AboutPage() {
     });
 
     tl
-      // .fromTo(
-      //   [...itemSelectors, "#about-me-description"],
-      //   { opacity: 1, immediateRender: false },
-      //   {
-      //     opacity: 0,
-      //     duration: 1.5, // timeline is scrubbed; duration scales to scroll distance
-      //     ease: "none",
-      //   },
-      //   0
-      // )
       .fromTo(
         [
           ...itemSelectors,

@@ -317,7 +317,7 @@ function IntroPanel() {
         />
         <div
           className={cn(
-            "space-y-4 z-50",
+            "space-y-4 z-50 flex flex-col",
             atLeast.lg ? "relative": "absolute",
             !atLeast.lg && "bottom-8",
             // !atLeast.md && `-left-[${(CIRCLE_DIAMETER + GUTTER_SIZE) / 2}px]`
