@@ -3,23 +3,40 @@ import TransitNight from "@/assets/transit-night.jpg";
 import { IntroPanel } from "./IntroPanel";
 import { BlogPanel } from "./BlogPanel";
 import { AnimatedButton } from "@/components/ui/animated-button";
+import { cn } from "@/lib/utils";
+import { useBreakpoint } from "@/hooks/use-breakpoint";
 
 const CIRCLE_DIAMETER = 120;
 const GUTTER_SIZE = 16;
 
 export function HomePage() {
   return (
-    <div id="main-grid" className="grid w-[calc(100svw-32px)] h-[calc(100svh-32px)] grid-cols-12 grid-rows-12 gap-4 m-4 min-w-[1280px]">
-      <div id="intro-panel-wrapper"className="col-span-4 row-span-12">
+    <div
+      id="main-grid"
+      className="grid w-[calc(100svw-32px)] h-[calc(100svh-32px)] grid-cols-12 grid-rows-12 gap-4 m-4 sm:min-w-[640px] 2xl:min-w-[1280px]"
+    >
+      <div
+        id="intro-panel-wrapper"
+        className="col-span-12 md:col-span-4 row-span-30 md:row-span-12"
+      >
         <IntroPanel />
       </div>
-      <div id="projects-panel-wrapper" className="col-span-4 row-span-12">
+      <div
+        id="projects-panel-wrapper"
+        className="col-span-12 md:col-span-4 row-span-10 md:row-span-12"
+      >
         <ProjectsPanel />
       </div>
-      <div id="blog-panel-wrapper" className="col-span-4 row-span-7 relative">
+      <div
+        id="blog-panel-wrapper"
+        className="col-span-12 md:col-span-4 row-span-10 md:row-span-7 relative"
+      >
         <BlogPanel />
       </div>
-      <div id="about-panel-wrapper" className="col-span-4 row-span-5 relative">
+      <div
+        id="about-panel-wrapper"
+        className="col-span-12 md:col-span-4 row-span-18 md:row-span-5 relative pb-4 md:pb-0"
+      >
         <AboutPanel />
       </div>
     </div>
@@ -27,11 +44,15 @@ export function HomePage() {
 }
 
 function ProjectsPanel() {
+  const { atLeast } = useBreakpoint();
+
   return (
     <div
-      className="bg-white w-full h-full overflow-hidden relative p-12 space-y-4"
+      className=
+        "bg-white w-full h-full overflow-hidden relative p-12 space-y-4"
+      
       style={{
-        borderRadius: `16px 16px 16px ${CIRCLE_DIAMETER / 2}px`,
+        borderRadius: atLeast.md ?`16px 16px 16px ${CIRCLE_DIAMETER / 2}px` : `16px ${CIRCLE_DIAMETER / 2}px 16px ${CIRCLE_DIAMETER / 2}px`,
       }}
     >
       <img
@@ -95,35 +116,34 @@ function AboutPanel() {
   );
 }
 
+//
+// const handleElementClick = () => {
 
-// 
-  // const handleElementClick = () => {
+//   console.log('Animating element expanding');
+//   const tl = gsap.timeline();
 
-  //   console.log('Animating element expanding');
-  //   const tl = gsap.timeline();
+//   tl.to("#main-grid", {
+//     // top: '-16px',
+//     marginTop: 0,
+//     marginBottom: 32,
+//     duration: 0.5,
+//     ease: "power2.inOut",
+//   }, "0")
 
-  //   tl.to("#main-grid", {
-  //     // top: '-16px',
-  //     marginTop: 0,
-  //     marginBottom: 32,
-  //     duration: 0.5,
-  //     ease: "power2.inOut",
-  //   }, "0")
+//   tl.to(chipRef.current, {
+//     borderRadius: `0 0 16px 16px`,
+//     duration: 0.25,
+//     ease: "power2.inOut",
+//   }, "0")
 
-  //   tl.to(chipRef.current, {
-  //     borderRadius: `0 0 16px 16px`,
-  //     duration: 0.25,
-  //     ease: "power2.inOut",
-  //   }, "0")
+//   tl.to(chipRef.current, {
+//     top: '-32px',
+//     left: "50%",
+//     transform: "translateX(-50%)",
+//     width: '100svw',
+//     height: 140,
+//     duration: 0.5,
+//     ease: "power2.inOut",
+//   }, "0")
 
-  //   tl.to(chipRef.current, {
-  //     top: '-32px',
-  //     left: "50%",
-  //     transform: "translateX(-50%)",
-  //     width: '100svw',
-  //     height: 140,
-  //     duration: 0.5,
-  //     ease: "power2.inOut",
-  //   }, "0")
-    
-  // }
+// }

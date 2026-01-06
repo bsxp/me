@@ -6,6 +6,7 @@ import NoiseBackground from "@/assets/noise.png";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
+import { useBreakpoint } from "@/hooks/use-breakpoint";
 
 const CIRCLE_DIAMETER = 120;
 const GUTTER_SIZE = 16;
@@ -130,7 +131,7 @@ const glassMorphism = {
 };
 
 function IntroPanel() {
-
+  const { atLeast } = useBreakpoint();
   const navigate = useNavigate();
   const [blob1Radii, setBlob1Radii] =
     useState<[number, number, number, number, number, number, number, number]>(
@@ -232,11 +233,11 @@ function IntroPanel() {
           top: `${CIRCLE_DIAMETER + GUTTER_SIZE}px`,
           height: `calc(100% - (${CIRCLE_DIAMETER + GUTTER_SIZE}px))`,
           width: `${CIRCLE_DIAMETER + GUTTER_SIZE}px`,
-          borderRadius: `${CIRCLE_DIAMETER / 2}px 0px 0px ${
+          borderRadius: atLeast.md ?`${CIRCLE_DIAMETER / 2}px 0px 0px ${
             CIRCLE_DIAMETER / 2
           }px / ${CIRCLE_DIAMETER / 2}px 16px ${CIRCLE_DIAMETER / 2}px ${
             CIRCLE_DIAMETER / 2
-          }px`,
+          }px` :`${CIRCLE_DIAMETER / 2}px 0px 0px 16px / ${CIRCLE_DIAMETER / 2}px 16px 16px`,
           ...glassMorphism,
         }}
       >
@@ -313,21 +314,45 @@ function IntroPanel() {
             )`,
           }}
         />
-        <div className="space-y-4 z-50">
+        <div
+          className={cn(
+            "space-y-4 z-50",
+            atLeast.md ? "relative": "absolute",
+            !atLeast.md && "top-2/3 -translate-y-1/2",
+            // !atLeast.md && `-left-[${(CIRCLE_DIAMETER + GUTTER_SIZE) / 2}px]`
+            // atLeast.md && "relative": "absolute top-5/8 -translate-y-1/2",
+          )}
+          style={{
+            left: -(CIRCLE_DIAMETER + GUTTER_SIZE) + 16,
+            right: 16,
+          }}
+        >
           <Typography variant="eyebrow" className="text-blue-600">
             CHRIS PORTER
           </Typography>
-          <Typography variant="h1" className="font-bold text-black">
+          <Typography
+            variant={atLeast.md ? "h1" : "h3"}
+            className="font-bold text-black"
+          >
             SOFTWARE ENGINEER & URBANIST
           </Typography>
           <Typography variant="caption">
             I'm on a mission to make cities more human-centric
           </Typography>
-          <div className="flex space-x-4">
-            <Button variant="defaultPrimary" className="rounded-full bg-[#060610]" size="lg">
+          <div className="flex space-x-12 justify-center md:justify-start">
+            <Button
+              variant="defaultPrimary"
+              className="rounded-full bg-[#060610]"
+              size="lg"
+            >
               Contact me
             </Button>
-            <Button variant="ghost" className="rounded-full" size="lg" onClick={() => navigate("/about")}>
+            <Button
+              variant="ghost"
+              className="rounded-full"
+              size="lg"
+              onClick={() => navigate("/about")}
+            >
               About me <ArrowRight className="size-4" />
             </Button>
           </div>

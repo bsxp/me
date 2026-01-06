@@ -7,12 +7,14 @@ import { CIRCLE_DIAMETER } from "../blog/config";
 import { BlogCategoriesScroller } from "../blog/BlogCategoriesScroller";
 import { PlusCircleButton } from "../blog/PlusCircleButton";
 import { useNavigate } from "react-router-dom";
+import { useBreakpoint } from "@/hooks/use-breakpoint";
 
 gsap.registerPlugin(ScrollTrigger);
 
 function BlogPanel() {
   const navigate = useNavigate();
   const tl = gsap.timeline();
+  const { atLeast } = useBreakpoint();
   const [expanded, setExpanded] = useState<boolean>(false);
 
   const handleToggleBlogPanel = () => {
@@ -152,7 +154,7 @@ function BlogPanel() {
       id="blog-panel"
       className="absolute top-0 right-0 h-full w-full p-12 bg-[#060610] text-white border border-white/10"
       style={{
-        borderRadius: `16px ${CIRCLE_DIAMETER / 2}px 16px 16px`,
+        borderRadius: atLeast.md ? `16px ${CIRCLE_DIAMETER / 2}px 16px 16px` : `${CIRCLE_DIAMETER / 2}px 16px ${CIRCLE_DIAMETER / 2}px 16px`,
       }}
       // onMouseMove={handleMouseMove}
     >

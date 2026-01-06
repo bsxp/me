@@ -12,12 +12,12 @@ function NavBar() {
         variant="ghost"
 
         size="lg"
-        onClick={() => navigate("/about")}
+        onClick={() => navigate("/about#projects")}
       >
         <ArrowLeft className="size-4" />
         Back to projects
       </Button>
-      <Button variant="ghost" size="lg">
+      <Button variant="ghost" size="lg" onClick={() => navigate("/")}>
         <Typography variant="span" id="navbar-me-label">
           Chris Porter
         </Typography>
