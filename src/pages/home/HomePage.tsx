@@ -5,6 +5,7 @@ import { BlogPanel } from "./BlogPanel";
 import { AnimatedButton } from "@/components/ui/animated-button";
 import { cn } from "@/lib/utils";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
+import { PlusCircleButton } from "../blog/PlusCircleButton";
 
 const CIRCLE_DIAMETER = 120;
 const GUTTER_SIZE = 16;
@@ -46,13 +47,15 @@ export function HomePage() {
 function ProjectsPanel() {
   const { atLeast } = useBreakpoint();
 
+  const handleNavigateToProjects = () => {};
+
   return (
     <div
-      className=
-        "bg-white w-full h-full overflow-hidden relative p-12 space-y-4"
-      
+      className="bg-white w-full h-full overflow-hidden relative p-12 space-y-4 flex"
       style={{
-        borderRadius: atLeast.md ?`16px 16px 16px ${CIRCLE_DIAMETER / 2}px` : `16px ${CIRCLE_DIAMETER / 2}px 16px ${CIRCLE_DIAMETER / 2}px`,
+        borderRadius: atLeast.md
+          ? `16px 16px 16px ${CIRCLE_DIAMETER / 2}px`
+          : `16px ${CIRCLE_DIAMETER / 2}px 16px ${CIRCLE_DIAMETER / 2}px`,
       }}
     >
       <img
@@ -61,14 +64,25 @@ function ProjectsPanel() {
         src={TransitNight}
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full object-cover z-10 brightness-75"
       />
-      <Typography className="z-50 text-white relative" variant="h2">
+      <Typography
+        className="z-50 text-white relative mb-0"
+        variant={atLeast.md ? "h2" : "h3"}
+      >
         PROJECTS
       </Typography>
+      <PlusCircleButton
+        className={cn("mr-12", atLeast.md && "top-18")}
+        handleClick={handleNavigateToProjects}
+        expanded={false}
+      />
     </div>
   );
 }
 
 function AboutPanel() {
+
+  const { atLeast } = useBreakpoint();
+
   return (
     <div className="relative w-full h-full">
       <AnimatedButton />
@@ -110,40 +124,8 @@ function AboutPanel() {
           borderRadius: `16px 16px ${CIRCLE_DIAMETER / 2}px 0`,
         }}
       >
-        <Typography variant="h2">ABOUT ME</Typography>
+        <Typography variant={atLeast.md ? "h2" : "h3"}>ABOUT ME</Typography>
       </div>
     </div>
   );
 }
-
-//
-// const handleElementClick = () => {
-
-//   console.log('Animating element expanding');
-//   const tl = gsap.timeline();
-
-//   tl.to("#main-grid", {
-//     // top: '-16px',
-//     marginTop: 0,
-//     marginBottom: 32,
-//     duration: 0.5,
-//     ease: "power2.inOut",
-//   }, "0")
-
-//   tl.to(chipRef.current, {
-//     borderRadius: `0 0 16px 16px`,
-//     duration: 0.25,
-//     ease: "power2.inOut",
-//   }, "0")
-
-//   tl.to(chipRef.current, {
-//     top: '-32px',
-//     left: "50%",
-//     transform: "translateX(-50%)",
-//     width: '100svw',
-//     height: 140,
-//     duration: 0.5,
-//     ease: "power2.inOut",
-//   }, "0")
-
-// }

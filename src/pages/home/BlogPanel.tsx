@@ -162,7 +162,7 @@ function BlogPanel() {
         <Typography
           id="blog-label"
           className="z-50 absolute top-0 left-0"
-          variant="h2"
+          variant={atLeast.md ? "h2" : "h3"}
         >
           BLOG
         </Typography>

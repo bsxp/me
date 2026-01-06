@@ -4,14 +4,16 @@ import { Minus } from "lucide-react";
 function PlusCircleButton({
   handleClick,
   expanded,
+  className=""
 }: {
   handleClick: () => void;
   expanded: boolean;
+  className?: string;
 }) {
   return (
     <div
       id="plus-circle-button"
-      className="cursor-pointer rounded-full bg-transparent hover:bg-white/10 p-2 group absolute top-1/2 -translate-y-1/2 right-0 z-50"
+      className={cn("cursor-pointer rounded-full bg-transparent hover:bg-white/10 p-2 group absolute top-1/2 -translate-y-1/2 right-0 z-50", className)}
       onClick={handleClick}
     >
       <div className="relative size-8">

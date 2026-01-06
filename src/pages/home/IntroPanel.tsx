@@ -233,11 +233,11 @@ function IntroPanel() {
           top: `${CIRCLE_DIAMETER + GUTTER_SIZE}px`,
           height: `calc(100% - (${CIRCLE_DIAMETER + GUTTER_SIZE}px))`,
           width: `${CIRCLE_DIAMETER + GUTTER_SIZE}px`,
-          borderRadius: atLeast.md ?`${CIRCLE_DIAMETER / 2}px 0px 0px ${
+          borderRadius:  `${CIRCLE_DIAMETER / 2}px 0px 0px ${
             CIRCLE_DIAMETER / 2
           }px / ${CIRCLE_DIAMETER / 2}px 16px ${CIRCLE_DIAMETER / 2}px ${
             CIRCLE_DIAMETER / 2
-          }px` :`${CIRCLE_DIAMETER / 2}px 0px 0px 16px / ${CIRCLE_DIAMETER / 2}px 16px 16px`,
+          }px`,
           ...glassMorphism,
         }}
       >
@@ -318,13 +318,13 @@ function IntroPanel() {
           className={cn(
             "space-y-4 z-50",
             atLeast.md ? "relative": "absolute",
-            !atLeast.md && "top-2/3 -translate-y-1/2",
+            !atLeast.md && "bottom-8",
             // !atLeast.md && `-left-[${(CIRCLE_DIAMETER + GUTTER_SIZE) / 2}px]`
             // atLeast.md && "relative": "absolute top-5/8 -translate-y-1/2",
           )}
           style={{
-            left: -(CIRCLE_DIAMETER + GUTTER_SIZE) + 16,
-            right: 16,
+            left: -(CIRCLE_DIAMETER + GUTTER_SIZE) + 32,
+            right: 32,
           }}
         >
           <Typography variant="eyebrow" className="text-blue-600">
@@ -339,7 +339,7 @@ function IntroPanel() {
           <Typography variant="caption">
             I'm on a mission to make cities more human-centric
           </Typography>
-          <div className="flex space-x-12 justify-center md:justify-start">
+          <div className="flex space-x-12 justify-between md:justify-start">
             <Button
               variant="defaultPrimary"
               className="rounded-full bg-[#060610]"
