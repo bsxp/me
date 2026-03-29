@@ -16,12 +16,12 @@ const FEATURED = [
     tags: ["Urban Data", "Civic Tech", "Data Visualization", "Mapping"],
   },
   {
-    id: "foundra",
-    tags: ["NLP", "Web Scraping", "Urban Data", "AI"],
+    id: "labbook",
+    tags: ["Science", "E-Notebooks", "Cryptography", "SaaS"],
   },
   {
-    id: "rater",
-    tags: ["Insurance", "Drag & Drop", "Data Management", "Versioning"],
+    id: "foundry",
+    tags: ["Startups", "CRM", "Accounting", "Toolkit"],
   },
   {
     id: "playbook",

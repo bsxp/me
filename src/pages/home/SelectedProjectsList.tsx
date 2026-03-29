@@ -4,8 +4,8 @@ import { projects } from "@/data/projects";
 
 const SELECTED_PROJECT_IDS = [
   "hearth",
-  "foundra",
-  "rater",
+  "labbook",
+  "foundry",
   "playbook",
   "Lytic",
   "lumon",

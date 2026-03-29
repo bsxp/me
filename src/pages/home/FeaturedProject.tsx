@@ -117,8 +117,8 @@ export function FeaturedProject({
           </div>
         </div>
 
-        {/* Preview image */}
-        {project.coverImage && (
+        {/* Preview media */}
+        {(project.coverImage || project.coverVideo) && (
           <div className="mt-12">
             <Link
               to={`/projects/${project.id}`}
@@ -128,12 +128,24 @@ export function FeaturedProject({
                 className="w-full overflow-hidden"
                 style={{ borderRadius: 12 }}
               >
-                <img
-                  src={project.coverImage}
-                  alt={project.title}
-                  className="w-full h-auto object-cover"
-                  style={{ maxHeight: 500 }}
-                />
+                {project.coverVideo ? (
+                  <video
+                    src={project.coverVideo}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-auto object-cover pointer-events-none"
+                    style={{ maxHeight: 500 }}
+                  />
+                ) : (
+                  <img
+                    src={project.coverImage}
+                    alt={project.title}
+                    className="w-full h-auto object-cover"
+                    style={{ maxHeight: 500 }}
+                  />
+                )}
               </div>
             </Link>
           </div>

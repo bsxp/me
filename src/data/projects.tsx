@@ -1,4 +1,9 @@
-import HearthCover from "@/assets/projects/hearth/hearth-cover.jpg";
+import HearthCover from "@/assets/projects/hearth/hearth-cover.png";
+import FoundryCover from "@/assets/projects/foundry/foundry-cover.png";
+import LabbookCover from "@/assets/projects/labbook/labbook-cover.png";
+import PlaybookCover from "@/assets/projects/playbook/playbook-cover.png";
+import RaterCover from "@/assets/projects/rater/rater-cover.jpeg";
+import LumonVideo from "@/assets/projects/lumon/lumon-cover.mov";
 import { Typography } from "@/components/ui/typography";
 
 type Project = {
@@ -7,6 +12,7 @@ type Project = {
   description: string;
   overview: string | React.ReactNode;
   coverImage: string;
+  coverVideo?: string;
   body: string | React.ReactNode;
   href: string;
 };
@@ -150,10 +156,19 @@ const projects: Project[] = [
     href: "",
   },
   {
-    id: "foundra",
-    title: "Foundra",
-    description: "Using natural language to scrape urban data",
-    coverImage: "",
+    id: "labbook",
+    title: "Labbook.io",
+    description: "The electronic lab notebook built for how scientists actually work",
+    coverImage: LabbookCover,
+    overview: "",
+    body: "",
+    href: "",
+  },
+  {
+    id: "foundry",
+    title: "Foundry",
+    description: "A complete toolkit for helping founders go from 0 to 1",
+    coverImage: FoundryCover,
 
     overview: "",
     body: "",
@@ -174,6 +189,7 @@ const projects: Project[] = [
     title: "Lumon terminal pro",
     description: "Finding the scary numbers",
     coverImage: "",
+    coverVideo: LumonVideo,
     overview: "",
     body: "",
     href: "",
@@ -182,7 +198,7 @@ const projects: Project[] = [
     id: "playbook",
     title: "Playbook",
     description: "Simplifying the process of organizing live events",
-    coverImage: "",
+    coverImage: PlaybookCover,
     overview: "",
     body: "",
     href: "",
@@ -192,7 +208,7 @@ const projects: Project[] = [
     title: "Rater",
     description:
       "Drag-and-drop insurance rater builder, version control, data management, and more",
-    coverImage: "",
+    coverImage: RaterCover,
 
     overview: "",
     body: "",

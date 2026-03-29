@@ -15,7 +15,7 @@ export const FAKE_ARTICLES = [
       "Exploring how distributed teams are reshaping the modern workplace. From async communication to virtual reality meetings, discover what's next.",
     tags: ["Work", "Technology", "Culture"],
     date: new Date("2025-11-28"),
-    projectId: "foundra",
+    projectId: "foundry",
   },
   {
     id: 3,
@@ -96,7 +96,7 @@ export const FAKE_ARTICLES = [
       "Practical strategies for handling growing data loads while maintaining performance and reliability.",
     tags: ["Databases", "Infrastructure", "Engineering"],
     date: new Date("2025-10-15"),
-    projectId: "foundra",
+    projectId: "foundry",
   },
   {
     id: 12,
