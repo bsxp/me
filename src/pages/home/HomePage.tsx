@@ -1,11 +1,139 @@
 import { Link } from "react-router-dom";
+import { useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
 import { SelectedProjectsList } from "./SelectedProjectsList";
+import { FeaturedProject } from "./FeaturedProject";
+import { projects } from "@/data/projects";
+
+gsap.registerPlugin(ScrollTrigger, useGSAP);
+
+const FEATURED = [
+  {
+    id: "hearth",
+    tags: ["Urban Data", "Civic Tech", "Data Visualization", "Mapping"],
+  },
+  {
+    id: "foundra",
+    tags: ["NLP", "Web Scraping", "Urban Data", "AI"],
+  },
+  {
+    id: "rater",
+    tags: ["Insurance", "Drag & Drop", "Data Management", "Versioning"],
+  },
+  {
+    id: "playbook",
+    tags: ["Events", "Coordination", "Mobile", "Logistics"],
+  },
+  {
+    id: "Lytic",
+    tags: ["LLM Analytics", "Observability", "Dashboards", "AI"],
+  },
+  {
+    id: "lumon",
+    tags: ["Terminal", "Retro UI", "Easter Egg", "Severance"],
+  },
+];
+
+const featuredProjects = FEATURED.map((f) => ({
+  ...f,
+  project: projects.find((p) => p.id === f.id)!,
+}));
 
 export function HomePage() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      const transitions = featuredProjects.length - 1; // 5 transitions between 6 panels
+      const scrollPerTransition = window.innerHeight; // 100vh per transition
+      const totalPinScroll = transitions * scrollPerTransition;
+
+      // Pin the intro so featured wrapper slides up over it
+      ScrollTrigger.create({
+        trigger: "#home-intro",
+        start: "top top",
+        end: "bottom top",
+        pin: true,
+        pinSpacing: false,
+      });
+
+      // Pin the entire featured wrapper for the full duration
+      const wrapperPin = ScrollTrigger.create({
+        trigger: "#featured-wrapper",
+        start: "top top",
+        end: `+=${totalPinScroll}`,
+        pin: true,
+        pinSpacing: true,
+      });
+
+      // Position all panels except the first off-screen
+      // Direction pattern: right, down, right, down, right
+      // i=1: right, i=2: down, i=3: right, i=4: down, i=5: right
+      featuredProjects.forEach((_, i) => {
+        if (i === 0) return;
+        const fromRight = i % 2 === 1;
+        gsap.set(`#featured-${i}`, {
+          xPercent: fromRight ? 100 : 0,
+          yPercent: fromRight ? 0 : 100,
+        });
+      });
+
+      // Animate each panel in during its scroll segment
+      featuredProjects.forEach((_, i) => {
+        if (i === 0) return;
+
+        const segmentStart = (i - 1) * scrollPerTransition;
+        const segmentEnd = i * scrollPerTransition;
+        const pinStart = wrapperPin.start;
+
+        gsap.to(`#featured-${i}`, {
+          xPercent: 0,
+          yPercent: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: "#featured-wrapper",
+            start: pinStart + segmentStart,
+            end: pinStart + segmentEnd,
+            scrub: true,
+          },
+        });
+      });
+    },
+    { scope: containerRef }
+  );
+
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#fafafa" }}>
-      <Nav />
-      <Hero />
+    <div ref={containerRef} className="overflow-x-hidden">
+      {/* Intro section — gets pinned */}
+      <div
+        id="home-intro"
+        className="min-h-screen relative"
+        style={{ backgroundColor: "#fafafa" }}
+      >
+        <Nav />
+        <Hero />
+      </div>
+
+      {/* Featured projects wrapper — all panels stacked, pinned as a group */}
+      <div id="featured-wrapper" className="relative z-10" style={{ height: "100vh" }}>
+        {featuredProjects.map((f, i) => (
+          <div
+            key={f.id}
+            id={`featured-${i}`}
+            className="absolute inset-0 w-full h-full overflow-auto"
+            style={{ zIndex: i }}
+          >
+            <FeaturedProject
+              project={f.project}
+              index={i}
+              total={featuredProjects.length}
+              tags={f.tags}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
