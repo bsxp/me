@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import type { Project } from "@/data/projects";
+import { BorderLinesOverlay } from "./Overlays";
 
 export function FeaturedProject({
   project,
@@ -7,12 +8,14 @@ export function FeaturedProject({
   total,
   tags,
   bgColor = "#0a0a0a",
+  overlay,
 }: {
   project: Project;
   index: number;
   total: number;
   tags: string[];
   bgColor?: string;
+  overlay?: React.ReactNode;
 }) {
   const number = String(index + 1).padStart(2, "0");
   const totalStr = String(total).padStart(2, "0");
@@ -22,9 +25,17 @@ export function FeaturedProject({
       className="w-full h-screen relative"
       style={{ backgroundColor: bgColor }}
     >
-      <div className="max-w-[1400px] mx-auto px-8 sm:px-12 pt-12 pb-8 flex flex-col h-screen overflow-hidden">
-        {/* Counter */}
-        <div className="mb-10">
+      {/* Border + crosshairs on every panel */}
+      <BorderLinesOverlay />
+      {overlay}
+
+      {/* Content aligned inside the border frame (64px top/bottom, 32px sides + 16px inner padding) */}
+      <div
+        className="absolute flex flex-col overflow-hidden z-10"
+        style={{ top: 64, bottom: 64, left: 32, right: 32, padding: "20px 24px" }}
+      >
+        {/* Counter — top right */}
+        <div className="flex justify-start mb-8">
           <span
             className="font-[Inter] text-sm font-normal"
             style={{ color: "#fff" }}
@@ -35,7 +46,7 @@ export function FeaturedProject({
         </div>
 
         {/* Main content area */}
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 flex-1 min-h-0">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 flex-1 min-h-0">
           {/* Left — title + meta */}
           <div className="flex-1 min-w-0 flex flex-col">
             <Link
@@ -55,7 +66,7 @@ export function FeaturedProject({
             </Link>
 
             {/* Project / Role / Date row */}
-            <div className="mt-auto pt-16">
+            <div className="mt-auto pt-12">
               <div
                 className="grid grid-cols-3 gap-8 pb-3 mb-3"
                 style={{ borderBottom: "1px solid #333" }}
@@ -121,7 +132,7 @@ export function FeaturedProject({
 
         {/* Preview media */}
         {(project.coverImage || project.coverVideo) && (
-          <div className="mt-6 min-h-0 flex-1">
+          <div className="mt-4 min-h-0 flex-1">
             <Link
               to={`/projects/${project.id}`}
               className="block no-underline h-full"

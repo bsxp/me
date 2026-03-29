@@ -7,6 +7,7 @@ import { SelectedProjectsList } from "./SelectedProjectsList";
 import { FeaturedProject } from "./FeaturedProject";
 import { ProjectsShowcase } from "./ProjectsShowcase";
 import { projects } from "@/data/projects";
+import AustinSvg from "@/assets/austin-infrastructure.svg";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -111,11 +112,34 @@ export function HomePage() {
       {/* Intro section — gets pinned */}
       <div
         id="home-intro"
-        className="min-h-screen relative"
+        className="min-h-screen relative overflow-hidden"
         style={{ backgroundColor: "#fafafa" }}
       >
-        <Nav />
-        <Hero />
+        {/* Austin infrastructure SVG underlay — fades out on right */}
+        <div
+          className="absolute inset-0 pointer-events-none overflow-hidden"
+          style={{
+            maskImage: "linear-gradient(to right, black 40%, transparent 70%)",
+            WebkitMaskImage: "linear-gradient(to right, black 40%, transparent 70%)",
+          }}
+        >
+          <img
+            src={AustinSvg}
+            alt=""
+            className="absolute"
+            style={{
+              opacity: 0.15,
+              width: "120%",
+              height: "120%",
+              top: "-10%",
+              left: "-15%", // adjust to pan horizontally
+            }}
+          />
+        </div>
+        <div className="relative z-10">
+          <Nav />
+          <Hero />
+        </div>
       </div>
 
       {/* Featured projects wrapper — all panels stacked, pinned as a group */}
@@ -213,7 +237,7 @@ function Hero() {
                 color: "#1a1a1a",
               }}
             >
-              I'm Chris
+              Chris
               <br />
               Porter.
             </h1>
@@ -226,8 +250,7 @@ function Hero() {
                 maxWidth: 600,
               }}
             >
-              I build software with purpose and meticulous attention to detail.
-              Available for work.
+              Urbanist <span className="text-blue-400">x</span> Technologist <span className="text-blue-400">x</span> Scientist
             </p>
           </div>
 
