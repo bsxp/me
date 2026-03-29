@@ -7,7 +7,7 @@ const SELECTED_PROJECT_IDS = [
   "labbook",
   "foundry",
   "playbook",
-  "Lytic",
+  "OneFeed",
   "lumon",
 ];
 

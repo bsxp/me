@@ -4,6 +4,7 @@ import LabbookCover from "@/assets/projects/labbook/labbook-cover.png";
 import PlaybookCover from "@/assets/projects/playbook/playbook-cover.png";
 import RaterCover from "@/assets/projects/rater/rater-cover.jpeg";
 import LumonVideo from "@/assets/projects/lumon/lumon-cover.mov";
+import OneFeedVideo from "@/assets/projects/onefeed/onefeed-cover.mov";
 import { Typography } from "@/components/ui/typography";
 
 type Project = {
@@ -220,6 +221,7 @@ const projects: Project[] = [
     description:
       "A unified feed of all notifications that a developer might need",
     coverImage: "",
+    coverVideo: OneFeedVideo,
 
     overview: "",
     body: "",

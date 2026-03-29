@@ -135,7 +135,7 @@ export function FeaturedProject({
                     loop
                     muted
                     playsInline
-                    className="w-full h-auto object-cover pointer-events-none"
+                    className="w-full h-auto object-contain pointer-events-none"
                     style={{ maxHeight: 500 }}
                   />
                 ) : (

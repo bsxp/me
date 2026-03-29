@@ -28,8 +28,8 @@ const FEATURED = [
     tags: ["Events", "Coordination", "Mobile", "Logistics"],
   },
   {
-    id: "Lytic",
-    tags: ["LLM Analytics", "Observability", "Dashboards", "AI"],
+    id: "OneFeed",
+    tags: ["Developer Tools", "Notifications", "Integrations", "Productivity"],
   },
   {
     id: "lumon",
