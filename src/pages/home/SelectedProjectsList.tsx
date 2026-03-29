@@ -11,8 +11,8 @@ const SELECTED_PROJECT_IDS = [
   "lumon",
 ];
 
-const selectedProjects = projects.filter((p) =>
-  SELECTED_PROJECT_IDS.includes(p.id)
+const selectedProjects = SELECTED_PROJECT_IDS.map(
+  (id) => projects.find((p) => p.id === id)!
 );
 
 export function SelectedProjectsList() {

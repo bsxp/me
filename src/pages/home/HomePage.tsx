@@ -14,26 +14,32 @@ const FEATURED = [
   {
     id: "hearth",
     tags: ["Urban Data", "Civic Tech", "Data Visualization", "Mapping"],
+    bgColor: "#0a0a0a",
   },
   {
     id: "labbook",
     tags: ["Science", "E-Notebooks", "Cryptography", "SaaS"],
+    bgColor: "#1a1a2e",
   },
   {
     id: "foundry",
     tags: ["Startups", "CRM", "Accounting", "Toolkit"],
+    bgColor: "#1c1c1c",
   },
   {
     id: "playbook",
     tags: ["Events", "Coordination", "Mobile", "Logistics"],
+    bgColor: "#141420",
   },
   {
     id: "OneFeed",
     tags: ["Developer Tools", "Notifications", "Integrations", "Productivity"],
+    bgColor: "#181818",
   },
   {
     id: "lumon",
     tags: ["Terminal", "Retro UI", "Easter Egg", "Severance"],
+    bgColor: "#0d1117",
   },
 ];
 
@@ -48,23 +54,13 @@ export function HomePage() {
   useGSAP(
     () => {
       const transitions = featuredProjects.length - 1; // 5 transitions between 6 panels
-      const scrollPerTransition = window.innerHeight; // 100vh per transition
-      const totalPinScroll = transitions * scrollPerTransition;
+      const totalPinScroll = transitions * window.innerHeight;
 
       // Pin the intro so featured wrapper slides up over it
       ScrollTrigger.create({
         trigger: "#home-intro",
         start: "top top",
         end: "bottom top",
-        pin: true,
-        pinSpacing: false,
-      });
-
-      // Pin the featured wrapper with NO pin spacing — we use a manual spacer
-      const wrapperPin = ScrollTrigger.create({
-        trigger: "#featured-wrapper",
-        start: "top top",
-        end: `+=${totalPinScroll}`,
         pin: true,
         pinSpacing: false,
       });
@@ -79,25 +75,32 @@ export function HomePage() {
         });
       });
 
-      // Animate each panel in during its scroll segment
+      // Single timeline for all transitions — no gaps, continuous scrub
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: "#featured-wrapper",
+          start: "top top",
+          end: `+=${totalPinScroll}`,
+          pin: true,
+          pinSpacing: false,
+          scrub: 0.5, // slight smoothing for buttery feel
+        },
+      });
+
+      // Add each transition sequentially to the timeline
       featuredProjects.forEach((_, i) => {
         if (i === 0) return;
 
-        const segmentStart = (i - 1) * scrollPerTransition;
-        const segmentEnd = i * scrollPerTransition;
-        const pinStart = wrapperPin.start;
-
-        gsap.to(`#featured-${i}`, {
-          xPercent: 0,
-          yPercent: 0,
-          ease: "none",
-          scrollTrigger: {
-            trigger: "#featured-wrapper",
-            start: pinStart + segmentStart,
-            end: pinStart + segmentEnd,
-            scrub: true,
+        tl.to(
+          `#featured-${i}`,
+          {
+            xPercent: 0,
+            yPercent: 0,
+            duration: 1,
+            ease: "none",
           },
-        });
+          (i - 1) // position each transition sequentially
+        );
       });
     },
     { scope: containerRef }
@@ -121,7 +124,7 @@ export function HomePage() {
           <div
             key={f.id}
             id={`featured-${i}`}
-            className="absolute inset-0 w-full h-full overflow-auto"
+            className="absolute inset-0 w-full h-full overflow-hidden"
             style={{ zIndex: i }}
           >
             <FeaturedProject
@@ -129,6 +132,7 @@ export function HomePage() {
               index={i}
               total={featuredProjects.length}
               tags={f.tags}
+              bgColor={f.bgColor}
             />
           </div>
         ))}

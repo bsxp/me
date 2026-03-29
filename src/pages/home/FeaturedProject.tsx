@@ -6,21 +6,23 @@ export function FeaturedProject({
   index,
   total,
   tags,
+  bgColor = "#0a0a0a",
 }: {
   project: Project;
   index: number;
   total: number;
   tags: string[];
+  bgColor?: string;
 }) {
   const number = String(index + 1).padStart(2, "0");
   const totalStr = String(total).padStart(2, "0");
 
   return (
     <div
-      className="w-full min-h-screen relative"
-      style={{ backgroundColor: "#0a0a0a" }}
+      className="w-full h-screen relative"
+      style={{ backgroundColor: bgColor }}
     >
-      <div className="max-w-[1400px] mx-auto px-8 sm:px-12 pt-20 pb-16 flex flex-col min-h-screen">
+      <div className="max-w-[1400px] mx-auto px-8 sm:px-12 pt-12 pb-8 flex flex-col h-screen overflow-hidden">
         {/* Counter */}
         <div className="mb-10">
           <span
@@ -33,7 +35,7 @@ export function FeaturedProject({
         </div>
 
         {/* Main content area */}
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 flex-1">
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 flex-1 min-h-0">
           {/* Left — title + meta */}
           <div className="flex-1 min-w-0 flex flex-col">
             <Link
@@ -119,14 +121,14 @@ export function FeaturedProject({
 
         {/* Preview media */}
         {(project.coverImage || project.coverVideo) && (
-          <div className="mt-12">
+          <div className="mt-6 min-h-0 flex-1">
             <Link
               to={`/projects/${project.id}`}
-              className="block no-underline"
+              className="block no-underline h-full"
             >
               <div
-                className="w-full overflow-hidden"
-                style={{ borderRadius: 12 }}
+                className="w-full h-full overflow-hidden flex items-center justify-center"
+                style={{ borderRadius: 4 }}
               >
                 {project.coverVideo ? (
                   <video
@@ -135,15 +137,15 @@ export function FeaturedProject({
                     loop
                     muted
                     playsInline
-                    className="w-full h-auto object-contain pointer-events-none"
-                    style={{ maxHeight: 500 }}
+                    className="max-w-full max-h-full object-contain pointer-events-none"
+                    style={{ borderRadius: 4 }}
                   />
                 ) : (
                   <img
                     src={project.coverImage}
                     alt={project.title}
-                    className="w-full h-auto object-cover"
-                    style={{ maxHeight: 500 }}
+                    className="max-w-full max-h-full object-contain"
+                    style={{ borderRadius: 4 }}
                   />
                 )}
               </div>
