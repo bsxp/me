@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { SelectedProjectsList } from "./SelectedProjectsList";
 import { FeaturedProject } from "./FeaturedProject";
+import { ProjectsShowcase } from "./ProjectsShowcase";
 import { projects } from "@/data/projects";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -59,18 +60,16 @@ export function HomePage() {
         pinSpacing: false,
       });
 
-      // Pin the entire featured wrapper for the full duration
+      // Pin the featured wrapper with NO pin spacing — we use a manual spacer
       const wrapperPin = ScrollTrigger.create({
         trigger: "#featured-wrapper",
         start: "top top",
         end: `+=${totalPinScroll}`,
         pin: true,
-        pinSpacing: true,
+        pinSpacing: false,
       });
 
       // Position all panels except the first off-screen
-      // Direction pattern: right, down, right, down, right
-      // i=1: right, i=2: down, i=3: right, i=4: down, i=5: right
       featuredProjects.forEach((_, i) => {
         if (i === 0) return;
         const fromRight = i % 2 === 1;
@@ -105,7 +104,7 @@ export function HomePage() {
   );
 
   return (
-    <div ref={containerRef} className="overflow-x-hidden">
+    <div ref={containerRef} className="overflow-x-hidden" style={{ backgroundColor: "#0a0a0a" }}>
       {/* Intro section — gets pinned */}
       <div
         id="home-intro"
@@ -117,7 +116,7 @@ export function HomePage() {
       </div>
 
       {/* Featured projects wrapper — all panels stacked, pinned as a group */}
-      <div id="featured-wrapper" className="relative z-10" style={{ height: "100vh" }}>
+      <div id="featured-wrapper" className="relative z-10" style={{ height: "100vh", backgroundColor: "#0a0a0a" }}>
         {featuredProjects.map((f, i) => (
           <div
             key={f.id}
@@ -134,6 +133,18 @@ export function HomePage() {
           </div>
         ))}
       </div>
+
+      {/* Manual spacer — provides scroll distance for the pinned transitions */}
+      <div
+        id="featured-spacer"
+        style={{
+          height: `${(featuredProjects.length - 1) * 100}vh`,
+          backgroundColor: "#0a0a0a",
+        }}
+      />
+
+      {/* All projects showcase — follows immediately after spacer */}
+      <ProjectsShowcase />
     </div>
   );
 }

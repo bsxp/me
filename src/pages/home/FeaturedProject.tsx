@@ -18,7 +18,7 @@ export function FeaturedProject({
   return (
     <div
       className="w-full min-h-screen relative"
-      style={{ backgroundColor: "#111" }}
+      style={{ backgroundColor: "#0a0a0a" }}
     >
       <div className="max-w-[1400px] mx-auto px-8 sm:px-12 pt-20 pb-16 flex flex-col min-h-screen">
         {/* Counter */}
