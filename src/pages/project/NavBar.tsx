@@ -12,7 +12,7 @@ function NavBar() {
         variant="ghost"
 
         size="lg"
-        onClick={() => navigate("/about#projects")}
+        onClick={() => navigate("/")}
       >
         <ArrowLeft className="size-4" />
         Back to projects

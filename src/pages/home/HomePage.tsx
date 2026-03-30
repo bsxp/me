@@ -197,7 +197,7 @@ function Nav() {
             About
           </Link>
           <Link
-            to="/blog"
+            to="/"
             className="text-sm font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
             style={{ color: "#1a1a1a" }}
           >
@@ -250,7 +250,7 @@ function Hero() {
                 maxWidth: 600,
               }}
             >
-              Urbanist <span className="text-blue-400">x</span> Technologist <span className="text-blue-400">x</span> Scientist
+              Urbanist <span className="text-blue-400">x</span> Technologist <span className="text-blue-400">x</span> Builder
             </p>
           </div>
 

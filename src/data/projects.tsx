@@ -176,16 +176,6 @@ const projects: Project[] = [
     href: "",
   },
   {
-    id: "my-site",
-    title: "My Site",
-    description: "My personal website",
-    coverImage: "",
-
-    overview: "",
-    body: "",
-    href: "",
-  },
-  {
     id: "lumon",
     title: "Lumon terminal pro",
     description: "Finding the scary numbers",

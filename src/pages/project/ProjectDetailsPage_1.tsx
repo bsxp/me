@@ -21,7 +21,7 @@ function ProjectDetailsPage_1() {
   const navigate = useNavigate();
 
   const handleBackToProjects = () => {
-    navigate("/about#projects");
+    navigate("/");
   };
 
   useGSAP(() => {
@@ -241,7 +241,7 @@ function ProjectDetailsPage_1() {
             the projects list.
           </Typography>
           <Link
-            to="/about"
+            to="/"
             className="text-sky-600 hover:text-sky-700 font-semibold underline"
           >
             Back to projects
