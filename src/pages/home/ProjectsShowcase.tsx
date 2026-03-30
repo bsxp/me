@@ -103,10 +103,10 @@ export function ProjectsShowcase() {
             </svg>
           </div>
           <span
-            className="font-[Inter] text-[10px] font-normal uppercase tracking-[0.2em]"
+            className="font-[Inter] text-[10px] font-normal lowercase tracking-[0.2em]"
             style={{ color: "#555" }}
           >
-            Scroll down
+            scroll down
           </span>
         </div>
 

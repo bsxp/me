@@ -128,7 +128,7 @@ export function HomePage() {
             alt=""
             className="absolute"
             style={{
-              opacity: 0.15,
+              opacity: 0.25,
               width: "120%",
               height: "120%",
               top: "-10%",
@@ -139,6 +139,23 @@ export function HomePage() {
         <div className="relative z-10">
           <Nav />
           <Hero />
+        </div>
+        {/* Scroll indicator */}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-3">
+          <div
+            className="w-12 h-12 rounded-full flex items-center justify-center"
+            style={{ border: "1px solid #ccc", backgroundColor: "rgb(250, 250, 250)" }}
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" >
+              <path d="M6 1V11M6 11L1 6M6 11L11 6" stroke="#999" strokeWidth="1.5" />
+            </svg>
+          </div>
+          <span
+            className="font-[Inter] text-[10px] font-normal lowercase tracking-[0.2em]"
+            style={{ color: "#999" }}
+          >
+            scroll down
+          </span>
         </div>
       </div>
 

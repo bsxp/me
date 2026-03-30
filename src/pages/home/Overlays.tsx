@@ -4,15 +4,15 @@ export function BorderLinesOverlay() {
 
   return (
     <div className="absolute inset-0 z-0 pointer-events-none">
-      <div className="absolute top-16 left-8 right-8" style={{ height: 1, backgroundColor: color }} />
-      <div className="absolute bottom-16 left-8 right-8" style={{ height: 1, backgroundColor: color }} />
-      <div className="absolute top-16 bottom-16 left-8" style={{ width: 1, backgroundColor: color }} />
-      <div className="absolute top-16 bottom-16 right-8" style={{ width: 1, backgroundColor: color }} />
+      <div className="absolute top-16 left-16 right-16" style={{ height: 1, backgroundColor: color }} />
+      <div className="absolute bottom-16 left-16 right-16" style={{ height: 1, backgroundColor: color }} />
+      <div className="absolute top-16 bottom-16 left-16" style={{ width: 1, backgroundColor: color }} />
+      <div className="absolute top-16 bottom-16 right-16" style={{ width: 1, backgroundColor: color }} />
       {[
-        { top: 64, left: 32 },
-        { top: 64, right: 32 },
-        { bottom: 64, left: 32 },
-        { bottom: 64, right: 32 },
+        { top: 64, left: 64 },
+        { top: 64, right: 64 },
+        { bottom: 64, left: 64 },
+        { bottom: 64, right: 64 },
       ].map((pos, i) => (
         <CrosshairMark key={i} pos={pos} color={dotColor} />
       ))}

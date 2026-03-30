@@ -32,7 +32,7 @@ export function FeaturedProject({
       {/* Content aligned inside the border frame (64px top/bottom, 32px sides + 16px inner padding) */}
       <div
         className="absolute flex flex-col overflow-hidden z-10"
-        style={{ top: 64, bottom: 64, left: 32, right: 32, padding: "20px 24px" }}
+        style={{ top: 64, bottom: 64, left: 64, right: 64, padding: "20px 24px" }}
       >
         {/* Counter — top right */}
         <div className="flex justify-start mb-8">
