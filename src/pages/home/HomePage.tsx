@@ -55,7 +55,8 @@ export function HomePage() {
   useGSAP(
     () => {
       const transitions = featuredProjects.length - 1; // 5 transitions between 6 panels
-      const totalPinScroll = transitions * window.innerHeight;
+      const buffer = 200; // px of scroll pause between each transition
+      const totalPinScroll = transitions * window.innerHeight + (transitions + 2) * buffer;
 
       // Pin the intro so featured wrapper slides up over it
       ScrollTrigger.create({
@@ -88,9 +89,33 @@ export function HomePage() {
         },
       });
 
-      // Add each transition sequentially to the timeline
+      // Trigger Hearth (first panel) title animation when wrapper reaches top
+      ScrollTrigger.create({
+        trigger: "#featured-wrapper",
+        start: "top 60%",
+        once: true,
+        onEnter: () => {
+          const lines = document.querySelectorAll("#featured-0 .title-line");
+          gsap.to(lines, {
+            yPercent: 0,
+            opacity: 1,
+            duration: 0.8,
+            ease: "power3.out",
+            stagger: 0.2,
+          });
+        },
+      });
+
+      // Add each transition with buffer pauses between them
+      // Timeline units: buffer ratio relative to a transition
+      const bufferRatio = buffer / window.innerHeight;
+
       featuredProjects.forEach((_, i) => {
         if (i === 0) return;
+
+        // Each segment: buffer + transition (1 unit)
+        // First panel gets an initial buffer too
+        const position = (i - 1) * (1 + bufferRatio) + bufferRatio;
 
         tl.to(
           `#featured-${i}`,
@@ -100,7 +125,26 @@ export function HomePage() {
             duration: 1,
             ease: "none",
           },
-          (i - 1) // position each transition sequentially
+          position
+        );
+
+        // Trigger title animation at 1/3 through the slide-in
+        tl.call(
+          () => {
+            const lines = document.querySelectorAll(`#featured-${i} .title-line`);
+            if (lines.length && !lines[0].classList.contains("animated")) {
+              lines[0].classList.add("animated");
+              gsap.to(lines, {
+                yPercent: 0,
+                opacity: 1,
+                duration: 0.8,
+                ease: "power3.out",
+                stagger: 0.2,
+              });
+            }
+          },
+          undefined,
+          position + 0.33
         );
       });
     },
@@ -183,7 +227,7 @@ export function HomePage() {
       <div
         id="featured-spacer"
         style={{
-          height: `${(featuredProjects.length - 1) * 100}vh`,
+          height: `calc(${featuredProjects.length - 1} * 100vh + ${(featuredProjects.length) * 200}px)`,
           backgroundColor: "#0a0a0a",
         }}
       />

@@ -1,4 +1,7 @@
 import { Link } from "react-router-dom";
+import { useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 import type { Project } from "@/data/projects";
 import { BorderLinesOverlay } from "./Overlays";
 
@@ -19,6 +22,14 @@ export function FeaturedProject({
 }) {
   const number = String(index + 1).padStart(2, "0");
   const totalStr = String(total).padStart(2, "0");
+  const titleRef = useRef<HTMLDivElement>(null);
+
+  // Set all title lines hidden initially
+  useGSAP(() => {
+    const lines = titleRef.current?.querySelectorAll(".title-line");
+    if (!lines) return;
+    gsap.set(lines, { yPercent: 100, opacity: 0 });
+  }, { scope: titleRef });
 
   return (
     <div
@@ -53,16 +64,30 @@ export function FeaturedProject({
               to={`/projects/${project.id}`}
               className="no-underline"
             >
-              <h2
-                className="font-[Inter] font-bold leading-[1.05] tracking-tight"
-                style={{
-                  fontSize: "clamp(32px, 5vw, 56px)",
-                  color: "#fff",
-                  maxWidth: 700,
-                }}
-              >
-                {project.title} — {project.description}
-              </h2>
+              <div ref={titleRef} style={{ maxWidth: 700 }}>
+                <div className="overflow-hidden">
+                  <h2
+                    className="title-line font-[Inter] font-bold leading-[1.05] tracking-tight"
+                    style={{
+                      fontSize: "clamp(32px, 5vw, 56px)",
+                      color: "#fff",
+                    }}
+                  >
+                    {project.title} —
+                  </h2>
+                </div>
+                <div className="overflow-hidden">
+                  <h2
+                    className="title-line font-[Inter] font-bold leading-[1.05] tracking-tight"
+                    style={{
+                      fontSize: "clamp(32px, 5vw, 56px)",
+                      color: "#fff",
+                    }}
+                  >
+                    {project.description}
+                  </h2>
+                </div>
+              </div>
             </Link>
 
             {/* Project / Role / Date row */}
