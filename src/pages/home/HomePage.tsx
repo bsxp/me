@@ -159,12 +159,22 @@ export function HomePage() {
         className="min-h-screen relative overflow-hidden"
         style={{ backgroundColor: "#fafafa" }}
       >
-        {/* Austin infrastructure SVG underlay — fades out on right */}
+        {/* Austin infrastructure SVG underlay — main left/center region */}
         <div
           className="absolute inset-0 pointer-events-none overflow-hidden"
           style={{
-            maskImage: "linear-gradient(to right, black 40%, transparent 70%)",
-            WebkitMaskImage: "linear-gradient(to right, black 40%, transparent 70%)",
+            maskImage: `
+              linear-gradient(to right, black 40%, transparent 70%),
+              linear-gradient(to top, black 20%, transparent 50%),
+              linear-gradient(to bottom, black 100px, transparent 200px)
+            `,
+            maskComposite: "add",
+            WebkitMaskImage: `
+              linear-gradient(to right, black 40%, transparent 70%),
+              linear-gradient(to top, black 20%, transparent 50%),
+              linear-gradient(to bottom, black 100px, transparent 200px)
+            `,
+            WebkitMaskComposite: "source-over",
           }}
         >
           <img
@@ -176,7 +186,7 @@ export function HomePage() {
               width: "120%",
               height: "120%",
               top: "-10%",
-              left: "-15%", // adjust to pan horizontally
+              left: "-15%",
             }}
           />
         </div>
@@ -237,6 +247,7 @@ export function HomePage() {
     </div>
   );
 }
+
 
 function Nav() {
   return (

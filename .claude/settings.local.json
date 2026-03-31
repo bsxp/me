@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc --noEmit 2>&1 | head -60)",
+      "Bash(npx tsc --noEmit 2>&1 | head -80)",
+      "Bash(npx vite build 2>&1 | tail -20)",
+      "Bash(npx vite build 2>&1 | grep -E \"\\(error|warning|✓\\)\" | head -10)",
+      "Bash(npx tsc --noEmit --pretty 2>&1 | head -30)",
+      "WebFetch(domain:preview.studio.site)",
+      "Bash(git checkout -- src/pages/home/HomeProjectsSection.tsx)",
+      "Bash(npx tsc --noEmit 2>&1)",
+      "Bash(npx vite build 2>&1 | tail -5)",
+      "WebFetch(domain:cecil.earth)",
+      "Bash(find /Users/chrisporter/Desktop/chris-site-v2 -name *.config.* -o -name tailwind.config.*)",
+      "Bash(curl -s -L 'https://cecil.earth/')",
+      "Bash(curl -s -L 'https://cecil.earth/assets/index-CoPb_Zrs.css')",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(gh repo:*)"
+    ]
+  }
+}
