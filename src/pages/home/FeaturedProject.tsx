@@ -3,6 +3,7 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import type { Project } from "@/data/projects";
+import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { BorderLinesOverlay } from "./Overlays";
 
 export function FeaturedProject({
@@ -23,6 +24,8 @@ export function FeaturedProject({
   const number = String(index + 1).padStart(2, "0");
   const totalStr = String(total).padStart(2, "0");
   const titleRef = useRef<HTMLDivElement>(null);
+  const { atLeast } = useBreakpoint();
+  const inset = atLeast.lg ? 64 : 16;
 
   // Set all title lines hidden initially
   useGSAP(() => {
@@ -43,7 +46,7 @@ export function FeaturedProject({
       {/* Content aligned inside the border frame (64px top/bottom, 32px sides + 16px inner padding) */}
       <div
         className="absolute flex flex-col overflow-hidden z-10"
-        style={{ top: 64, bottom: 64, left: 64, right: 64, padding: "20px 24px" }}
+        style={{ top: inset, bottom: inset, left: inset, right: inset, padding: atLeast.lg ? "20px 24px" : "12px 8px" }}
       >
         {/* Counter — top right */}
         <div className="flex justify-start mb-8">

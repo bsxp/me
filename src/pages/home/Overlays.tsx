@@ -1,18 +1,22 @@
+import { useBreakpoint } from "@/hooks/use-breakpoint";
+
 export function BorderLinesOverlay() {
+  const { atLeast } = useBreakpoint();
+  const inset = atLeast.lg ? 64 : 16;
   const color = "rgba(255,255,255,0.08)";
   const dotColor = "rgba(255,255,255,0.18)";
 
   return (
     <div className="absolute inset-0 z-0 pointer-events-none">
-      <div className="absolute top-16 left-16 right-16" style={{ height: 1, backgroundColor: color }} />
-      <div className="absolute bottom-16 left-16 right-16" style={{ height: 1, backgroundColor: color }} />
-      <div className="absolute top-16 bottom-16 left-16" style={{ width: 1, backgroundColor: color }} />
-      <div className="absolute top-16 bottom-16 right-16" style={{ width: 1, backgroundColor: color }} />
+      <div className="absolute" style={{ top: inset, left: inset, right: inset, height: 1, backgroundColor: color }} />
+      <div className="absolute" style={{ bottom: inset, left: inset, right: inset, height: 1, backgroundColor: color }} />
+      <div className="absolute" style={{ top: inset, bottom: inset, left: inset, width: 1, backgroundColor: color }} />
+      <div className="absolute" style={{ top: inset, bottom: inset, right: inset, width: 1, backgroundColor: color }} />
       {[
-        { top: 64, left: 64 },
-        { top: 64, right: 64 },
-        { bottom: 64, left: 64 },
-        { bottom: 64, right: 64 },
+        { top: inset, left: inset },
+        { top: inset, right: inset },
+        { bottom: inset, left: inset },
+        { bottom: inset, right: inset },
       ].map((pos, i) => (
         <CrosshairMark key={i} pos={pos} color={dotColor} />
       ))}
