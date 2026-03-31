@@ -289,7 +289,7 @@ function Nav() {
         >
           chris.
         </Link>
-        <nav className="ml-auto flex items-center gap-8">
+        <nav className="flex items-center gap-8 mx-auto sm:mx-0 sm:ml-auto">
           <Link
             to="/about"
             className="text-sm font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
