@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0a0a0a"/>
+  <!-- Border frame -->
+  <rect x="48" y="48" width="1104" height="534" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+  <!-- Corner crosshairs -->
+  <line x1="36" y1="48" x2="60" y2="48" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+  <line x1="48" y1="36" x2="48" y2="60" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+  <line x1="1140" y1="48" x2="1164" y2="48" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+  <line x1="1152" y1="36" x2="1152" y2="60" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+  <line x1="36" y1="582" x2="60" y2="582" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+  <line x1="48" y1="570" x2="48" y2="594" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+  <line x1="1140" y1="582" x2="1164" y2="582" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+  <line x1="1152" y1="570" x2="1152" y2="594" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+  <!-- Name -->
+  <text x="96" y="300" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="72" fill="#ffffff">Chris Porter.</text>
+  <!-- Subtitle -->
+  <text x="96" y="360" font-family="Inter, system-ui, sans-serif" font-weight="400" font-size="24" fill="#999999">Urbanist  x  Technologist  x  Builder</text>
+</svg>
