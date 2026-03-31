@@ -48,7 +48,7 @@ function Typography({
   children,
   ...props
 }: React.ComponentProps<"p"> & { variant: TypographyVariants }) {
-  const [hovered, setHovered] = useState<boolean>(false);
+  const [, setHovered] = useState<boolean>(false);
 
   if (!validVariants.includes(variant)) {
     throw new Error(`Invalid typography variant: ${variant}`);
