@@ -19,7 +19,7 @@ export function SelectedProjectsList() {
   return (
     <div>
       <span
-        className="font-[Inter] text-xs font-normal uppercase tracking-widest block mb-6"
+        className="font-[Inter] text-xs font-normal uppercase tracking-widest block mb-4 lg:mb-6"
         style={{ color: "#999" }}
       >
         Selected Projects
@@ -29,7 +29,7 @@ export function SelectedProjectsList() {
           <Link
             key={project.id}
             to={`/projects/${project.id}`}
-            className="group relative block no-underline py-5"
+            className="group relative block no-underline py-3 lg:py-5"
           >
             <div className="flex items-center justify-between">
               <span
