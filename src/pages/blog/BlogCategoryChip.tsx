@@ -139,17 +139,10 @@ function animateCategoryLabelMove({
 
   if (!labelElement) return;
 
-  const elementWidthStart = labelElement?.getBoundingClientRect().width;
-  const elementOffset = elementWidthStart / 2;
-
   const currentX = labelElement?.getBoundingClientRect().x;
   const targetElementWidth = 211;
   const offset = 12;
   const middleSegmentWidth = ((window.innerWidth - 64) * 6) / 14;
-  // const segmentDistanceFromRightSideOfScreen =
-  //   ((window.innerWidth - 64) * 10) / 14;
-
-  const sideSegmentWidth = ((window.innerWidth - 64) * 4) / 14;
   // const lateralMovement = -(elementOffset + (sideSegmentWidth / 2) +(middleSegmentWidth / 2));
 
   const lateralMovement = -(
@@ -193,7 +186,7 @@ function animateOtherChipsFadingOut({
   timeline: GSAPTimeline;
   index: number;
 }) {
-  BLOG_CATEGORIES_FULL.forEach((category: string, categoryIndex: number) => {
+  BLOG_CATEGORIES_FULL.forEach((_category: string, categoryIndex: number) => {
     if (categoryIndex === index) {
       console.log("Skipping category", categoryIndex);
       return;

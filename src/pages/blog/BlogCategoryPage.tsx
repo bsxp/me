@@ -363,7 +363,7 @@ function BlogCategoryNavigationChip({
 }: {
   category: (typeof BLOG_CATEGORIES)[number];
 }) {
-  const [hovered, setHovered] = useState<boolean>(true);
+  const [hovered] = useState<boolean>(true);
 
   return (
     <div
@@ -392,4 +392,4 @@ function BlogCategoryNavigationChip({
   );
 }
 
-export { BlogCategoryPage };
+export { BlogCategoryPage, BlogCategoryNavigationChip };

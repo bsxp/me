@@ -7,6 +7,7 @@ export const GRID_HEIGHT = GRID_SPACING * NUM_HORIZONTAL_LINES;
 
 // Scroll pin distances per section
 export const HERO_PIN_DISTANCE = 500;
+export const WORK_PIN_DISTANCE = 500;
 
 // Colors
 export const BG_LIGHT = "#e9f0f1";

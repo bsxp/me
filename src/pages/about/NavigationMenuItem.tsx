@@ -11,7 +11,7 @@ function NavigationMenuItem({
   id,
   title,
   secondTitle,
-  href,
+  href: _href,
 }: {
   id: string;
   title: string;

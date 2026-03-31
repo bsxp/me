@@ -1,6 +1,6 @@
 import { projects } from "@/data/projects";
 import { Typography } from "@/components/ui/typography";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { BouncingArrow } from "@/components/ui/bouncing-arrow";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -18,12 +18,6 @@ function ProjectDetailsPage_1() {
   const bodyRef = useRef<HTMLDivElement>(null);
   const headerLineRef = useRef<HTMLDivElement>(null);
   const headerLineCompleted = useRef(false);
-  const navigate = useNavigate();
-
-  const handleBackToProjects = () => {
-    navigate("/");
-  };
-
   useGSAP(() => {
     const headerTimeline = gsap.timeline({
       scrollTrigger: {

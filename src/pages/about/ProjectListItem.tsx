@@ -8,13 +8,13 @@ function ProjectListItem({
   id,
   title,
   description,
-  image,
+  coverImage,
   href,
 }: {
   id: string;
   title: string;
   description: string;
-  image: string;
+  coverImage: string;
   href: string;
 }) {
   const [hovered, setHovered] = useState<boolean>(false);
@@ -30,7 +30,7 @@ function ProjectListItem({
       className="relative border-t border-black/10 cursor-pointer ease-in-out px-4"
       aria-label={title}
       data-href={href}
-      data-image={image}
+      data-image={coverImage}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={handleClick}

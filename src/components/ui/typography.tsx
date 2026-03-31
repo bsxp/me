@@ -1,6 +1,5 @@
 import { createElement, useState } from "react";
 import { cn } from "@/lib/utils";
-import { useDisplayDesign } from "@/hooks/use-display-design";
 
 type TypographyVariants =
   | "h1"
@@ -50,7 +49,6 @@ function Typography({
   ...props
 }: React.ComponentProps<"p"> & { variant: TypographyVariants }) {
   const [hovered, setHovered] = useState<boolean>(false);
-  const { displayElementName } = useDisplayDesign();
 
   if (!validVariants.includes(variant)) {
     throw new Error(`Invalid typography variant: ${variant}`);

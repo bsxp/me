@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { ChevronUp, ChevronDown, ArrowRight } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { BLOG_CATEGORIES, GAP_Y, LETTER_SPACING } from "./config";
+import { BLOG_CATEGORIES, LETTER_SPACING } from "./config";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -331,16 +331,10 @@ function CarouselCell({
   handleClick: () => void;
 }) {
   const cellRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
   const normalizedSelected =
     ((selectedIndex % cellCount) + cellCount) % cellCount;
   const isSelected = index === normalizedSelected;
   const distanceFromSelected = Math.abs(index - normalizedSelected);
-
-  const handlePostClick = () => {
-    navigate(`/blog/posts/${article.id}`);
-    handleClick();
-  };
 
   // Animate opacity with GSAP
   useGSAP(() => {

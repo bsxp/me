@@ -64,7 +64,7 @@ export function GridCoordsOverlay() {
   );
 }
 
-function CrosshairMark({ pos, color }: { pos: Record<string, number>; color: string }) {
+function CrosshairMark({ pos, color }: { pos: { top?: number; bottom?: number; left?: number; right?: number }; color: string }) {
   const size = 24;
   return (
     <div

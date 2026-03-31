@@ -1,9 +1,8 @@
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { ArrowUpRight, Circle } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 const CIRCLE_DIAMETER = 120;
-const GUTTER_SIZE = 16;
 
 function AnimatedButton({ handleClick }: { handleClick: () => void }) {
   // When hovering the button, the arrow shoots up and to the right at a 45° angle

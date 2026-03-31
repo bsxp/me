@@ -11,7 +11,6 @@ import {
   NUM_VERTICAL_LINES,
   IMAGE_SCALE,
 } from "./config";
-import { ArrowDown } from "lucide-react";
 import { BouncingArrow } from "@/components/ui/bouncing-arrow";
 
 function HeroPanel() {

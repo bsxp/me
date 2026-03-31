@@ -6,7 +6,7 @@ import { ProfileClock } from "./ProfileClock";
 import { BouncingArrow } from "@/components/ui/bouncing-arrow";
 import { GridBackground } from "./GridBackground";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
-import { HERO_PIN_DISTANCE, GRID_SPACING } from "./config";
+import { HERO_PIN_DISTANCE } from "./config";
 
 gsap.registerPlugin(ScrollTrigger);
 
