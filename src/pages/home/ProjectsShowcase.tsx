@@ -92,8 +92,8 @@ export function ProjectsShowcase() {
           </Link>
         </div>
 
-        {/* Scroll down indicator */}
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3">
+        {/* Desktop: scroll down indicator */}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-3">
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center"
             style={{ border: "1px solid #333" }}
@@ -108,6 +108,21 @@ export function ProjectsShowcase() {
           >
             scroll down
           </span>
+        </div>
+
+        {/* Mobile: progress indicator */}
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5 lg:hidden">
+          {ALL_PROJECTS.map((_, i) => (
+            <div
+              key={i}
+              className="rounded-full transition-all duration-300"
+              style={{
+                width: i === activeIndex ? 6 : 4,
+                height: i === activeIndex ? 6 : 4,
+                backgroundColor: i === activeIndex ? "#fff" : "rgba(255,255,255,0.2)",
+              }}
+            />
+          ))}
         </div>
 
         {/* Project names list — font size scales to fit 100vh */}
