@@ -159,9 +159,26 @@ export function HomePage() {
         className="min-h-screen relative overflow-hidden"
         style={{ backgroundColor: "#fafafa" }}
       >
-        {/* Austin infrastructure SVG underlay — main left/center region */}
+        {/* Austin infrastructure SVG underlay — full width on mobile */}
         <div
-          className="absolute inset-0 pointer-events-none overflow-hidden"
+          className="absolute inset-0 pointer-events-none overflow-hidden lg:hidden"
+        >
+          <img
+            src={AustinSvg}
+            alt=""
+            className="absolute"
+            style={{
+              opacity: 0.25,
+              width: "140%",
+              height: "160%",
+              top: "-50%",
+              left: "-20%",
+            }}
+          />
+        </div>
+        {/* Austin infrastructure SVG underlay — faded right on desktop */}
+        <div
+          className="absolute inset-0 pointer-events-none overflow-hidden hidden lg:block"
           style={{
             maskImage: `
               linear-gradient(to right, black 40%, transparent 70%),
@@ -255,7 +272,7 @@ function Nav() {
       <div className="max-w-[1400px] mx-auto px-8 sm:px-12 h-full flex items-center">
         <Link
           to="/"
-          className="font-[Inter] text-sm font-normal no-underline flex items-center gap-2"
+          className="hidden sm:flex font-[Inter] text-sm font-normal no-underline items-center gap-2"
           style={{ color: "#1a1a1a" }}
         >
           chris.
