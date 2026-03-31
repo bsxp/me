@@ -142,7 +142,7 @@ function ArticleRow({
 
   return (
     <Link
-      to={`/projects/${article.projectId}`}
+      to={`/blog/posts/${article.id}`}
       className="group relative block no-underline"
     >
       <div
