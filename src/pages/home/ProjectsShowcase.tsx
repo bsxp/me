@@ -1,64 +1,21 @@
-import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
 import { projects } from "@/data/projects";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 // All projects for the showcase list
 const ALL_PROJECTS = projects;
-export const SHOWCASE_SCROLL_DISTANCE = ALL_PROJECTS.length * 150;
+export const NUM_SHOWCASE_PROJECTS = ALL_PROJECTS.length;
+export const SHOWCASE_CYCLE_DISTANCE = ALL_PROJECTS.length * 150;
 
-export function ProjectsShowcase() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const activeIndexRef = useRef(0);
-  const [activeIndex, setActiveIndex] = useState(0);
+interface ProjectsShowcaseProps {
+  activeIndex: number;
+}
 
-  useGSAP(
-    () => {
-      const numProjects = ALL_PROJECTS.length;
-
-      // Pin the showcase while scrolling through projects
-      ScrollTrigger.create({
-        trigger: containerRef.current,
-        start: "top top",
-        end: `+=${numProjects * 150 + window.innerHeight}`,
-        pin: true,
-        pinSpacing: false,
-        onUpdate: (self) => {
-          const deadZone = window.innerHeight / (numProjects * 150 + window.innerHeight);
-          const adjustedProgress = Math.max(0, (self.progress - deadZone) / (1 - deadZone));
-          const idx = Math.max(
-            0,
-            Math.min(
-              Math.floor(adjustedProgress * numProjects),
-              numProjects - 1
-            )
-          );
-          if (idx !== activeIndexRef.current) {
-            activeIndexRef.current = idx;
-            setActiveIndex(idx);
-          }
-        },
-        onLeave: () => {
-          gsap.set(containerRef.current, { visibility: "hidden" });
-        },
-        onEnterBack: () => {
-          gsap.set(containerRef.current, { visibility: "visible" });
-        },
-      });
-    },
-    { scope: containerRef }
-  );
-
+export function ProjectsShowcase({ activeIndex }: ProjectsShowcaseProps) {
   const activeProject = ALL_PROJECTS[activeIndex];
 
   return (
     <div
-      ref={containerRef}
-      className="w-full h-screen relative overflow-hidden"
+      className="w-full h-full relative overflow-hidden"
       style={{ backgroundColor: "#0a0a0a" }}
     >
       {/* Background image for active project */}
@@ -139,7 +96,6 @@ export function ProjectsShowcase() {
           className="flex flex-col justify-center"
           style={{
             gap: 0,
-            // Divide full viewport by number of lines
             fontSize: `calc(100vh / ${ALL_PROJECTS.length})`,
           }}
         >

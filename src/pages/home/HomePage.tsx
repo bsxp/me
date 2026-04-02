@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { SelectedProjectsList } from "./SelectedProjectsList";
 import { FeaturedProject } from "./FeaturedProject";
-import { ProjectsShowcase, SHOWCASE_SCROLL_DISTANCE } from "./ProjectsShowcase";
+import { ProjectsShowcase, NUM_SHOWCASE_PROJECTS, SHOWCASE_CYCLE_DISTANCE } from "./ProjectsShowcase";
 import { AboutOverlay } from "./AboutSection";
 import { projects } from "@/data/projects";
 import AustinSvg from "@/assets/austin-infrastructure.svg";
@@ -52,12 +52,19 @@ const featuredProjects = FEATURED.map((f) => ({
 
 export function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const showcaseIndexRef = useRef(0);
+  const [showcaseIndex, setShowcaseIndex] = useState(0);
 
   useGSAP(
     () => {
-      const transitions = featuredProjects.length - 1; // 5 transitions between 6 panels
+      const featuredTransitions = featuredProjects.length - 1; // 5 transitions between 6 panels
       const buffer = 200; // px of scroll pause between each transition
-      const totalPinScroll = transitions * window.innerHeight + (transitions + 3) * buffer;
+      // Total = featured transitions + showcase slide-in + showcase cycling
+      const allSlideTransitions = featuredTransitions + 1; // +1 for showcase sliding in
+      const totalPinScroll =
+        allSlideTransitions * window.innerHeight +
+        (allSlideTransitions + 2) * buffer +
+        SHOWCASE_CYCLE_DISTANCE;
 
       // Pin the intro and drive the hero→about transition as one scrubbed timeline
       // First 800px: hero fades out. Next: about fades in. Then 800px hold before featured.
@@ -156,6 +163,13 @@ export function HomePage() {
           yPercent: fromRight ? 0 : 100,
         });
       });
+      // Showcase panel starts off-screen below (slides up like even panels)
+      gsap.set("#showcase-panel", { yPercent: 100 });
+
+      // Scroll position (in px) where showcase cycling begins
+      const showcaseCycleStart =
+        allSlideTransitions * window.innerHeight +
+        (allSlideTransitions + 2) * buffer;
 
       // Single timeline for all transitions — no gaps, continuous scrub
       const tl = gsap.timeline({
@@ -165,7 +179,25 @@ export function HomePage() {
           end: `+=${totalPinScroll}`,
           pin: true,
           pinSpacing: false,
-          scrub: 0.5, // slight smoothing for buttery feel
+          scrub: 0.5,
+          onUpdate: (self) => {
+            // Drive showcase active index during the cycling phase
+            const scrolled = self.progress * totalPinScroll;
+            if (scrolled > showcaseCycleStart) {
+              const cycleProgress = (scrolled - showcaseCycleStart) / SHOWCASE_CYCLE_DISTANCE;
+              const idx = Math.max(0, Math.min(
+                Math.floor(cycleProgress * NUM_SHOWCASE_PROJECTS),
+                NUM_SHOWCASE_PROJECTS - 1
+              ));
+              if (idx !== showcaseIndexRef.current) {
+                showcaseIndexRef.current = idx;
+                setShowcaseIndex(idx);
+              }
+            } else if (showcaseIndexRef.current !== 0) {
+              showcaseIndexRef.current = 0;
+              setShowcaseIndex(0);
+            }
+          },
         },
       });
 
@@ -227,6 +259,18 @@ export function HomePage() {
           position + 0.33
         );
       });
+
+      // Showcase slides up from below after the last featured panel
+      const showcasePosition = featuredTransitions * (1 + bufferRatio) + bufferRatio;
+      tl.to(
+        "#showcase-panel",
+        { yPercent: 0, duration: 1, ease: "none" },
+        showcasePosition
+      );
+
+      // Extend timeline to cover the showcase cycling scroll distance
+      const showcaseCycleRatio = SHOWCASE_CYCLE_DISTANCE / window.innerHeight;
+      tl.set({}, {}, showcasePosition + 1 + bufferRatio + showcaseCycleRatio);
     },
     { scope: containerRef }
   );
@@ -324,7 +368,7 @@ export function HomePage() {
         </div>
       </div>
 
-      {/* Featured projects wrapper — all panels stacked, pinned as a group */}
+      {/* Featured projects + showcase wrapper — all panels stacked, pinned as a group */}
       <div id="featured-wrapper" className="relative z-10" style={{ height: "100vh", backgroundColor: "#0a0a0a" }}>
         {featuredProjects.map((f, i) => (
           <div
@@ -342,25 +386,24 @@ export function HomePage() {
             />
           </div>
         ))}
+        {/* Showcase panel — slides up after Lumon, then cycles through projects */}
+        <div
+          id="showcase-panel"
+          className="absolute inset-0 w-full h-full overflow-hidden"
+          style={{ zIndex: featuredProjects.length }}
+        >
+          <ProjectsShowcase activeIndex={showcaseIndex} />
+        </div>
       </div>
 
-      {/* Manual spacer — provides scroll distance for the pinned transitions */}
+      {/* Manual spacer — provides scroll distance for the pinned section */}
       <div
         id="featured-spacer"
         style={{
-          height: `calc(${featuredProjects.length - 1} * 100vh + ${(featuredProjects.length + 2) * 200}px)`,
+          height: `calc(${featuredProjects.length} * 100vh + ${(featuredProjects.length + 3) * 200}px + ${SHOWCASE_CYCLE_DISTANCE}px)`,
           backgroundColor: "#0a0a0a",
         }}
       />
-
-      {/* Spacer so Lumon fully exits before showcase pins */}
-      <div style={{ height: "100vh", backgroundColor: "#0a0a0a" }} />
-
-      {/* All projects showcase */}
-      <ProjectsShowcase />
-
-      {/* Spacer for showcase pin (pinSpacing: false) — footer sits right after */}
-      <div style={{ height: `calc(${SHOWCASE_SCROLL_DISTANCE}px - 150vh)`, backgroundColor: "#0a0a0a" }} />
 
       {/* Footer */}
       <Footer />
