@@ -17,17 +17,19 @@ const selectedProjects = SELECTED_PROJECT_IDS.map(
 
 export function SelectedProjectsList() {
   return (
-    <div>
+    <div id="selected-projects-wrapper">
       <span
+        id="selected-projects-header"
         className="font-[Inter] text-xs font-normal uppercase tracking-widest block mb-4 lg:mb-6"
         style={{ color: "#999" }}
       >
         Selected Projects
       </span>
       <div>
-        {selectedProjects.map((project) => (
+        {selectedProjects.map((project, i) => (
           <Link
             key={project.id}
+            id={`selected-project-${i}`}
             to={`/projects/${project.id}`}
             className="group relative block no-underline py-3 lg:py-5"
           >
@@ -46,7 +48,7 @@ export function SelectedProjectsList() {
             </div>
             {/* Base line */}
             <span
-              className="absolute bottom-0 left-0 w-full h-px"
+              className={`absolute bottom-0 left-0 w-full h-px ${i === 3 ? "selected-project-collapse-line" : ""}`}
               style={{ backgroundColor: "#e5e5e5" }}
             />
             {/* Black line that sweeps LTR on hover */}

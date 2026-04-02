@@ -1,94 +1,33 @@
-import { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
 import ChrisCoffee from "@/assets/chris-coffee.png";
 import AboutLeadenhall from "@/assets/about-leadenhall.png";
 import AboutPragueTram from "@/assets/about-prague-tram.png";
 
-gsap.registerPlugin(ScrollTrigger, useGSAP);
-
-export function AboutSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      // Pin the about section for extra scroll buffer
-      ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: "top top",
-        end: "+=400",
-        pin: true,
-        pinSpacing: true,
-      });
-
-
-      gsap.from(".about-line", {
-        opacity: 0,
-        duration: 0.8,
-        ease: "power2.out",
-        stagger: 0.15,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 40%",
-          once: true,
-        },
-      });
-
-      gsap.from(".about-image", {
-        opacity: 0,
-        duration: 0.8,
-        ease: "power2.out",
-        stagger: 0.15,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 40%",
-          once: true,
-        },
-      });
-
-      gsap.from("#about-text", {
-        y: 30,
-        opacity: 0,
-        duration: 1,
-        delay: 0.3,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 40%",
-          once: true,
-        },
-      });
-    },
-    { scope: sectionRef }
-  );
-
+export function AboutOverlay() {
   return (
     <div
-      ref={sectionRef}
-      className="relative w-full h-screen"
-      style={{ backgroundColor: "#fafafa", padding: 16 }}
+      id="about-overlay"
+      className="absolute inset-0 z-20 pointer-events-none"
+      style={{ opacity: 0, padding: 16 }}
     >
-      {/* Header: "chris." + full-width line */}
-      <p
-        className="font-[Inter] text-sm font-normal no-underline"
-        style={{ color: "#1a1a1a", marginBottom: 8 }}
-      >
-        chris.
-      </p>
-      <div className="about-line w-full h-px" style={{ backgroundColor: "#d0d0d0", marginBottom: 16 }} />
+      <div className="pointer-events-auto h-full flex flex-col">
+        {/* Target row for where "chris." and nav links animate to */}
+        <div className="flex items-start justify-between" style={{ marginBottom: 8 }}>
+          <div id="about-logo-target" className="font-[Inter] text-sm" style={{ color: "transparent" }}>chris.</div>
+          <div id="about-nav-target" className="font-[Inter] text-sm" style={{ color: "transparent" }}>Contact</div>
+        </div>
+        <div className="about-line w-full h-px" style={{ backgroundColor: "#d0d0d0", marginBottom: 16, opacity: 0 }} />
 
-      {/* 5-column grid filling the remaining height */}
-      <div
-        id="about-grid"
-        className="grid grid-cols-1 lg:grid-cols-5 gap-2"
-        style={{ height: "calc(100% - 52px - 16px - 1px)" }}
-      >
+        {/* 5-column grid filling the remaining height */}
+        <div
+          id="about-grid"
+          className="grid grid-cols-1 lg:grid-cols-5 gap-2 flex-1 min-h-0"
+        >
           {/* Columns 1-2: full-height image */}
           <img
             src={AboutLeadenhall}
             alt="Leadenhall Market"
             className="about-image lg:col-span-2 h-full rounded-sm min-h-[200px] object-cover w-full"
+            style={{ opacity: 0 }}
           />
 
           {/* Column 3: two stacked vertical images */}
@@ -97,11 +36,13 @@ export function AboutSection() {
               src={ChrisCoffee}
               alt="Chris at a coffee shop"
               className="about-image flex-1 rounded-sm object-cover min-h-0"
+              style={{ opacity: 0 }}
             />
             <img
               src={AboutPragueTram}
               alt="Prague tram"
               className="about-image flex-1 rounded-sm object-cover min-h-0"
+              style={{ opacity: 0 }}
             />
           </div>
 
@@ -109,6 +50,7 @@ export function AboutSection() {
           <div
             id="about-text"
             className="lg:col-span-2 flex flex-col justify-between py-2 lg:pl-6"
+            style={{ opacity: 0 }}
           >
             <div />
 
@@ -158,10 +100,11 @@ export function AboutSection() {
               </div>
             </div>
           </div>
-      </div>
+        </div>
 
-      {/* Bottom line */}
-      <div className="about-line w-full h-px" style={{ backgroundColor: "#d0d0d0", marginTop: 16 }} />
+        {/* Bottom line */}
+        <div className="about-line w-full h-px" style={{ backgroundColor: "#d0d0d0", marginTop: 16, opacity: 0 }} />
+      </div>
     </div>
   );
 }
