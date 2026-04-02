@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 import { SelectedProjectsList } from "./SelectedProjectsList";
 import { FeaturedProject } from "./FeaturedProject";
 import { ProjectsShowcase } from "./ProjectsShowcase";
+import { AboutOverlay } from "./AboutSection";
 import { projects } from "@/data/projects";
 import AustinSvg from "@/assets/austin-infrastructure.svg";
 
@@ -58,14 +59,93 @@ export function HomePage() {
       const buffer = 200; // px of scroll pause between each transition
       const totalPinScroll = transitions * window.innerHeight + (transitions + 2) * buffer;
 
-      // Pin the intro so featured wrapper slides up over it
-      ScrollTrigger.create({
-        trigger: "#home-intro",
-        start: "top top",
-        end: "bottom top",
-        pin: true,
-        pinSpacing: false,
+      // Pin the intro and drive the hero→about transition as one scrubbed timeline
+      // First 800px: hero fades out. Next: about fades in. Then 800px hold before featured.
+      const heroExitTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: "#home-intro",
+          start: "top top",
+          end: "+=2000",
+          pin: true,
+          scrub: 0.3,
+        },
       });
+
+      // === Hero exit + About enter (0–0.8), then 0.8–1.0 is hold ===
+
+      // Phase 1: Hero text, SVG, nav links fade out + up
+      heroExitTl.to(
+        ["#hero-name", "#hero-tagline", "#hero-scroll-indicator"],
+        { y: -60, opacity: 0, duration: 0.2, ease: "none" },
+        0
+      );
+      heroExitTl.to(
+        "#home-intro img[alt='']",
+        { opacity: 0, duration: 0.2, ease: "none" },
+        0
+      );
+      // "chris." animates from nav position to about overlay top-left
+      // Nav links animate from nav position to about overlay top-right
+      {
+        const logo = document.getElementById("nav-logo");
+        const logoTarget = document.getElementById("about-logo-target");
+        const navLinks = document.getElementById("nav-links");
+        const navTarget = document.getElementById("about-nav-target");
+
+        if (logo && logoTarget) {
+          const logoRect = logo.getBoundingClientRect();
+          const targetRect = logoTarget.getBoundingClientRect();
+          heroExitTl.to(
+            "#nav-logo",
+            { x: targetRect.left - logoRect.left, y: targetRect.top - logoRect.top, duration: 0.24, ease: "none" },
+            0.12
+          );
+        }
+
+        if (navLinks && navTarget) {
+          const navRect = navLinks.getBoundingClientRect();
+          const targetRect = navTarget.getBoundingClientRect();
+          heroExitTl.to(
+            "#nav-links",
+            { x: targetRect.right - navRect.right, y: targetRect.top - navRect.top, duration: 0.24, ease: "none" },
+            0.12
+          );
+        }
+      }
+
+      // Phase 2: Project list collapses toward line between items 3 and 4
+      heroExitTl.to("#selected-project-0", { y: 120, opacity: 0, duration: 0.28, ease: "none" }, 0.08);
+      heroExitTl.to("#selected-project-1", { y: 80, opacity: 0, duration: 0.28, ease: "none" }, 0.08);
+      heroExitTl.to("#selected-project-2", { y: 40, opacity: 0, duration: 0.28, ease: "none" }, 0.08);
+      heroExitTl.to("#selected-project-3", { y: -40, opacity: 0, duration: 0.28, ease: "none" }, 0.08);
+      heroExitTl.to("#selected-project-4", { y: -80, opacity: 0, duration: 0.28, ease: "none" }, 0.08);
+      heroExitTl.to("#selected-project-5", { y: -120, opacity: 0, duration: 0.28, ease: "none" }, 0.08);
+
+      // "Selected Projects" header fades out
+      heroExitTl.to("#selected-projects-header", { opacity: 0, duration: 0.2, ease: "none" }, 0.12);
+
+      // Collapse line fades out
+      heroExitTl.to(".selected-project-collapse-line", { opacity: 0, duration: 0.12, ease: "none" }, 0.32);
+
+      // Phase 3: About overlay elements fade in
+      heroExitTl.fromTo("#about-overlay", { opacity: 0 }, { opacity: 1, duration: 0.08, ease: "none" }, 0.4);
+      heroExitTl.fromTo(".about-line", { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none", stagger: 0.04 }, 0.44);
+      // Left image slides in from left, top stacked from top, bottom stacked from bottom
+      const aboutImages = document.querySelectorAll(".about-image");
+      if (aboutImages[0]) {
+        heroExitTl.fromTo(aboutImages[0], { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.12, ease: "none" }, 0.48);
+      }
+      if (aboutImages[1]) {
+        heroExitTl.fromTo(aboutImages[1], { opacity: 0, y: -16 }, { opacity: 1, y: 0, duration: 0.12, ease: "none" }, 0.52);
+      }
+      if (aboutImages[2]) {
+        heroExitTl.fromTo(aboutImages[2], { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.12, ease: "none" }, 0.52);
+      }
+      heroExitTl.fromTo("#about-text", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.2, ease: "none" }, 0.56);
+
+      // 0.8–1.0: dead time (hold on about section before featured projects)
+      heroExitTl.set({}, {}, 1.0);
+
 
       // Position all panels except the first off-screen
       featuredProjects.forEach((_, i) => {
@@ -211,8 +291,10 @@ export function HomePage() {
           <Nav />
           <Hero />
         </div>
+        {/* About overlay — fades in after hero elements exit */}
+        <AboutOverlay />
         {/* Desktop scroll indicator */}
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 hidden lg:flex flex-col items-center gap-3">
+        <div id="hero-scroll-indicator" className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 hidden lg:flex flex-col items-center gap-3">
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center"
             style={{ border: "1px solid #ccc", backgroundColor: "rgb(250, 250, 250)" }}
@@ -283,13 +365,14 @@ function Nav() {
     <header className="w-full" style={{ height: 80 }}>
       <div className="max-w-[1400px] mx-auto px-8 sm:px-12 h-full flex items-center">
         <Link
+          id="nav-logo"
           to="/"
           className="hidden sm:flex font-[Inter] text-sm font-normal no-underline items-center gap-2"
           style={{ color: "#1a1a1a" }}
         >
           chris.
         </Link>
-        <nav className="flex items-center gap-8 mx-auto sm:mx-0 sm:ml-auto">
+        <nav id="nav-links" className="flex items-center gap-8 mx-auto sm:mx-0 sm:ml-auto">
           <Link
             to="/about"
             className="text-sm font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
@@ -330,8 +413,9 @@ function Hero() {
       <div className="max-w-[1400px] mx-auto px-8 sm:px-12">
         <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
           {/* Left side — name + tagline */}
-          <div className="flex-1 min-w-0">
+          <div id="hero-left" className="flex-1 min-w-0">
             <h1
+              id="hero-name"
               className="font-[Inter] font-bold leading-[0.95] tracking-tight"
               style={{
                 fontSize: "clamp(56px, 9vw, 120px)",
@@ -343,6 +427,7 @@ function Hero() {
               Porter.
             </h1>
             <p
+              id="hero-tagline"
               className="font-[Inter] font-normal mt-12"
               style={{
                 fontSize: "clamp(20px, 2.5vw, 28px)",
