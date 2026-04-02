@@ -315,7 +315,6 @@ export function HomePage() {
             alt=""
             className="absolute"
             style={{
-              opacity: 0.25,
               width: "140%",
               height: "160%",
               top: "-50%",
@@ -347,7 +346,6 @@ export function HomePage() {
             type="image/svg+xml"
             className="absolute pointer-events-none"
             style={{
-              opacity: 0.25,
               width: "120%",
               height: "120%",
               top: "-10%",

@@ -12,8 +12,15 @@
         from { opacity: 0; }
         to   { opacity: 1; }
     }
+    @keyframes fadein-dim {
+        from { opacity: 0; }
+        to   { opacity: 0.25; }
+    }
     
 
+    .layer-water {
+        opacity: 0.25;
+    }
     .layer-water path {
         stroke: #aaaaaa;
         stroke-width: 2.5;
@@ -26,6 +33,9 @@
     }
     
 
+    .layer-highways {
+        opacity: 0.25;
+    }
     .layer-highways path {
         stroke: #bbbbbb;
         stroke-width: 2.2;
@@ -38,6 +48,9 @@
     }
     
 
+    .layer-roads {
+        opacity: 0.25;
+    }
     .layer-roads path {
         stroke: #aaaaaa;
         stroke-width: 1.0;
@@ -50,6 +63,9 @@
     }
     
 
+    .layer-residential {
+        opacity: 0.25;
+    }
     .layer-residential path {
         stroke: #999999;
         stroke-width: 0.4;
@@ -67,7 +83,7 @@
         font-size: 14px;
         fill: #555;
         opacity: 0;
-        animation: fadein 2s ease-out 10s forwards;
+        animation: fadein-dim 2s ease-out 10s forwards;
         text-anchor: middle;
     }
     
@@ -10055,9 +10071,9 @@
 
   <!-- Coordinate ping dot — hidden by default, shown via .ping-visible class on SVG -->
   <g id="coord-ping" opacity="0" style="transition: opacity 0.3s">
-    <circle cx="632" cy="887" r="8" fill="#3b82f6"/>
-    <circle cx="632" cy="887" r="8" fill="#3b82f6">
-      <animate attributeName="r" from="8" to="24" dur="1.5s" repeatCount="indefinite"/>
+    <circle cx="632" cy="887" r="5" fill="#3b82f6"/>
+    <circle cx="632" cy="887" r="5" fill="#3b82f6">
+      <animate attributeName="r" from="5" to="16" dur="1.5s" repeatCount="indefinite"/>
       <animate attributeName="opacity" from="1" to="0" dur="1.5s" repeatCount="indefinite"/>
     </circle>
   </g>
