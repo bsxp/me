@@ -110,7 +110,7 @@ export function HomePage() {
         0
       );
       heroExitTl.to(
-        "#home-intro img[alt='']",
+        "#home-intro img[alt=''], #home-intro object",
         { opacity: 0, duration: 0.2, ease: "none" },
         0
       );
