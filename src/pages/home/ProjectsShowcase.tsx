@@ -9,6 +9,7 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 // All projects for the showcase list
 const ALL_PROJECTS = projects;
+export const SHOWCASE_SCROLL_DISTANCE = ALL_PROJECTS.length * 150;
 
 export function ProjectsShowcase() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -40,6 +41,12 @@ export function ProjectsShowcase() {
             activeIndexRef.current = idx;
             setActiveIndex(idx);
           }
+        },
+        onLeave: () => {
+          gsap.set(containerRef.current, { visibility: "hidden" });
+        },
+        onEnterBack: () => {
+          gsap.set(containerRef.current, { visibility: "visible" });
         },
       });
     },

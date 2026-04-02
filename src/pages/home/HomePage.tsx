@@ -5,7 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { SelectedProjectsList } from "./SelectedProjectsList";
 import { FeaturedProject } from "./FeaturedProject";
-import { ProjectsShowcase } from "./ProjectsShowcase";
+import { ProjectsShowcase, SHOWCASE_SCROLL_DISTANCE } from "./ProjectsShowcase";
 import { AboutOverlay } from "./AboutSection";
 import { projects } from "@/data/projects";
 import AustinSvg from "@/assets/austin-infrastructure.svg";
@@ -359,8 +359,8 @@ export function HomePage() {
       {/* All projects showcase */}
       <ProjectsShowcase />
 
-      {/* Spacer for showcase pin scroll (projects * 150 + 100vh dead zone) */}
-      <div id="showcase-spacer" style={{ height: "calc(2700px + 100vh)", backgroundColor: "#0a0a0a" }} />
+      {/* Spacer for showcase pin (pinSpacing: false) — footer sits right after */}
+      <div style={{ height: `calc(${SHOWCASE_SCROLL_DISTANCE}px - 150vh)`, backgroundColor: "#0a0a0a" }} />
 
       {/* Footer */}
       <Footer />
