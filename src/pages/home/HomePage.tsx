@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -54,6 +54,24 @@ export function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const showcaseIndexRef = useRef(0);
   const [showcaseIndex, setShowcaseIndex] = useState(0);
+  const [coordsHovered, setCoordsHovered] = useState(false);
+  const svgObjectRef = useRef<HTMLObjectElement>(null);
+
+  // Toggle ping dot inside SVG — boost opacity to counteract the 0.25 parent
+  useEffect(() => {
+    const obj = svgObjectRef.current;
+    if (!obj) return;
+    const update = () => {
+      const svgDoc = obj.contentDocument;
+      const ping = svgDoc?.getElementById("coord-ping");
+      if (ping) ping.setAttribute("opacity", coordsHovered ? "1" : "0");
+    };
+    obj.addEventListener("load", update);
+    update();
+    return () => obj.removeEventListener("load", update);
+  }, [coordsHovered]);
+
+
 
   useGSAP(
     () => {
@@ -80,10 +98,15 @@ export function HomePage() {
 
       // === Hero exit + About enter (0–0.8), then 0.8–1.0 is hold ===
 
-      // Phase 1: Hero text, SVG, nav links fade out + up
+      // Phase 1: Hero text, SVG, nav links fade out + up; vertical line slides left
       heroExitTl.to(
         ["#hero-name", "#hero-tagline", "#hero-scroll-indicator"],
         { y: -60, opacity: 0, duration: 0.2, ease: "none" },
+        0
+      );
+      heroExitTl.to(
+        "#hero-vertical-line",
+        { x: -40, opacity: 0, duration: 0.2, ease: "none" },
         0
       );
       heroExitTl.to(
@@ -318,10 +341,11 @@ export function HomePage() {
             WebkitMaskComposite: "source-over",
           }}
         >
-          <img
-            src={AustinSvg}
-            alt=""
-            className="absolute"
+          <object
+            ref={svgObjectRef}
+            data={AustinSvg}
+            type="image/svg+xml"
+            className="absolute pointer-events-none"
             style={{
               opacity: 0.25,
               width: "120%",
@@ -337,8 +361,9 @@ export function HomePage() {
         </div>
         {/* Vertical line — line, coordinates, line — rotated as one unit */}
         <div
-          className="absolute top-0 bottom-0 z-10 pointer-events-none hidden sm:flex flex-col items-center"
-          style={{ left: 47 }}
+          id="hero-vertical-line"
+          className="absolute top-0 bottom-0 z-30 pointer-events-none hidden sm:flex flex-col items-center"
+          style={{ left: 94 }}
         >
           {/* Top line segment */}
           <div style={{ width: 1, flex: "1 1 0%", backgroundColor: "#1a1a1a", opacity: 0.5 }} />
@@ -348,12 +373,15 @@ export function HomePage() {
             style={{ width: 1, height: 180 }}
           >
             <span
-              className="absolute left-1/2 top-1/2 font-['Space_Mono'] text-[10px] tracking-[0.15em] uppercase whitespace-nowrap"
+              className="absolute left-1/2 top-1/2 font-['Space_Mono'] text-[10px] tracking-[0.15em] uppercase whitespace-nowrap cursor-pointer"
               style={{
                 color: "#1a1a1a",
                 opacity: 0.6,
                 transform: "translate(-50%, -50%) rotate(-90deg)",
+                pointerEvents: "auto",
               }}
+              onMouseEnter={() => setCoordsHovered(true)}
+              onMouseLeave={() => setCoordsHovered(false)}
             >
               30.2617°N — 97.7452°W
             </span>
@@ -631,3 +659,4 @@ function Footer() {
     </footer>
   );
 }
+

@@ -10052,4 +10052,13 @@
   </g>
 
   <text class="title-text" x="600.0" y="1370">AUSTIN, TX</text>
+
+  <!-- Coordinate ping dot — hidden by default, shown via .ping-visible class on SVG -->
+  <g id="coord-ping" opacity="0" style="transition: opacity 0.3s">
+    <circle cx="632" cy="887" r="8" fill="#3b82f6"/>
+    <circle cx="632" cy="887" r="8" fill="#3b82f6">
+      <animate attributeName="r" from="8" to="24" dur="1.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" from="1" to="0" dur="1.5s" repeatCount="indefinite"/>
+    </circle>
+  </g>
 </svg>
