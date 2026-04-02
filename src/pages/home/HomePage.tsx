@@ -335,6 +335,32 @@ export function HomePage() {
           <Nav />
           <Hero />
         </div>
+        {/* Vertical line — line, coordinates, line — rotated as one unit */}
+        <div
+          className="absolute top-0 bottom-0 z-10 pointer-events-none hidden sm:flex flex-col items-center"
+          style={{ left: 47 }}
+        >
+          {/* Top line segment */}
+          <div style={{ width: 1, flex: "1 1 0%", backgroundColor: "#1a1a1a", opacity: 0.5 }} />
+          {/* Coordinates — rotated 90°, explicit height to create gap */}
+          <div
+            className="relative shrink-0"
+            style={{ width: 1, height: 180 }}
+          >
+            <span
+              className="absolute left-1/2 top-1/2 font-['Space_Mono'] text-[10px] tracking-[0.15em] uppercase whitespace-nowrap"
+              style={{
+                color: "#1a1a1a",
+                opacity: 0.6,
+                transform: "translate(-50%, -50%) rotate(-90deg)",
+              }}
+            >
+              30.2617°N — 97.7452°W
+            </span>
+          </div>
+          {/* Bottom line segment */}
+          <div style={{ width: 1, flex: "0 0 18%", backgroundColor: "#1a1a1a", opacity: 0.5 }} />
+        </div>
         {/* About overlay — fades in after hero elements exit */}
         <AboutOverlay />
         {/* Desktop scroll indicator */}
