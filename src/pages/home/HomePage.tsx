@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 import { SelectedProjectsList } from "./SelectedProjectsList";
 import { FeaturedProject } from "./FeaturedProject";
 import { ProjectsShowcase } from "./ProjectsShowcase";
+import { AboutSection } from "./AboutSection";
 import { projects } from "@/data/projects";
 import AustinSvg from "@/assets/austin-infrastructure.svg";
 
@@ -241,6 +242,9 @@ export function HomePage() {
           </svg>
         </div>
       </div>
+
+      {/* About section */}
+      <AboutSection />
 
       {/* Featured projects wrapper — all panels stacked, pinned as a group */}
       <div id="featured-wrapper" className="relative z-10" style={{ height: "100vh", backgroundColor: "#0a0a0a" }}>

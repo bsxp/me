@@ -33,7 +33,7 @@ const projects: Project[] = [
         us?
         <br />
         <br />
-        Hearth uses urban datasets to understand what makes our cities feel
+        Hearth uses vast quantities of urban data to understand what makes our cities feel
         better, and aims to make prescriptive changes to spaces to make them
         more human-centric.
       </span>
