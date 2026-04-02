@@ -57,7 +57,7 @@ export function HomePage() {
     () => {
       const transitions = featuredProjects.length - 1; // 5 transitions between 6 panels
       const buffer = 200; // px of scroll pause between each transition
-      const totalPinScroll = transitions * window.innerHeight + (transitions + 2) * buffer;
+      const totalPinScroll = transitions * window.innerHeight + (transitions + 3) * buffer;
 
       // Pin the intro and drive the hero→about transition as one scrubbed timeline
       // First 800px: hero fades out. Next: about fades in. Then 800px hold before featured.
@@ -348,13 +348,22 @@ export function HomePage() {
       <div
         id="featured-spacer"
         style={{
-          height: `calc(${featuredProjects.length - 1} * 100vh + ${(featuredProjects.length) * 200}px)`,
+          height: `calc(${featuredProjects.length - 1} * 100vh + ${(featuredProjects.length + 2) * 200}px)`,
           backgroundColor: "#0a0a0a",
         }}
       />
 
-      {/* All projects showcase — follows immediately after spacer */}
+      {/* Spacer so Lumon fully exits before showcase pins */}
+      <div style={{ height: "100vh", backgroundColor: "#0a0a0a" }} />
+
+      {/* All projects showcase */}
       <ProjectsShowcase />
+
+      {/* Spacer for showcase pin scroll (projects * 150 + 100vh dead zone) */}
+      <div id="showcase-spacer" style={{ height: "calc(2700px + 100vh)", backgroundColor: "#0a0a0a" }} />
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
@@ -447,5 +456,109 @@ function Hero() {
         </div>
       </div>
     </section>
+  );
+}
+
+function Footer() {
+  return (
+    <footer
+      className="w-full py-16 px-8 sm:px-12"
+      style={{ backgroundColor: "#0a0a0a" }}
+    >
+      <div className="max-w-[1400px] mx-auto">
+        <div className="w-full h-px mb-12" style={{ backgroundColor: "#333" }} />
+        <div className="flex flex-col lg:flex-row justify-between gap-12">
+          {/* Left — name + location */}
+          <div>
+            <p
+              className="font-[Inter] font-bold text-lg"
+              style={{ color: "#fafafa" }}
+            >
+              Chris Porter
+            </p>
+            <p
+              className="font-['Space_Mono'] text-xs mt-2"
+              style={{ color: "#666" }}
+            >
+              Austin, Texas
+            </p>
+          </div>
+
+          {/* Middle — social links */}
+          <div className="flex flex-col gap-2">
+            <p
+              className="font-[Inter] text-xs uppercase tracking-widest mb-2"
+              style={{ color: "#666" }}
+            >
+              Social
+            </p>
+            <a
+              href="mailto:hi@chrisporter.org"
+              className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
+              style={{ color: "#999" }}
+            >
+              Email
+            </a>
+            <a
+              href="https://linkedin.com/in/chris-porterwa"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
+              style={{ color: "#999" }}
+            >
+              LinkedIn
+            </a>
+            <a
+              href="https://github.com/bsxp"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
+              style={{ color: "#999" }}
+            >
+              GitHub
+            </a>
+          </div>
+
+          {/* Right — site links */}
+          <div className="flex flex-col gap-2">
+            <p
+              className="font-[Inter] text-xs uppercase tracking-widest mb-2"
+              style={{ color: "#666" }}
+            >
+              Site
+            </p>
+            <Link
+              to="/about"
+              className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
+              style={{ color: "#999" }}
+            >
+              About
+            </Link>
+            <Link
+              to="/"
+              className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
+              style={{ color: "#999" }}
+            >
+              Projects
+            </Link>
+            <Link
+              to="/blog"
+              className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
+              style={{ color: "#999" }}
+            >
+              Blog
+            </Link>
+          </div>
+        </div>
+
+        <div className="w-full h-px mt-12 mb-6" style={{ backgroundColor: "#333" }} />
+        <p
+          className="font-['Space_Mono'] text-xs"
+          style={{ color: "#444" }}
+        >
+          &copy; {new Date().getFullYear()} Chris Porter
+        </p>
+      </div>
+    </footer>
   );
 }

@@ -23,14 +23,16 @@ export function ProjectsShowcase() {
       ScrollTrigger.create({
         trigger: containerRef.current,
         start: "top top",
-        end: `+=${numProjects * 150}`,
+        end: `+=${numProjects * 150 + window.innerHeight}`,
         pin: true,
-        pinSpacing: true,
+        pinSpacing: false,
         onUpdate: (self) => {
+          const deadZone = window.innerHeight / (numProjects * 150 + window.innerHeight);
+          const adjustedProgress = Math.max(0, (self.progress - deadZone) / (1 - deadZone));
           const idx = Math.max(
             0,
             Math.min(
-              Math.floor(self.progress * numProjects),
+              Math.floor(adjustedProgress * numProjects),
               numProjects - 1
             )
           );
