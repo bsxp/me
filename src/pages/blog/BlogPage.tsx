@@ -71,11 +71,11 @@ function Header() {
           My corner of the internet
         </h1>
         <p
-          className="font-[Inter] font-normal mt-4"
+          className="font-['Space_Mono'] font-normal mt-4"
           style={{
-            fontSize: 15,
+            fontSize: 14,
             color: "#6b6b6b",
-            lineHeight: 1.6,
+            lineHeight: 1.7,
             maxWidth: 380,
           }}
         >
@@ -115,7 +115,7 @@ function YearGroup({
         {/* Year label */}
         <div className="shrink-0 pt-6 sm:pt-0" style={{ width: 200 }}>
           <span
-            className="font-[Inter] text-sm font-normal sm:leading-[72px]"
+            className="font-['Space_Mono'] text-xs font-normal sm:leading-[72px]"
             style={{ color: "#999" }}
           >
             {year}
@@ -151,7 +151,7 @@ function ArticleRow({
       >
         {/* Title */}
         <span
-          className="flex-1 font-[Inter] text-sm sm:text-base font-normal min-w-0"
+          className="flex-1 font-['Space_Mono'] text-sm font-normal min-w-0"
           style={{ color: "#1a1a1a" }}
         >
           {article.title}
@@ -159,7 +159,7 @@ function ArticleRow({
 
         {/* Tag */}
         <span
-          className="hidden sm:inline-flex items-center gap-1.5 text-sm font-[Inter] font-normal shrink-0"
+          className="hidden sm:inline-flex items-center gap-1.5 text-xs font-['Space_Mono'] font-normal shrink-0"
           style={{ color: "#999" }}
         >
           {tag}

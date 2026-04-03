@@ -70,6 +70,7 @@ export function HomePage() {
 
       // Pin the intro and drive the hero→about transition as one scrubbed timeline
       // First 800px: hero fades out. Next: about fades in. Then 800px hold before featured.
+      let wasInAbout = false;
       const heroExitTl = gsap.timeline({
         scrollTrigger: {
           trigger: "#home-intro",
@@ -78,6 +79,17 @@ export function HomePage() {
           pin: true,
           pinReparent: false,
           scrub: 0.3,
+          onUpdate: (self) => {
+            const inAbout = self.progress > 0.5;
+            if (inAbout !== wasInAbout) {
+              wasInAbout = inAbout;
+              if (inAbout) {
+                history.replaceState(null, "", "#about");
+              } else {
+                history.replaceState(null, "", window.location.pathname);
+              }
+            }
+          },
         },
       });
 
@@ -287,6 +299,16 @@ export function HomePage() {
     { scope: containerRef }
   );
 
+  // Scroll to about section if URL has #about on mount
+  useEffect(() => {
+    if (window.location.hash === "#about") {
+      // Delay to let ScrollTrigger set up pinning first
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 1500 });
+      });
+    }
+  }, []);
+
   return (
     <div ref={containerRef} className="overflow-x-hidden" style={{ backgroundColor: "#0a0a0a" }}>
       {/* Intro section — gets pinned */}
@@ -332,8 +354,12 @@ export function HomePage() {
         >
           <AustinSvgMap />
         </div>
-        <div className="relative z-10">
+        {/* Nav sits above about overlay (z-20) so buttons remain clickable */}
+        <div className="absolute top-0 left-0 right-0 z-30">
           <Nav />
+        </div>
+        <div className="relative z-10">
+          <div style={{ height: 80 }} /> {/* Spacer for nav */}
           <Hero />
         </div>
         {/* Vertical line — line, coordinates, line — rotated as one unit */}
@@ -450,17 +476,27 @@ export function HomePage() {
 
 
 function Nav() {
+  const handleLogoClick = () => {
+    // If in the about section (scroll > 500), smooth scroll to reverse animation
+    // Otherwise, instant scroll to top
+    if (window.scrollY > 500) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      window.scrollTo({ top: 0 });
+    }
+  };
+
   return (
     <header className="w-full" style={{ height: 80 }}>
       <div className="max-w-[1400px] mx-auto px-8 sm:px-12 h-full flex items-center">
-        <Link
+        <button
           id="nav-logo"
-          to="/"
-          className="hidden sm:flex font-[Inter] text-sm font-normal no-underline items-center gap-2"
-          style={{ color: "#1a1a1a" }}
+          onClick={handleLogoClick}
+          className="hidden sm:flex font-[Inter] text-sm font-normal items-center gap-2 cursor-pointer"
+          style={{ color: "#1a1a1a", background: "none", border: "none", padding: 0 }}
         >
           chris.
-        </Link>
+        </button>
         <nav id="nav-links" className="flex items-center gap-8 mx-auto sm:mx-0 sm:ml-auto">
           <button
             onClick={() => window.scrollTo({ top: 1500, behavior: "smooth" })}
@@ -635,12 +671,21 @@ function Footer() {
         </div>
 
         <div className="w-full h-px mt-12 mb-6" style={{ backgroundColor: "#333" }} />
-        <p
-          className="font-['Space_Mono'] text-xs"
-          style={{ color: "#444" }}
-        >
-          &copy; {new Date().getFullYear()} Chris Porter
-        </p>
+        <div className="flex items-center justify-between">
+          <p
+            className="font-['Space_Mono'] text-xs"
+            style={{ color: "#444" }}
+          >
+            &copy; {new Date().getFullYear()} Chris Porter
+          </p>
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="font-['Space_Mono'] text-xs cursor-pointer transition-opacity hover:opacity-70"
+            style={{ color: "#666", background: "none", border: "none", padding: 0 }}
+          >
+            Take me to the top &uarr;
+          </button>
+        </div>
       </div>
     </footer>
   );
