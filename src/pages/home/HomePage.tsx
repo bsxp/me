@@ -462,20 +462,23 @@ function Nav() {
           chris.
         </Link>
         <nav id="nav-links" className="flex items-center gap-8 mx-auto sm:mx-0 sm:ml-auto">
-          <Link
-            to="/about"
-            className="text-sm font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
-            style={{ color: "#1a1a1a" }}
+          <button
+            onClick={() => window.scrollTo({ top: 1500, behavior: "smooth" })}
+            className="text-sm font-[Inter] font-normal transition-opacity hover:opacity-50 cursor-pointer"
+            style={{ color: "#1a1a1a", background: "none", border: "none", padding: 0 }}
           >
             About
-          </Link>
-          <Link
-            to="/"
-            className="text-sm font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
-            style={{ color: "#1a1a1a" }}
+          </button>
+          <button
+            onClick={() => {
+              const spacer = document.getElementById("featured-spacer");
+              if (spacer) window.scrollTo({ top: spacer.offsetTop + spacer.offsetHeight - window.innerHeight * 2 });
+            }}
+            className="text-sm font-[Inter] font-normal transition-opacity hover:opacity-50 cursor-pointer"
+            style={{ color: "#1a1a1a", background: "none", border: "none", padding: 0 }}
           >
             Projects
-          </Link>
+          </button>
           <Link
             to="/blog"
             className="text-sm font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
