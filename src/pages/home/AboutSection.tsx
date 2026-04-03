@@ -18,7 +18,7 @@ export function AboutOverlay() {
           <div id="about-logo-target" className="font-[Inter] text-sm" style={{ color: "transparent" }}>chris.</div>
           <div id="about-nav-target" className="font-[Inter] text-sm" style={{ color: "transparent" }}>Contact</div>
         </div>
-        <div className="about-line w-full h-px" style={{ backgroundColor: "#d0d0d0", marginBottom: 16, opacity: 0 }} />
+        <div id="about-line-top" className="about-line w-full h-px" style={{ backgroundColor: "#d0d0d0", marginBottom: 16, opacity: 0 }} />
 
         {/* 5-column grid filling the remaining height */}
         <div

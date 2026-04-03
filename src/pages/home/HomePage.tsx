@@ -106,6 +106,43 @@ export function HomePage() {
         { x: -40, opacity: 0, duration: 0.2, ease: "none" },
         0
       );
+      // Tablet horizontal line: step 1 — fade coords text
+      heroExitTl.to(
+        "#hero-hline-coords",
+        { opacity: 0, duration: 0.12, ease: "none" },
+        0.08
+      );
+      // Step 2 — collapse the coord gap (starts well after text is gone)
+      heroExitTl.to(
+        "#hero-hline-coords",
+        { width: 0, padding: 0, duration: 0.12, ease: "none" },
+        0.26
+      );
+      // Step 3 — slide up to about-line position, adjust padding and color
+      {
+        const hLine = document.getElementById("hero-horizontal-line");
+        const aboutLineTop = document.getElementById("about-line-top");
+        const isTablet = window.innerWidth >= 640 && window.innerWidth < 1024;
+
+        if (hLine && aboutLineTop && isTablet) {
+          // Measure actual positions for precise alignment
+          const hLineY = hLine.getBoundingClientRect().top;
+          const aboutLineY = aboutLineTop.getBoundingClientRect().top;
+          heroExitTl.to(
+            "#hero-horizontal-line",
+            { y: aboutLineY - hLineY - 8, paddingLeft: 16, paddingRight: 16, duration: 0.12, ease: "none" },
+            0.4
+          );
+          // Transition line color to match about line
+          heroExitTl.to(
+            "#hero-hline-left, #hero-hline-right",
+            { backgroundColor: "#d0d0d0", opacity: 1, duration: 0.12, ease: "none" },
+            0.4
+          );
+          // Hide about-line-top visually but keep its space
+          heroExitTl.set("#about-line-top", { visibility: "hidden" }, 0);
+        }
+      }
       heroExitTl.to(
         "#home-intro img[alt=''], #home-intro .desktop-svg-map",
         { opacity: 0, duration: 0.2, ease: "none" },
@@ -367,11 +404,11 @@ export function HomePage() {
           <div style={{ height: 80 }} /> {/* Spacer for nav */}
           <Hero />
         </div>
-        {/* Vertical line — line, coordinates, line — rotated as one unit */}
+        {/* Vertical line — desktop only (lg+) */}
         <div
           id="hero-vertical-line"
-          className="absolute top-0 bottom-0 z-30 pointer-events-none hidden sm:flex flex-col items-center"
-          style={{ left: 94 }}
+          className="absolute top-0 bottom-0 z-30 pointer-events-none hidden lg:flex flex-col items-center"
+          style={{ left: "calc((max(0px, (100vw - 1400px) / 2) + 48px) / 2)" }}
         >
           {/* Top line segment */}
           <div style={{ width: 1, flex: "1 1 0%", backgroundColor: "#1a1a1a", opacity: 0.5 }} />
@@ -402,6 +439,23 @@ export function HomePage() {
           </div>
           {/* Bottom line segment */}
           <div style={{ width: 1, flex: "0 0 18%", backgroundColor: "#1a1a1a", opacity: 0.5 }} />
+        </div>
+        {/* Horizontal line — tablet only (sm to lg) */}
+        <div
+          id="hero-horizontal-line"
+          className="absolute left-0 right-0 z-30 pointer-events-none hidden sm:flex lg:hidden items-center"
+          style={{ top: 80, paddingLeft: 48, paddingRight: 48 }}
+        >
+          <div id="hero-hline-left" style={{ flex: 1, height: 1, backgroundColor: "#1a1a1a", opacity: 0.5 }} />
+          <div id="hero-hline-coords" className="shrink-0 overflow-hidden" style={{ padding: "0 16px" }}>
+            <span
+              className="font-['Space_Mono'] text-[10px] tracking-[0.15em] uppercase whitespace-nowrap"
+              style={{ color: "#1a1a1a", opacity: 0.6 }}
+            >
+              30.2617°N — 97.7452°W
+            </span>
+          </div>
+          <div id="hero-hline-right" style={{ flex: 1, height: 1, backgroundColor: "#1a1a1a", opacity: 0.5 }} />
         </div>
         {/* About overlay — fades in after hero elements exit */}
         <AboutOverlay />
@@ -508,7 +562,7 @@ function Nav() {
             className="text-sm font-[Inter] font-normal transition-opacity hover:opacity-50 cursor-pointer"
             style={{ color: "#1a1a1a", background: "none", border: "none", padding: 0 }}
           >
-            About
+            about
           </button>
           <button
             onClick={() => {
@@ -518,21 +572,21 @@ function Nav() {
             className="text-sm font-[Inter] font-normal transition-opacity hover:opacity-50 cursor-pointer"
             style={{ color: "#1a1a1a", background: "none", border: "none", padding: 0 }}
           >
-            Projects
+            projects
           </button>
           <Link
             to="/blog"
             className="text-sm font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
             style={{ color: "#1a1a1a" }}
           >
-            Blog
+            blog
           </Link>
           <a
             href="mailto:chris@example.com"
             className="text-sm font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
             style={{ color: "#1a1a1a" }}
           >
-            Contact
+            contact
           </a>
         </nav>
       </div>
