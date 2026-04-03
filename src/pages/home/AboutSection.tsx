@@ -1,8 +1,11 @@
+import { useState } from "react";
 import ChrisCoffee from "@/assets/chris-coffee.png";
 import AboutLeadenhall from "@/assets/about-leadenhall.png";
 import AboutPragueTram from "@/assets/about-prague-tram.png";
 
 export function AboutOverlay() {
+  const [expandedImage, setExpandedImage] = useState(0);
+
   return (
     <div
       id="about-overlay"
@@ -22,26 +25,53 @@ export function AboutOverlay() {
           id="about-grid"
           className="grid grid-cols-1 lg:grid-cols-5 gap-2 flex-1 min-h-0"
         >
-          {/* Columns 1-2: full-height image */}
+          {/* Mobile accordion images */}
+          <div className="lg:hidden flex flex-col gap-1" style={{ height: 360 }}>
+            {[
+              { src: AboutLeadenhall, alt: "Leadenhall Market" },
+              { src: ChrisCoffee, alt: "Chris at a coffee shop" },
+              { src: AboutPragueTram, alt: "Prague tram" },
+            ].map((img, i) => (
+              <div
+                key={i}
+                className="about-image overflow-hidden rounded-sm cursor-pointer"
+                style={{
+                  flex: expandedImage === i ? 4 : 1,
+                  transition: "flex 0.4s ease-in-out",
+                  opacity: 0,
+                  minHeight: 0,
+                }}
+                onClick={() => setExpandedImage(i)}
+              >
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop: columns 1-2 full-height image */}
           <img
             src={AboutLeadenhall}
             alt="Leadenhall Market"
-            className="about-image lg:col-span-2 h-full rounded-sm min-h-[200px] object-cover w-full"
+            className="about-image-desktop hidden lg:block lg:col-span-2 h-full rounded-sm min-h-[200px] object-cover w-full"
             style={{ opacity: 0 }}
           />
 
-          {/* Column 3: two stacked vertical images */}
-          <div className="lg:col-span-1 flex flex-col gap-2 min-h-[200px]">
+          {/* Desktop: column 3 two stacked vertical images */}
+          <div className="hidden lg:flex lg:col-span-1 flex-col gap-2 min-h-[200px]">
             <img
               src={ChrisCoffee}
               alt="Chris at a coffee shop"
-              className="about-image flex-1 rounded-sm object-cover min-h-0"
+              className="about-image-desktop flex-1 rounded-sm object-cover min-h-0"
               style={{ opacity: 0 }}
             />
             <img
               src={AboutPragueTram}
               alt="Prague tram"
-              className="about-image flex-1 rounded-sm object-cover min-h-0"
+              className="about-image-desktop flex-1 rounded-sm object-cover min-h-0"
               style={{ opacity: 0 }}
             />
           </div>

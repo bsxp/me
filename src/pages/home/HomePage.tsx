@@ -161,16 +161,21 @@ export function HomePage() {
         document.getElementById("about-inner")?.style.setProperty("pointer-events", "none");
       }}, 0.4);
       heroExitTl.fromTo(".about-line", { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none", stagger: 0.04 }, 0.44);
-      // Left image slides in from left, top stacked from top, bottom stacked from bottom
-      const aboutImages = document.querySelectorAll(".about-image");
-      if (aboutImages[0]) {
-        heroExitTl.fromTo(aboutImages[0], { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.12, ease: "none" }, 0.48);
+      // Mobile: accordion images fade in together
+      const mobileImages = document.querySelectorAll(".about-image");
+      if (mobileImages.length) {
+        heroExitTl.fromTo(mobileImages, { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none", stagger: 0.02 }, 0.48);
       }
-      if (aboutImages[1]) {
-        heroExitTl.fromTo(aboutImages[1], { opacity: 0, y: -16 }, { opacity: 1, y: 0, duration: 0.12, ease: "none" }, 0.52);
+      // Desktop: left image slides from left, stacked from top/bottom
+      const desktopImages = document.querySelectorAll(".about-image-desktop");
+      if (desktopImages[0]) {
+        heroExitTl.fromTo(desktopImages[0], { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.12, ease: "none" }, 0.48);
       }
-      if (aboutImages[2]) {
-        heroExitTl.fromTo(aboutImages[2], { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.12, ease: "none" }, 0.52);
+      if (desktopImages[1]) {
+        heroExitTl.fromTo(desktopImages[1], { opacity: 0, y: -16 }, { opacity: 1, y: 0, duration: 0.12, ease: "none" }, 0.52);
+      }
+      if (desktopImages[2]) {
+        heroExitTl.fromTo(desktopImages[2], { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.12, ease: "none" }, 0.52);
       }
       heroExitTl.fromTo("#about-text", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.2, ease: "none" }, 0.56);
 
