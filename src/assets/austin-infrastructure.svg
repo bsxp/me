@@ -21,6 +21,13 @@
     .layer-water {
         opacity: 0.25;
     }
+    path, .title-text {
+        animation-play-state: paused;
+    }
+    .svg-running path, .svg-running .title-text {
+        animation-play-state: running;
+    }
+
     .layer-water path {
         stroke: #aaaaaa;
         stroke-width: 2.5;
@@ -31,7 +38,7 @@
         stroke-dashoffset: var(--len);
         animation: draw 8s ease-out 0s forwards;
     }
-    
+
 
     .layer-highways {
         opacity: 0.25;
@@ -46,7 +53,7 @@
         stroke-dashoffset: var(--len);
         animation: draw var(--dur) ease-out var(--del) forwards;
     }
-    
+
 
     .layer-roads {
         opacity: 0.25;
@@ -61,7 +68,7 @@
         stroke-dashoffset: var(--len);
         animation: draw var(--dur) ease-out var(--del) forwards;
     }
-    
+
 
     .layer-residential {
         opacity: 0.25;
@@ -76,7 +83,7 @@
         stroke-dashoffset: var(--len);
         animation: draw var(--dur) ease-out var(--del) forwards;
     }
-    
+
 
     .title-text {
         font-family: 'Courier New', monospace;

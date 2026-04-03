@@ -9,7 +9,7 @@ export function AboutOverlay() {
       className="absolute inset-0 z-20 pointer-events-none"
       style={{ opacity: 0, padding: 16 }}
     >
-      <div className="pointer-events-auto h-full flex flex-col">
+      <div id="about-inner" className="pointer-events-none h-full flex flex-col">
         {/* Target row for where "chris." and nav links animate to */}
         <div className="flex items-start justify-between" style={{ marginBottom: 8 }}>
           <div id="about-logo-target" className="font-[Inter] text-sm" style={{ color: "transparent" }}>chris.</div>

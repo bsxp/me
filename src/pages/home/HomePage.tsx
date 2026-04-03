@@ -54,22 +54,6 @@ export function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const showcaseIndexRef = useRef(0);
   const [showcaseIndex, setShowcaseIndex] = useState(0);
-  const [coordsHovered, setCoordsHovered] = useState(false);
-  const svgObjectRef = useRef<HTMLObjectElement>(null);
-
-  // Toggle ping dot inside SVG — boost opacity to counteract the 0.25 parent
-  useEffect(() => {
-    const obj = svgObjectRef.current;
-    if (!obj) return;
-    const update = () => {
-      const svgDoc = obj.contentDocument;
-      const ping = svgDoc?.getElementById("coord-ping");
-      if (ping) ping.setAttribute("opacity", coordsHovered ? "1" : "0");
-    };
-    obj.addEventListener("load", update);
-    update();
-    return () => obj.removeEventListener("load", update);
-  }, [coordsHovered]);
 
 
 
@@ -92,6 +76,7 @@ export function HomePage() {
           start: "top top",
           end: "+=2000",
           pin: true,
+          pinReparent: false,
           scrub: 0.3,
         },
       });
@@ -110,7 +95,7 @@ export function HomePage() {
         0
       );
       heroExitTl.to(
-        "#home-intro img[alt=''], #home-intro object",
+        "#home-intro img[alt=''], #home-intro .desktop-svg-map",
         { opacity: 0, duration: 0.2, ease: "none" },
         0
       );
@@ -158,7 +143,11 @@ export function HomePage() {
       heroExitTl.to(".selected-project-collapse-line", { opacity: 0, duration: 0.12, ease: "none" }, 0.32);
 
       // Phase 3: About overlay elements fade in
-      heroExitTl.fromTo("#about-overlay", { opacity: 0 }, { opacity: 1, duration: 0.08, ease: "none" }, 0.4);
+      heroExitTl.fromTo("#about-overlay", { opacity: 0 }, { opacity: 1, duration: 0.08, ease: "none", onComplete: () => {
+        document.getElementById("about-inner")?.style.setProperty("pointer-events", "auto");
+      }, onReverseComplete: () => {
+        document.getElementById("about-inner")?.style.setProperty("pointer-events", "none");
+      }}, 0.4);
       heroExitTl.fromTo(".about-line", { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none", stagger: 0.04 }, 0.44);
       // Left image slides in from left, top stacked from top, bottom stacked from bottom
       const aboutImages = document.querySelectorAll(".about-image");
@@ -315,6 +304,7 @@ export function HomePage() {
             alt=""
             className="absolute"
             style={{
+
               width: "140%",
               height: "160%",
               top: "-50%",
@@ -324,7 +314,7 @@ export function HomePage() {
         </div>
         {/* Austin infrastructure SVG underlay — faded right on desktop */}
         <div
-          className="absolute inset-0 pointer-events-none overflow-hidden hidden lg:block"
+          className="absolute inset-0 pointer-events-none overflow-hidden hidden lg:block z-0"
           style={{
             maskImage: `
               linear-gradient(to right, black 40%, transparent 70%),
@@ -340,18 +330,7 @@ export function HomePage() {
             WebkitMaskComposite: "source-over",
           }}
         >
-          <object
-            ref={svgObjectRef}
-            data={AustinSvg}
-            type="image/svg+xml"
-            className="absolute pointer-events-none"
-            style={{
-              width: "120%",
-              height: "120%",
-              top: "-10%",
-              left: "-15%",
-            }}
-          />
+          <AustinSvgMap />
         </div>
         <div className="relative z-10">
           <Nav />
@@ -378,8 +357,14 @@ export function HomePage() {
                 transform: "translate(-50%, -50%) rotate(-90deg)",
                 pointerEvents: "auto",
               }}
-              onMouseEnter={() => setCoordsHovered(true)}
-              onMouseLeave={() => setCoordsHovered(false)}
+              onMouseEnter={() => {
+                const ping = document.getElementById("coord-ping");
+                if (ping) ping.setAttribute("opacity", "1");
+              }}
+              onMouseLeave={() => {
+                const ping = document.getElementById("coord-ping");
+                if (ping) ping.setAttribute("opacity", "0");
+              }}
             >
               30.2617°N — 97.7452°W
             </span>
@@ -655,6 +640,43 @@ function Footer() {
         </p>
       </div>
     </footer>
+  );
+}
+
+function AustinSvgMap() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    fetch(AustinSvg)
+      .then((r) => r.text())
+      .then((text) => {
+        el.innerHTML = text;
+        const svgEl = el.querySelector("svg");
+        if (svgEl) {
+          svgEl.setAttribute("width", "100%");
+          svgEl.setAttribute("height", "100%");
+          svgEl.style.pointerEvents = "none";
+          requestAnimationFrame(() => {
+            svgEl.classList.add("svg-running");
+          });
+        }
+      });
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      id="austin-svg-map"
+      className="absolute pointer-events-none desktop-svg-map"
+      style={{
+        width: "120%",
+        height: "120%",
+        top: "-10%",
+        left: "-15%",
+      }}
+    />
   );
 }
 
