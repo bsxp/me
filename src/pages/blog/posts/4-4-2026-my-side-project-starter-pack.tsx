@@ -14,9 +14,9 @@ export default function MySideProjectStarterPack() {
     <article>
       <p>
         It's 2026, if you're a developer and haven't at least tried to spin up a
-        side project with AI... you're falling behind, bud. Let me be crisp: by
-        "side project" I don't mean "my next business". What I mean, whenever I
-        ask myself, "What if I could just...?", it's the thing that comes out the
+        side project with AI... I think you might be falling behind a little bit. Let me be crisp: by
+        "side project" I don't mean "your next business". What I mean is, whenever you
+        ask yourself, "What if I could just...?", it's the thing that comes out the
         other side.
       </p>
       <ul>
