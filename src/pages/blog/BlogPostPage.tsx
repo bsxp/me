@@ -134,6 +134,17 @@ function BlogPostPage() {
                   font-weight: 600;
                   color: #1a1a1a;
                 }
+                .blog-post-content blockquote {
+                  border-left: 3px solid #e5e5e5;
+                  padding-left: 1.25rem;
+                  margin: 1.5rem 0;
+                  font-style: italic;
+                  color: #666;
+                }
+                .blog-post-content img {
+                  max-width: 100%;
+                  height: auto;
+                }
               `}</style>
               <Component />
             </div>

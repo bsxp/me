@@ -1,5 +1,6 @@
 import { lazy, type ComponentType } from "react";
 import { POST_META as sideProjectMeta } from "./4-4-2026-my-side-project-starter-pack";
+import { POST_META as beWeirdMeta } from "./3-13-2026-be-weird";
 
 export interface PostMeta {
   slug: string;
@@ -18,6 +19,10 @@ export const POSTS: Post[] = [
   {
     meta: sideProjectMeta,
     Component: lazy(() => import("./4-4-2026-my-side-project-starter-pack")),
+  },
+  {
+    meta: beWeirdMeta,
+    Component: lazy(() => import("./3-13-2026-be-weird")),
   },
 ];
 
