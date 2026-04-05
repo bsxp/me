@@ -132,7 +132,7 @@ export default function BeWeird() {
       />
 
       <p>
-        As I waited in line, about a dozen people came up asking to get photos
+        While I waited in line, about a dozen people came up asking to get photos
         with "Mr. Claw", which was hilarious. While we waited to get in, my
         ClawCon experience started by making new friends who were far deeper
         OpenClaw enthusiasts than I am. I met a couple who runs their entire
