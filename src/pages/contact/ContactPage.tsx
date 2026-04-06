@@ -28,7 +28,7 @@ function ContactPage() {
               about
             </Link>
             <Link
-              to="/"
+              to="/#projects"
               className="text-xs font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
               style={{ color: "#1a1a1a" }}
             >
@@ -40,6 +40,13 @@ function ContactPage() {
               style={{ color: "#1a1a1a" }}
             >
               blog
+            </Link>
+            <Link
+              to="/contact"
+              className="text-xs font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
+              style={{ color: "#1a1a1a" }}
+            >
+              contact
             </Link>
           </nav>
         </div>

@@ -1,6 +1,11 @@
+import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 import { POSTS } from "./posts";
+
+gsap.registerPlugin(useGSAP);
 
 interface ArticleEntry {
   id: string;
@@ -40,8 +45,34 @@ const sortedYears = Object.keys(grouped).sort((a, b) => Number(b) - Number(a));
 const COMING_SOON_COUNT = 3;
 
 export function BlogPage() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    const tl = gsap.timeline();
+
+    tl.fromTo(
+      "#blog-header",
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }
+    );
+
+    tl.fromTo(
+      ".blog-article-row",
+      { opacity: 0, y: 12 },
+      { opacity: 1, y: 0, duration: 0.4, ease: "power2.out", stagger: 0.07 },
+      "-=0.3"
+    );
+
+    tl.fromTo(
+      ".blog-coming-soon",
+      { opacity: 0 },
+      { opacity: 1, duration: 0.3, ease: "power2.out", stagger: 0.07 },
+      "-=0.2"
+    );
+  }, { scope: containerRef });
+
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#fafafa" }}>
+    <div ref={containerRef} className="min-h-screen" style={{ backgroundColor: "#fafafa" }}>
       <Nav />
       <Header />
       <ArticleList />
@@ -69,7 +100,7 @@ function Nav() {
             about
           </Link>
           <Link
-            to="/"
+            to="/#projects"
             className="text-xs font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
             style={{ color: "#1a1a1a" }}
           >
@@ -82,6 +113,13 @@ function Nav() {
           >
             blog
           </Link>
+          <Link
+            to="/contact"
+            className="text-xs font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
+            style={{ color: "#1a1a1a" }}
+          >
+            contact
+          </Link>
         </nav>
       </div>
     </header>
@@ -90,13 +128,13 @@ function Nav() {
 
 function Header() {
   return (
-    <section className="w-full" style={{ marginTop: 48, marginBottom: 64 }}>
+    <section id="blog-header" className="w-full" style={{ marginTop: 48, marginBottom: 64, opacity: 0 }}>
       <div className="max-w-[1000px] mx-auto px-8 sm:px-12">
         <h1
           className="font-[Inter] font-normal leading-tight"
           style={{ fontSize: "clamp(28px, 4vw, 36px)", color: "#1a1a1a" }}
         >
-          My corner of the internet
+          Welcome to my mind palace
         </h1>
         <p
           className="font-['Space_Mono'] font-normal mt-4"
@@ -107,8 +145,7 @@ function Header() {
             maxWidth: 380,
           }}
         >
-          Welcome to the journal of Chris Porter. I write about my journey
-          through engineering, urbanism & design.
+          Share in my journey through engineering, urbanism & design.
         </p>
       </div>
     </section>
@@ -129,8 +166,8 @@ function ArticleList() {
           {Array.from({ length: COMING_SOON_COUNT }).map((_, i) => (
             <div
               key={i}
-              className="flex items-center py-5"
-              style={{ borderBottom: "1px solid #e5e5e5" }}
+              className="blog-coming-soon flex items-center py-5"
+              style={{ borderBottom: "1px solid #e5e5e5", opacity: 0 }}
             >
               <span
                 className="font-['Space_Mono'] text-sm font-normal"
@@ -186,7 +223,8 @@ function ArticleRow({ article }: { article: ArticleEntry }) {
   return (
     <Link
       to={article.href}
-      className="group relative block no-underline"
+      className="blog-article-row group relative block no-underline"
+      style={{ opacity: 0 }}
     >
       <div
         className="flex items-center gap-4 py-5"

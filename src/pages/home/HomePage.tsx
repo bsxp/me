@@ -341,12 +341,16 @@ export function HomePage() {
     { scope: containerRef }
   );
 
-  // Scroll to about section if URL has #about on mount
+  // Scroll to section if URL has a hash on mount
   useEffect(() => {
     if (window.location.hash === "#about") {
-      // Delay to let ScrollTrigger set up pinning first
       requestAnimationFrame(() => {
         window.scrollTo({ top: 1500 });
+      });
+    } else if (window.location.hash === "#projects") {
+      requestAnimationFrame(() => {
+        const spacer = document.getElementById("featured-spacer");
+        if (spacer) window.scrollTo({ top: spacer.offsetTop + spacer.offsetHeight - window.innerHeight * 2 });
       });
     }
   }, []);

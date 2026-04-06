@@ -1,6 +1,11 @@
-import { Suspense } from "react";
+import { useRef } from "react";
 import { Link, useParams } from "react-router-dom";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { getPostBySlug } from "./posts";
+
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 function BlogPostPage() {
   const { postId } = useParams<{ postId: string }>();
@@ -30,9 +35,66 @@ function BlogPostPage() {
   }
 
   const { meta, Component } = post;
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    gsap.fromTo(
+      "#post-header",
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }
+    );
+
+    gsap.fromTo(
+      "#post-body-divider",
+      { opacity: 0 },
+      { opacity: 1, duration: 0.4, ease: "power2.out", delay: 0.4 }
+    );
+
+    const blocks = containerRef.current?.querySelectorAll(".blog-post-content > *:not(style)");
+    if (!blocks) return;
+
+    const viewportBottom = window.innerHeight;
+    let staggerIndex = 0;
+
+    blocks.forEach((block) => {
+      const rect = block.getBoundingClientRect();
+      const isInView = rect.top < viewportBottom;
+
+      if (isInView) {
+        gsap.fromTo(
+          block,
+          { opacity: 0, y: 16 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: "power2.out",
+            delay: 0.5 + staggerIndex * 0.12,
+          }
+        );
+        staggerIndex++;
+      } else {
+        gsap.fromTo(
+          block,
+          { opacity: 0, y: 16 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: block,
+              start: "top 90%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      }
+    });
+  }, { scope: containerRef });
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#fafafa" }}>
+    <div ref={containerRef} className="min-h-screen" style={{ backgroundColor: "#fafafa" }}>
       {/* Nav */}
       <header className="w-full" style={{ height: 80 }}>
         <div className="max-w-[700px] mx-auto px-8 sm:px-12 h-full flex items-center">
@@ -56,7 +118,7 @@ function BlogPostPage() {
       </header>
 
       {/* Post header */}
-      <section className="w-full" style={{ marginTop: 48, marginBottom: 40 }}>
+      <section id="post-header" className="w-full" style={{ marginTop: 48, marginBottom: 40, opacity: 0 }}>
         <div className="max-w-[700px] mx-auto px-8 sm:px-12">
           <div className="flex gap-2 mb-4">
             {meta.tags.map((tag) => (
@@ -92,12 +154,14 @@ function BlogPostPage() {
       </section>
 
       {/* Post body */}
-      <section className="w-full" style={{ paddingBottom: 64 }}>
+      <section id="post-body" className="w-full" style={{ paddingBottom: 64 }}>
         <div className="max-w-[700px] mx-auto px-8 sm:px-12">
-          <div className="w-full h-px mb-10" style={{ backgroundColor: "#e5e5e5" }} />
-          <Suspense fallback={null}>
+          <div id="post-body-divider" className="w-full h-px mb-10" style={{ backgroundColor: "#e5e5e5", opacity: 0 }} />
             <div className="blog-post-content font-[Inter] text-base leading-relaxed" style={{ color: "#333" }}>
               <style>{`
+                .blog-post-content > *:not(style) {
+                  opacity: 0;
+                }
                 .blog-post-content p {
                   margin-bottom: 1.25rem;
                   line-height: 1.8;
@@ -148,7 +212,6 @@ function BlogPostPage() {
               `}</style>
               <Component />
             </div>
-          </Suspense>
         </div>
       </section>
 
