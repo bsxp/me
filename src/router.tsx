@@ -8,7 +8,13 @@ import { BlogCategoryPageRevamp } from "./pages/blog/BlogCategoryPageRevamp";
 import { AboutPage } from "./pages/about/AboutPage";
 import { ContactPage } from "./pages/contact/ContactPage";
 import { ProjectDetailsPage_1 } from "./pages/project/ProjectDetailsPage_1";
-import { useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function gtag(...args: any[]): void;
+}
+
 // Root layout component
 function RootLayout() {
   const location = useLocation();
@@ -17,6 +23,13 @@ function RootLayout() {
   useLayoutEffect(() => {
     document.documentElement.scrollTo(0, 0);
   }, [location.pathname]);
+
+  // Send pageview to GA4 on route change
+  useEffect(() => {
+    gtag("event", "page_view", {
+      page_path: location.pathname + location.search,
+    });
+  }, [location.pathname, location.search]);
 
   return (
     <div className="app w-full min-h-svh overflow-x-hidden">
