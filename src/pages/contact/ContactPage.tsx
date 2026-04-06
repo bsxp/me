@@ -6,7 +6,7 @@ import PhoneBooths from "@/assets/about-phone-booths.png";
 function ContactPage() {
   return (
     <div
-      className="h-screen w-full overflow-hidden"
+      className="min-h-screen lg:h-screen w-full lg:overflow-hidden"
       style={{ backgroundColor: "#fafafa" }}
     >
       {/* Nav */}
@@ -47,7 +47,7 @@ function ContactPage() {
       </header>
 
       {/* Body */}
-      <div className="flex flex-col lg:flex-row" style={{ height: "calc(100vh - 80px)" }}>
+      <div className="flex flex-col lg:flex-row lg:h-[calc(100vh-80px)]">
         {/* Left — contact info */}
         <div className="lg:w-[40%] shrink-0 flex flex-col justify-between px-8 sm:px-12 py-10">
           <div>
@@ -109,28 +109,33 @@ function ContactPage() {
         {/* Vertical divider */}
         <div className="hidden lg:block w-px shrink-0" style={{ backgroundColor: "#e5e5e5" }} />
 
-        {/* Right — image collage */}
+        {/* Right — image collage (desktop: absolute positioned, mobile: stacked) */}
+        {/* Desktop */}
         <div className="hidden lg:block flex-1 relative min-h-0">
-          {/* Large image — top, full width, ~60% height */}
           <div className="absolute top-0 left-0 right-0" style={{ height: "58%" }}>
             <img src={Conservatory} alt="Conservatory" className="w-full h-full object-cover" />
           </div>
-
-          {/* Horizontal divider */}
           <div className="absolute left-0 right-0" style={{ top: "58%", height: 1, backgroundColor: "#e5e5e5" }} />
-
-          {/* Bottom left — shorter, wider */}
           <div className="absolute left-0" style={{ top: "calc(58% + 1px)", bottom: 0, width: "55%" }}>
             <img src={AlleyNight} alt="Night alley" className="w-full h-full object-cover" />
           </div>
-
-          {/* Bottom right — taller feel from the narrowness */}
           <div className="absolute right-0" style={{ top: "calc(58% + 1px)", bottom: 0, left: "calc(55% + 1px)" }}>
             <img src={PhoneBooths} alt="Phone booths" className="w-full h-full object-cover" />
           </div>
-
-          {/* Vertical divider between bottom images */}
           <div className="absolute" style={{ top: "58%", bottom: 0, left: "55%", width: 1, backgroundColor: "#e5e5e5" }} />
+        </div>
+
+        {/* Mobile */}
+        <div className="lg:hidden">
+          <div className="w-full h-px" style={{ backgroundColor: "#e5e5e5" }} />
+          <div style={{ height: 240 }}>
+            <img src={Conservatory} alt="Conservatory" className="w-full h-full object-cover" />
+          </div>
+          <div className="w-full h-px" style={{ backgroundColor: "#e5e5e5" }} />
+          <div className="grid grid-cols-2" style={{ height: 180 }}>
+            <img src={AlleyNight} alt="Night alley" className="w-full h-full object-cover" />
+            <img src={PhoneBooths} alt="Phone booths" className="w-full h-full object-cover" />
+          </div>
         </div>
       </div>
     </div>
