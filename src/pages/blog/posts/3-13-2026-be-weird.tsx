@@ -8,6 +8,7 @@ export const POST_META = {
 };
 
 import { Link } from "react-router-dom";
+import { TechChip } from "../components/TechChip";
 
 const IMG = "/blog/be-weird";
 
@@ -48,7 +49,12 @@ export default function BeWeird() {
       </p>
       <ul>
         <li>
-          OpenClaw has a core orchestration tool called "
+          <TechChip
+            name="OpenClaw"
+            logo="/logos/openclaw.svg"
+            href="https://openclaw.ai/"
+          />{" "}
+          has a core orchestration tool called "
           <a
             href="https://docs.openclaw.ai/tools/lobster"
             target="_blank"

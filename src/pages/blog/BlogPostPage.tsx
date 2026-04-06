@@ -181,13 +181,13 @@ function BlogPostPage() {
               >
                 Social
               </p>
-              <a
-                href="mailto:hi@chrisporter.org"
+              <Link
+                to="/contact"
                 className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
                 style={{ color: "#666" }}
               >
                 Email
-              </a>
+              </Link>
               <a
                 href="https://linkedin.com/in/chris-porterwa"
                 target="_blank"

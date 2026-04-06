@@ -63,24 +63,24 @@ function Nav() {
         <nav className="ml-auto flex items-center gap-8">
           <Link
             to="/#about"
-            className="text-sm font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
+            className="text-xs font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
             style={{ color: "#1a1a1a" }}
           >
-            About
+            about
           </Link>
           <Link
             to="/"
-            className="text-sm font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
+            className="text-xs font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
             style={{ color: "#1a1a1a" }}
           >
-            Projects
+            projects
           </Link>
           <Link
             to="/blog"
-            className="text-sm font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
+            className="text-xs font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
             style={{ color: "#1a1a1a" }}
           >
-            Blog
+            blog
           </Link>
         </nav>
       </div>
@@ -154,7 +154,7 @@ function YearGroup({
   articles: ArticleEntry[];
 }) {
   return (
-    <div>
+    <div style={{ paddingBottom: 112 }}>
       {/* Top border */}
       <div className="w-full h-px" style={{ backgroundColor: "#e5e5e5" }} />
 
@@ -211,7 +211,7 @@ function ArticleRow({ article }: { article: ArticleEntry }) {
         {/* Arrow */}
         <ArrowUpRight
           size={16}
-          className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 mr-5"
           style={{ color: "#999" }}
         />
       </div>

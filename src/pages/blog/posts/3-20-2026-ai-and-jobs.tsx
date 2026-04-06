@@ -3,7 +3,7 @@ export const POST_META = {
   title: "AI governance & threading the needle of progress",
   description:
     "My take on AI governance, balancing innovation with responsibility, and what it means for the people building with it.",
-  tags: ["Thoughts", "AI", "Engineering"],
+  tags: ["AI", "Engineering", "Thoughts"],
   date: new Date(2026, 2, 20),
 };
 

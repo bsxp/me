@@ -6,6 +6,7 @@ import { BlogPage } from "./pages/blog/BlogPage";
 import { BlogPostPage } from "./pages/blog/BlogPostPage";
 import { BlogCategoryPageRevamp } from "./pages/blog/BlogCategoryPageRevamp";
 import { AboutPage } from "./pages/about/AboutPage";
+import { ContactPage } from "./pages/contact/ContactPage";
 import { ProjectDetailsPage_1 } from "./pages/project/ProjectDetailsPage_1";
 import { useLayoutEffect } from "react";
 // Root layout component
@@ -49,6 +50,10 @@ export const router = createBrowserRouter([
       {
         path: "about",
         element: <AboutPage />,
+      },
+      {
+        path: "contact",
+        element: <ContactPage />,
       },
       {
         path: "projects/:projectId",

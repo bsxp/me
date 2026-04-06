@@ -559,7 +559,7 @@ function Nav() {
         <nav id="nav-links" className="flex items-center gap-8 mx-auto sm:mx-0 sm:ml-auto">
           <button
             onClick={() => window.scrollTo({ top: 1500, behavior: "smooth" })}
-            className="text-sm font-[Inter] font-normal transition-opacity hover:opacity-50 cursor-pointer"
+            className="text-xs font-[Inter] font-normal transition-opacity hover:opacity-50 cursor-pointer"
             style={{ color: "#1a1a1a", background: "none", border: "none", padding: 0 }}
           >
             about
@@ -569,25 +569,25 @@ function Nav() {
               const spacer = document.getElementById("featured-spacer");
               if (spacer) window.scrollTo({ top: spacer.offsetTop + spacer.offsetHeight - window.innerHeight * 2 });
             }}
-            className="text-sm font-[Inter] font-normal transition-opacity hover:opacity-50 cursor-pointer"
+            className="text-xs font-[Inter] font-normal transition-opacity hover:opacity-50 cursor-pointer"
             style={{ color: "#1a1a1a", background: "none", border: "none", padding: 0 }}
           >
             projects
           </button>
           <Link
             to="/blog"
-            className="text-sm font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
+            className="text-xs font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
             style={{ color: "#1a1a1a" }}
           >
             blog
           </Link>
-          <a
-            href="mailto:chris@example.com"
-            className="text-sm font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
+          <Link
+            to="/contact"
+            className="text-xs font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
             style={{ color: "#1a1a1a" }}
           >
             contact
-          </a>
+          </Link>
         </nav>
       </div>
     </header>
@@ -670,13 +670,13 @@ function Footer() {
             >
               Social
             </p>
-            <a
-              href="mailto:hi@chrisporter.org"
+            <Link
+              to="/contact"
               className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
               style={{ color: "#999" }}
             >
               Email
-            </a>
+            </Link>
             <a
               href="https://linkedin.com/in/chris-porterwa"
               target="_blank"

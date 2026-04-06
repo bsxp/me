@@ -112,7 +112,7 @@ export function AboutOverlay() {
                 I believe software is the most powerful vector to realize the value of good ideas; an empty file is a blank canvas on which we paint brighter futures.
               </p>
               <div className="flex flex-col gap-2 mt-8">
-                <ContactLink href="mailto:hi@chrisporter.org" label="Email" slug="hi@chrisporter.org" />
+                <ContactLink href="/contact" label="Email" slug="hi@chrisporter.org" />
                 <ContactLink href="https://linkedin.com/in/chris-porterwa" label="LinkedIn" slug="chris-porterwa" external />
                 <ContactLink href="https://github.com/bsxp" label="GitHub" slug="bsxp" external />
                 <span
