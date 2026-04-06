@@ -7,11 +7,21 @@ export const POST_META = {
   date: new Date(2026, 2, 13),
 };
 
+import { Link } from "react-router-dom";
+
 const IMG = "/blog/be-weird";
 
 export default function BeWeird() {
   return (
     <article>
+      <p>
+        Picture this: you're biking down South Congress in an 8-foot-tall
+        inflatable lobster costume, and every single person at every stoplight is
+        pulling out their phone. That was my Wednesday night during SXSW 2026.
+      </p>
+
+      <p>Let me back up.</p>
+
       <p>
         Every year here in Austin we do a little event called South by
         Southwest, more commonly referred to as SXSW. As a resident of Austin,
@@ -57,7 +67,7 @@ export default function BeWeird() {
           >
             an episode of Lightcone
           </a>{" "}
-          where they started dressed as Lobsters
+          where they started dressed as lobsters
         </li>
         <li>
           People started showing up to{" "}
@@ -79,7 +89,7 @@ export default function BeWeird() {
       </p>
 
       <img
-        src={`${IMG}/Screenshot 2026-04-04 at 6.15.12 PM.png`}
+        src={`${IMG}/google-trends-openclaw.png`}
         alt="Google Trends for OpenClaw showing a spike before ClawCon"
         className="w-full rounded-sm my-6"
       />
@@ -133,8 +143,8 @@ export default function BeWeird() {
 
       <p>
         While I waited in line, about a dozen people came up asking to get photos
-        with "Mr. Claw", which was hilarious. While we waited to get in, my
-        ClawCon experience started by making new friends who were far deeper
+        with "Mr. Claw", which was hilarious. My ClawCon experience started
+        before I even got inside — making new friends who were far deeper
         OpenClaw enthusiasts than I am. I met a couple who runs their entire
         marketing agency on OpenClaw — talk about relationship goals. I met a
         former NYC banker who was using OpenClaw to automate everything he could
@@ -147,6 +157,9 @@ export default function BeWeird() {
         alt="Meeting fellow OpenClaw enthusiasts in line"
         className="w-full rounded-sm my-6"
       />
+      <p className="text-center" style={{ color: "#999", fontSize: "0.85rem", marginTop: "-1rem" }}>
+        The line to get in — spot the lobster
+      </p>
 
       <p>
         On my way in the door, the security for the event asked for selfies and
@@ -191,7 +204,7 @@ export default function BeWeird() {
       </p>
 
       <p>
-        At some point in the evening I was solicited to participate in an{" "}
+        At some point in the evening I was pulled into an{" "}
         <a
           href="https://www.facebook.com/61575355315138/videos/we-stopped-by-clawcon-at-sxsw-to-ask-ai-optimists-about-the-future-of-ai-opencla/2396541617473230/"
           target="_blank"
@@ -199,8 +212,12 @@ export default function BeWeird() {
         >
           interview
         </a>{" "}
-        to give my thoughts on the prevalence of AI &amp; its impact on job
-        displacement.
+        to give my thoughts on the prevalence of AI and its impact on job
+        displacement (for more of my thoughts on this, read{" "}
+        <Link to="/blog/posts/ai-and-jobs">
+          AI governance &amp; threading the needle of progress
+        </Link>
+        ).
       </p>
 
       <img
@@ -208,15 +225,18 @@ export default function BeWeird() {
         alt="Being interviewed at ClawCon about AI"
         className="w-full rounded-sm my-6"
       />
+      <p className="text-center" style={{ color: "#999", fontSize: "0.85rem", marginTop: "-1rem" }}>
+        Mid-interview — hard to gesticulate with claws
+      </p>
 
       <p>
         After the event, on my walk home down Brazos St. I was stopped another
-        dozen times or so for more photos. Among those who solicited for photos
-        ranged from a bride-to-be on a pub cycle, to a random swath of people
-        suffering in an eternal line to see a SXSW movie premiere. There was
-        also a group of girls on their way to go clubbing who were members of
-        the 'Rock Lobster Music Club' at their university and were stoked to
-        find their mascot in the wild.
+        dozen times or so for more photos. Among those who asked ranged from a
+        bride-to-be on a pub cycle, to a random swath of people suffering in an
+        eternal line to see a SXSW movie premiere. There was also a group of
+        girls on their way to go clubbing who were members of the 'Rock Lobster
+        Music Club' at their university and were stoked to find their mascot in
+        the wild.
       </p>
 
       <p>
@@ -229,6 +249,10 @@ export default function BeWeird() {
         I must have had 100 people ask to take photos of the lobster throughout
         the night. If you see photos of the event out in the wild, look for the
         giant 8-foot-tall lobster in the background and you'll know it was me!
+      </p>
+
+      <p>
+        Life's too short to blend in. Be a little weird.
       </p>
 
       <p>Other photos from the event:</p>
