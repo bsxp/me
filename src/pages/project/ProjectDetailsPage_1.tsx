@@ -7,7 +7,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import gsap from "gsap";
 import { TableOfContents } from "@/pages/project/TableOfContents";
 import { useRef } from "react";
-import { Footer } from "./Footer";
 import { NavBar } from "./NavBar";
 
 gsap.registerPlugin(ScrollTrigger);

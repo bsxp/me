@@ -2,7 +2,6 @@ import HearthCover from "@/assets/projects/hearth/hearth-cover.png";
 import FoundryCover from "@/assets/projects/foundry/foundry-cover.png";
 import LabbookCover from "@/assets/projects/labbook/labbook-cover.png";
 import PlaybookCover from "@/assets/projects/playbook/playbook-cover.png";
-import RaterCover from "@/assets/projects/rater/rater-cover.jpeg";
 import RaterDashboard from "@/assets/projects/rater/rater-dashboard.png";
 import RaterBuilder from "@/assets/projects/rater/rater-builder.png";
 import RaterGraphZoom from "@/assets/projects/rater/rater-graph-zoom.png";
