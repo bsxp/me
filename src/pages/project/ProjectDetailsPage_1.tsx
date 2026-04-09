@@ -277,7 +277,7 @@ function ProjectDetailsPage_1() {
   }
 
   return (
-    <div className="pb-[50svh]">
+    <div>
       <div id="nav-bar-container" className="fixed top-0 z-999">
         <NavBar />
       </div>
@@ -288,7 +288,7 @@ function ProjectDetailsPage_1() {
         >
           <div className="flex-1 " id="title-container">
             <div className="flex flex-col justify-center items-center h-full">
-              <div id="title-area" className="flex flex-col gap-y-2 px-[20%]">
+              <div id="title-area" className="flex flex-col gap-y-2 w-full max-w-2xl px-4">
                 <Typography variant="h1" className="font-medium font-[Forum]">
                   {project.title}
                 </Typography>
@@ -297,17 +297,20 @@ function ProjectDetailsPage_1() {
                   className="h-px bg-gray-400"
                   ref={headerLineRef}
                 />
-                <div className="flex">
+                <div>
                   <Typography
                     variant="h6"
-                    className="flex font-medium text-2xl font-[Google Sans Code] relative inline-block"
+                    className="font-medium text-2xl font-[Google Sans Code]"
                   >
-                    <span className="relative z-10">{project.description}</span>
                     <span
-                      aria-hidden
-                      className="absolute left-1 bottom-0 w-full h-4.5 bg-amber-300/60 z-0"
-                      style={{ pointerEvents: "none" }}
-                    ></span>
+                      className="box-decoration-clone"
+                      style={{
+                        backgroundImage: "linear-gradient(to top, rgba(252,195,77,0.6) 40%, transparent 40%)",
+                        padding: "0 2px",
+                      }}
+                    >
+                      {project.description}
+                    </span>
                   </Typography>
                 </div>
                 <div>
@@ -327,7 +330,7 @@ function ProjectDetailsPage_1() {
               </div>
             </div>
           </div>
-          <div className="flex-1 relative" id="image-container">
+          <div className={`flex-1 relative${project.coverImageBorder ? " border-l border-gray-300" : ""}`} id="image-container">
             <img
               src={project.coverImage}
               alt={project.title}
@@ -348,11 +351,66 @@ function ProjectDetailsPage_1() {
           </Typography>
         </div>
       </div>
+      {/* Full footer */}
+      <footer className="w-full py-16 px-8 sm:px-12" style={{ backgroundColor: "#0a0a0a" }}>
+        <div className="max-w-2xl mx-auto">
+          <div className="w-full h-px mb-12" style={{ backgroundColor: "#333" }} />
+          <div className="flex flex-col lg:flex-row justify-between gap-12">
+            <div>
+              <p className="font-[Inter] font-bold text-lg" style={{ color: "#fafafa" }}>
+                Chris Porter
+              </p>
+              <p className="font-['Space_Mono'] text-xs mt-2" style={{ color: "#666" }}>
+                Austin, Texas
+              </p>
+            </div>
+            <div className="flex flex-col gap-2">
+              <p className="font-[Inter] text-xs uppercase tracking-widest mb-2" style={{ color: "#666" }}>
+                Social
+              </p>
+              <Link to="/contact" className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity" style={{ color: "#999" }}>
+                Email
+              </Link>
+              <a href="https://linkedin.com/in/chris-porterwa" target="_blank" rel="noopener noreferrer" className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity" style={{ color: "#999" }}>
+                LinkedIn
+              </a>
+              <a href="https://github.com/bsxp" target="_blank" rel="noopener noreferrer" className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity" style={{ color: "#999" }}>
+                GitHub
+              </a>
+            </div>
+            <div className="flex flex-col gap-2">
+              <p className="font-[Inter] text-xs uppercase tracking-widest mb-2" style={{ color: "#666" }}>
+                Site
+              </p>
+              <Link to="/about" className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity" style={{ color: "#999" }}>
+                About
+              </Link>
+              <Link to="/" className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity" style={{ color: "#999" }}>
+                Projects
+              </Link>
+              <Link to="/blog" className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity" style={{ color: "#999" }}>
+                Blog
+              </Link>
+            </div>
+          </div>
+          <div className="w-full h-px mt-12 mb-6" style={{ backgroundColor: "#333" }} />
+          <div className="flex items-center justify-between">
+            <p className="font-['Space_Mono'] text-xs" style={{ color: "#444" }}>
+              &copy; {new Date().getFullYear()} Chris Porter
+            </p>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="font-['Space_Mono'] text-xs cursor-pointer transition-opacity hover:opacity-70"
+              style={{ color: "#666", background: "none", border: "none", padding: 0 }}
+            >
+              Take me to the top &uarr;
+            </button>
+          </div>
+        </div>
+      </footer>
+
       <div id="table-of-contents" className="fixed right-20 top-20">
         <TableOfContents bodyRef={bodyRef} />
-      </div>
-      <div id="footer" className="fixed left-1/2 -translate-1/2 bottom-4">
-        <Footer />
       </div>
       <div
         id="fixed-header-line"

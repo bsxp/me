@@ -19,7 +19,7 @@ function NavBar() {
       </Button>
       <Button variant="ghost" size="lg" onClick={() => navigate("/")}>
         <Typography variant="span" id="navbar-me-label">
-          Chris Porter
+          chris.
         </Typography>
       </Button>
     </div>

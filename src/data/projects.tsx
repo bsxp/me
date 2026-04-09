@@ -3,9 +3,18 @@ import FoundryCover from "@/assets/projects/foundry/foundry-cover.png";
 import LabbookCover from "@/assets/projects/labbook/labbook-cover.png";
 import PlaybookCover from "@/assets/projects/playbook/playbook-cover.png";
 import RaterCover from "@/assets/projects/rater/rater-cover.jpeg";
+import RaterDashboard from "@/assets/projects/rater/rater-dashboard.png";
+import RaterBuilder from "@/assets/projects/rater/rater-builder.png";
+import RaterGraphZoom from "@/assets/projects/rater/rater-graph-zoom.png";
+import RaterTablesPanel from "@/assets/projects/rater/rater-tables-panel.png";
+import RaterOutputs from "@/assets/projects/rater/rater-outputs.png";
+import RaterTableEditor from "@/assets/projects/rater/rater-table-editor.png";
+import RaterAddNode from "@/assets/projects/rater/rater-add-node.png";
 import LumonVideo from "@/assets/projects/lumon/lumon-cover.mov";
 import OneFeedVideo from "@/assets/projects/onefeed/onefeed-cover.mov";
 import { Typography } from "@/components/ui/typography";
+import { TechChip } from "@/pages/blog/components/TechChip";
+import { InteractiveSchema } from "@/components/InteractiveSchema";
 
 type Project = {
   id: string;
@@ -14,6 +23,7 @@ type Project = {
   overview: string | React.ReactNode;
   coverImage: string;
   coverVideo?: string;
+  coverImageBorder?: boolean;
   body: string | React.ReactNode;
   href: string;
 };
@@ -199,10 +209,523 @@ const projects: Project[] = [
     title: "Rater",
     description:
       "Drag-and-drop insurance rater builder, version control, data management, and more",
-    coverImage: RaterCover,
+    coverImage: RaterGraphZoom,
+    coverImageBorder: true,
 
-    overview: "",
-    body: "",
+    overview: (
+      <span>
+        A conversation with a friend who builds insurance raters led to a
+        realization: the entirety of a rater — its inputs, lookup tables,
+        operations, and outputs — can be expressed as a graph. Nodes and edges.
+        And if it can be expressed as a graph, it can be encoded as JSON,
+        versioned granularly, and manipulated visually.
+        <br />
+        <br />
+        Rater is a visual builder for insurance rating engines. It replaces
+        hundred-tab spreadsheets with an interactive graph editor, giving
+        actuaries a transparent, auditable language for risk models — and
+        version control that actually works.
+      </span>
+    ),
+    body: (
+      <>
+        <section id="the-insight" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            The Insight
+          </Typography>
+          <br />
+          Insurance raters are, at their core, calculation engines. They take a
+          set of inputs — driver age, vehicle type, ZIP code, claims history —
+          pass them through lookup tables to find base rates and factors, apply
+          mathematical operations, and produce a premium. Every rater follows
+          this pattern, regardless of complexity.
+          <br />
+          <br />
+          That pattern is a graph. Inputs flow into lookup nodes. Lookup nodes
+          feed into operations. Operations produce outputs. The connections
+          between them are edges. The whole thing can be serialized as JSON,
+          diffed, versioned, and rendered visually. Once you see it, you can't
+          unsee it.
+          <br />
+          <br />
+          That realization was the genesis of Rater — an aha moment born out of
+          a conversation with a friend who builds these systems for a living.
+        </section>
+        <section id="the-problem" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            The Problem
+          </Typography>
+          <br />
+          Today, insurance raters are built in spreadsheets. Massive ones. A
+          single rater might span tens or even hundreds of tabs in{" "}
+          <TechChip name="Excel" logo="/logos/excel.svg" href="https://www.microsoft.com/en-us/microsoft-365/excel" /> —
+          rate tables in one tab, model logic wired up in another, outputs
+          somewhere else entirely. The relationships between tabs are implicit,
+          fragile, and nearly impossible to audit at a glance.
+          <br />
+          <br />
+          Version control is where the real pain lives. When underlying data
+          changes — say a rate table updates with new risk data, or a single
+          variable shifts in a subsection of the model — the entire file gets
+          versioned. There's no way to isolate a change to one table or one
+          variable. You can't diff a specific piece of the rater. You can't
+          roll back a single factor without rolling back everything. It's
+          whole-file-in, whole-file-out.
+          <br />
+          <br />
+          For actuaries, this means an enormous amount of cognitive overhead
+          just to keep track of what changed, when, and why. The tools don't
+          match the granularity of the work.
+        </section>
+        <section id="the-builder" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            The Builder
+          </Typography>
+          <br />
+          Rater replaces the spreadsheet with a visual graph editor. The
+          interface is organized around a split-panel layout: inputs on the
+          left, the graph canvas in the center, and rate tables and outputs on
+          the right. Each rater is composed of perils — independent coverage
+          types like Collision or Comprehensive — and each peril has its own
+          calculation graph.
+          <br />
+          <br />
+          <img
+            src={RaterBuilder}
+            alt="The Rater builder interface showing inputs, graph canvas, and workspace panels"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+          <br />
+          Building a rater is a matter of dragging nodes onto the canvas and
+          connecting them. The "Add Node" menu exposes the four core node types
+          that compose every rating model:
+          <br />
+          <br />
+          <img
+            src={RaterAddNode}
+            alt="Add Node dropdown showing Input, Lookup, Operation, and Output node types"
+            className="w-80 rounded-lg border border-gray-200 my-6 block mx-auto"
+          />
+          <br />
+          <strong>Input nodes</strong> are the entry points — variables like
+          Vehicle Symbol, Driver Age, or Territory Code. Each input has a type
+          (number, text) and can be flagged as a "base value," which marks it
+          as a primary rating variable rather than a modifier. Inputs defined
+          at the rater level are available across all perils as proxy nodes,
+          so a single Driver Age input feeds into both Collision and
+          Comprehensive graphs without duplication.
+          <br />
+          <br />
+          <strong>Lookup nodes</strong> are where rate tables enter the graph.
+          A lookup node binds to a specific table, maps the table's primary key
+          columns to upstream input nodes, and specifies which value column to
+          return. When the graph evaluates, the lookup matches input values
+          against the table's primary keys and returns the corresponding rate
+          or factor. Tables support composite primary keys — a Driver Age
+          Factors table might key on both age_min and age_max, and the lookup
+          node maps each key independently. If a lookup can't find a match,
+          its border turns red — an immediate visual signal that something
+          in the model is misconfigured.
+          <br />
+          <br />
+          <strong>Operation nodes</strong> perform the math. Four operations
+          are supported: add, subtract, multiply, and divide. Each operation
+          node accepts multiple inputs from connected edges and applies the
+          operation across them. For non-commutative operations like subtract
+          and divide, the node provides manual input reordering — arrow buttons
+          let users control which value comes first, since the order of
+          operands matters. Division handles zero gracefully by returning the
+          numerator.
+          <br />
+          <br />
+          <strong>Output nodes</strong> are the terminal points of each peril's
+          graph — they display the final calculated premium. In the workspace,
+          these values propagate up to the outputs panel, giving a clear
+          summary of every peril's result side by side.
+          <br />
+          <br />
+          Edges connect nodes and define the flow of data. The graph enforces
+          connectivity rules: inputs connect to perils, perils can chain into
+          other perils, and perils connect to outputs. These constraints
+          prevent invalid wiring while keeping the model flexible.
+        </section>
+        <section id="the-graph" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            The Graph
+          </Typography>
+          <br />
+          Zooming into a peril's graph reveals the full calculation flow. Here,
+          a Personal Auto Core Rater evaluates two perils — Collision and
+          Comprehensive — using three inputs: Vehicle Symbol, Driver Age, and
+          Territory Code.
+          <br />
+          <br />
+          <img
+            src={RaterGraphZoom}
+            alt="Zoomed view of the rating graph showing inputs flowing through lookups and operations to outputs"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+          <br />
+          Each input fans out into lookup nodes that query different rate
+          tables. Vehicle Symbol feeds into both the Auto Collision Base Rates
+          and Comprehensive Base Rates lookups — same input, different tables,
+          different base rates. Driver Age feeds into a Driver Age Factors
+          lookup that returns a multiplier. Territory Code feeds into Territory
+          Factors tables for each peril.
+          <br />
+          <br />
+          The lookup results then converge into operation nodes. A base rate
+          gets multiplied by a driver age factor, then by a territory factor,
+          producing the final premium for each peril. The graph makes this
+          chain of dependencies completely explicit — you can trace any output
+          back to its source inputs and understand exactly which tables and
+          operations contributed to the result.
+          <br />
+          <br />
+          The graph isn't just a visualization — it's the source of truth. The
+          underlying data model is a JSON-serializable schema that captures
+          every node, edge, table, and configuration. This means the entire
+          rater is portable, diffable, and machine-readable. Dagre handles
+          automatic layout calculations so the graph stays organized as it
+          grows.
+        </section>
+        <section id="the-schema" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            The Schema
+          </Typography>
+          <br />
+          Under the hood, every rater is a single JSON document. The visual
+          graph that users build in the canvas is a direct reflection of this
+          schema — not a separate representation. This is the key architectural
+          decision: the JSON <em>is</em> the rater. Everything else — the
+          visual editor, the workspace simulator, the version history — reads
+          from and writes to this structure.
+          <br />
+          <br />
+          A rater schema has three layers: metadata, top-level nodes and edges,
+          and peril sub-graphs.
+          <br />
+          <br />
+          <strong>Top-level nodes</strong> define the rater's interface with the
+          outside world. There are three types at this level: <code>input</code>{" "}
+          nodes (the variables an actuary defines — Vehicle Symbol, Driver Age,
+          Territory Code), <code>peril</code> nodes (containers for independent
+          coverage calculations), and <code>output</code> nodes (the final
+          premium results). Edges at this level wire inputs to perils and
+          perils to outputs:
+          <br />
+          <br />
+          <pre
+            className="bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto text-sm"
+            style={{ fontFamily: "Google Sans Code, monospace" }}
+          >
+{`{
+  "nodes": [
+    { "id": "vehSymbol",  "type": "input",  "label": "Vehicle Symbol" },
+    { "id": "driverAge",  "type": "input",  "label": "Driver Age" },
+    { "id": "territory",  "type": "input",  "label": "Territory Code" },
+    { "id": "collision",  "type": "peril",  "label": "Collision Coverage" },
+    { "id": "comp",       "type": "peril",  "label": "Comprehensive Coverage" },
+    { "id": "collPrem",   "type": "output", "label": "Collision Premium" },
+    { "id": "compPrem",   "type": "output", "label": "Comprehensive Premium" }
+  ],
+  "edges": [
+    { "from": "vehSymbol",  "to": "collision" },
+    { "from": "driverAge",  "to": "collision" },
+    { "from": "territory",  "to": "collision" },
+    { "from": "vehSymbol",  "to": "comp" },
+    { "from": "territory",  "to": "comp" },
+    { "from": "collision",  "to": "collPrem" },
+    { "from": "comp",       "to": "compPrem" }
+  ]
+}`}
+          </pre>
+          <br />
+          <strong>Peril sub-graphs</strong> are where the actual rating logic
+          lives. Each peril contains its own nodes and edges, forming a
+          self-contained calculation graph. The node types inside a peril are:
+          <br />
+          <br />
+          <ul className="list-disc pl-6 space-y-2">
+            <li>
+              <code>perilInput</code> — proxy nodes that reference a top-level
+              input via <code>sourceInputId</code>, making parent inputs
+              available inside the sub-graph without duplication
+            </li>
+            <li>
+              <code>lookup</code> — binds to a specific <em>version</em> of a
+              rate table via <code>tableVersionId</code>, specifies a{" "}
+              <code>valueColumn</code> to return, and maps primary keys to
+              upstream inputs via <code>searchInputMappings</code>
+            </li>
+            <li>
+              <code>operation</code> — performs math (multiply, add, subtract,
+              divide) on its incoming edge values
+            </li>
+            <li>
+              <code>perilOutput</code> — bridges the sub-graph result back to a
+              top-level output via <code>targetOutputId</code>
+            </li>
+          </ul>
+          <br />
+          Here's the Collision peril sub-graph. Three inputs feed three
+          lookups, which chain through two multiply operations to produce the
+          final premium. Hover over any line in the schema to highlight the
+          corresponding node or edge in the graph:
+          <br />
+          <br />
+          <InteractiveSchema />
+          <br />
+          Notice that each lookup node carries both a{" "}
+          <code>tableId</code> (which table) and a{" "}
+          <code>tableVersionId</code> (which version of that table). This is
+          the link between the graph and the versioning system. A lookup
+          doesn't just point at "Auto Collision Base Rates" — it points at{" "}
+          <code>tbl-v-002</code>, a specific snapshot of that table's data.
+          When an actuary updates a rate table, a new version is created with
+          a new ID, but every existing rater still references the old version.
+          Nothing changes silently. The actuary has to explicitly re-select
+          the table in the lookup node to adopt the new data — an intentional
+          opt-in that prevents upstream table changes from quietly altering a
+          rater's behavior.
+          <br />
+          <br />
+          This structure is what makes everything else possible. Because the
+          graph is JSON, it can be diffed — meaning two versions of a rater
+          can be compared node by node, edge by edge. It can be serialized
+          and stored as a single column in{" "}
+          <TechChip name="PostgreSQL" logo="/logos/postgresql.svg" href="https://www.postgresql.org/" />. It can be validated
+          against connectivity rules (inputs connect to perils, perils to
+          outputs — never input directly to output). And it can be rendered
+          by{" "}
+          <TechChip name="ReactFlow" logo="/logos/xyflow.svg" href="https://reactflow.dev/" />{" "}
+          with a one-to-one mapping between schema nodes and
+          visual nodes on the canvas.
+          <br />
+          <br />
+          The naming convention is intentional too. Peril-scoped nodes use
+          dot-delimited IDs like{" "}
+          <code>collision.lk.baseRate</code> and{" "}
+          <code>collision.op.step1</code>, making it immediately clear which
+          peril owns which node when reading the raw schema. Combined with
+          the connectivity rules, this creates a schema that is both
+          human-readable and machine-enforceable.
+        </section>
+        <section id="rate-tables" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Rate Tables
+          </Typography>
+          <br />
+          Rate tables are first-class entities in Rater, not cells buried in a
+          spreadsheet tab. Each table has a name, a schema of typed columns,
+          and rows of data. Columns can be individually marked as primary keys
+          — indicated by a key icon in the table editor — and tables can have
+          composite primary keys spanning multiple columns.
+          <br />
+          <br />
+          <img
+            src={RaterTableEditor}
+            alt="Table editor showing Auto Collision Base Rates with vehicle_symbol primary key and rate values"
+            className="w-80 rounded-lg border border-gray-200 my-6 block mx-auto"
+          />
+          <br />
+          The table editor supports adding rows, adding columns, renaming
+          columns, toggling primary key status, and editing cell values inline.
+          New columns default to string type with no primary key, and adding a
+          column automatically backfills empty values across all existing rows.
+          <br />
+          <br />
+          Tables can also be imported by dragging files directly into the
+          workspace — Rater supports .xlsx, .xls, .csv, .pdf, and image files.
+          Uploaded files are parsed by a backend extraction service that
+          detects table structure, infers column types, and returns structured
+          data. Extracted tables appear in a pending state for review before
+          being saved, giving actuaries a chance to verify column names,
+          primary keys, and data integrity before the table enters the model.
+          <br />
+          <br />
+          <img
+            src={RaterTablesPanel}
+            alt="Tables panel showing independently versioned rate tables with file upload dropzone"
+            className="w-80 rounded-lg border border-gray-200 my-6 block mx-auto"
+          />
+          <br />
+          Critically, each table is versioned independently. The tables panel
+          shows Auto Collision Base Rates at v2 while Territory Factors,
+          Driver Age Factors, and Comprehensive Base Rates remain at v1. This
+          is the granularity that matters — updating a single rate table with
+          new risk data doesn't force a version bump on the entire rater.
+          <br />
+          <br />
+          And because lookup nodes in the graph pin to a specific table
+          version by ID, updating a table doesn't silently change any rater
+          that references it. The old version persists. The new version exists
+          alongside it. An actuary adopts the new data only when they
+          explicitly point a lookup node at the updated version — a deliberate
+          decision, not an invisible side effect. This is the version control
+          that spreadsheets can never offer: the ability to update data
+          independently of the models that consume it, and to control exactly
+          when each model picks up the change.
+        </section>
+        <section id="version-control" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Git for Raters
+          </Typography>
+          <br />
+          The versioning system is perhaps the most consequential piece of the
+          project. Rater uses an append-only architecture — every update
+          creates a new record rather than modifying the existing one. Each
+          table version gets a unique ID, an incremented version number, and a
+          timestamp. The system retrieves the latest version by default but
+          retains the full history, enabling complete audit trails.
+          <br />
+          <br />
+          <img
+            src={RaterDashboard}
+            alt="Rater dashboard showing multiple raters with version numbers and change descriptions"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+          <br />
+          This extends to the rater level as well. The dashboard shows each
+          rater with its current version number and a description of the last
+          change — "Revised experience mod caps per regulat..." for a Workers
+          Comp rater at v4, "Updated territory factors for Q2 2026" for a
+          Personal Auto rater at v3. These aren't just labels; they're
+          pointers into a version history that can be traversed and compared.
+          <br />
+          <br />
+          The result is version control that matches the actual granularity of
+          the work. Update a single rate table? That's its own versioned
+          change. Tweak a variable in one peril? Versioned independently. Add
+          a column to a factor table? New version, isolated from everything
+          else. Actuaries can iterate on a small piece of a model without
+          worrying about side effects elsewhere. They can trace the history of
+          any individual component. They can compare versions of a single
+          table across time. It's git for raters.
+        </section>
+        <section id="workspace" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            The Workspace
+          </Typography>
+          <br />
+          Beyond the builder, Rater includes a workspace simulator where users
+          can test their rating engines with live inputs. The workspace renders
+          the full graph on a{" "}
+          <TechChip name="ReactFlow" logo="/logos/xyflow.svg" href="https://reactflow.dev/" />{" "}
+          canvas, with an input panel on the
+          left for entering test values and a results panel on the right.
+          <br />
+          <br />
+          <img
+            src={RaterOutputs}
+            alt="Workspace showing the graph with outputs panel displaying Collision Premium at 145.00 and Comp Premium at 72.00"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+          <br />
+          As input values change, they propagate through the graph in real
+          time. A Vehicle Symbol of 2 flows into the Auto Collision Base
+          Rates lookup, returning a base rate of 145. That value chains
+          through operation nodes — multiplied by a Driver Age factor of 3,
+          then by a Territory factor of 1.2 — producing a final Collision
+          Premium of 145.00 and a Comp Premium of 72.00. Every intermediate
+          value is visible on the graph itself, not hidden in a cell reference.
+          <br />
+          <br />
+          This makes the logic of a rater not just visible but interactive.
+          An actuary can trace exactly how a change in one input ripples
+          through the entire model. The graph becomes both a building tool
+          and an auditing tool — a transparent, visual language for something
+          that was previously locked inside opaque spreadsheets.
+        </section>
+        <section id="the-stack" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            The Stack
+          </Typography>
+          <br />
+          Rater is built with{" "}
+          <TechChip
+            name="React"
+            logo="/logos/react.svg"
+            href="https://react.dev/"
+          />{" "}
+          and{" "}
+          <TechChip
+            name="TypeScript"
+            logo="/logos/typescript.svg"
+            href="https://www.typescriptlang.org/"
+          />
+          , using{" "}
+          <TechChip
+            name="Vite"
+            logo="/vite.svg"
+            href="https://vite.dev/"
+          />{" "}
+          for the build toolchain and{" "}
+          <TechChip
+            name="Tailwind"
+            logo="/logos/tailwind.svg"
+            href="https://tailwindcss.com/"
+          />{" "}
+          for styling. The graph editor is powered by{" "}
+          <TechChip
+            name="XYFlow"
+            logo="/logos/xyflow.svg"
+            href="https://www.xyflow.com/"
+          />{" "}
+          (ReactFlow) with Dagre for automatic layout calculations.
+          Drag-and-drop interactions use{" "}
+          <TechChip
+            name="dnd-kit"
+            logo="/logos/dndkit.svg"
+            href="https://dndkit.com/"
+          />
+          . The UI layer is built on{" "}
+          <TechChip
+            name="shadcn"
+            logo="/logos/shadcn.svg"
+            href="https://ui.shadcn.com/"
+          />{" "}
+          and Radix primitives.
+          <br />
+          <br />
+          State management leans on React Context, with six dedicated providers
+          covering raters, inputs, factors, perils, tables, and graphs. Each
+          domain has its own context, keeping concerns cleanly separated
+          without introducing external state management overhead. The graph
+          provider manages node and edge state per peril, while the table
+          provider handles independent table versioning and history retrieval.
+          <br />
+          <br />
+          The backend is{" "}
+          <TechChip
+            name="Supabase"
+            logo="/logos/supabase.svg"
+            href="https://supabase.com/"
+          />{" "}
+          — PostgreSQL for persistence, with an API layer that supports the
+          append-only versioning strategy. Rate tables and rater schemas live
+          in separate database tables, enabling independent versioning of each
+          component. Table imports are handled by a backend extraction service
+          that parses uploaded files into structured column-and-row data.
+        </section>
+        <section id="reflection" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Reflection
+          </Typography>
+          <br />
+          Rater is a sunset project — it never made it to market — but it
+          validated something important. When my friend saw the prototype, his
+          reaction was immediate: "holy shit, it doesn't have to be this bad."
+          That kind of response, from someone who lives in the problem space
+          every day, told me the insight was right even if the timing wasn't.
+          <br />
+          <br />
+          The core idea — that raters are graphs, and graphs deserve real
+          tooling — still holds. The codebase is available for anyone
+          interested in exploring it further.
+        </section>
+      </>
+    ),
     href: "",
   },
   {
