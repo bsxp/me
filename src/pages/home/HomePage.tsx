@@ -357,6 +357,10 @@ export function HomePage() {
 
   return (
     <div ref={containerRef} className="overflow-x-hidden" style={{ backgroundColor: "#0a0a0a" }}>
+      {/* Migration banner */}
+      <div className="w-full py-2 px-4 text-center font-['Space_Mono'] text-xs" style={{ backgroundColor: "#1a1a1a", color: "#999" }}>
+        Migrating content over from previous website, please excuse empty pages! Check back daily for new migrated content.
+      </div>
       {/* Intro section — gets pinned */}
       <div
         id="home-intro"
