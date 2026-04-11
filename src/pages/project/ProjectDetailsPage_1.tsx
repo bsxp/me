@@ -330,11 +330,21 @@ function ProjectDetailsPage_1() {
             </div>
           </div>
           <div className={`flex-1 relative${project.coverImageBorder ? " border-l border-gray-300" : ""}`} id="image-container">
-            <img
-              src={project.coverImage}
-              alt={project.title}
-              className="w-full h-full object-cover z-50"
-            />
+            {project.coverImageDark ? (
+              <div className="w-full h-full bg-gray-950 flex items-center justify-center p-12">
+                <img
+                  src={project.coverImage}
+                  alt={project.title}
+                  className="max-w-[85%] max-h-[85%] object-contain rounded-lg shadow-2xl z-50"
+                />
+              </div>
+            ) : (
+              <img
+                src={project.coverImage}
+                alt={project.title}
+                className="w-full h-full object-cover z-50"
+              />
+            )}
           </div>
         </div>
       </div>

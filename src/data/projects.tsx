@@ -14,6 +14,11 @@ import OneFeedVideo from "@/assets/projects/onefeed/onefeed-cover.mov";
 import { Typography } from "@/components/ui/typography";
 import { TechChip } from "@/pages/blog/components/TechChip";
 import { InteractiveSchema } from "@/components/InteractiveSchema";
+import { InteractiveDateCreator } from "@/components/InteractiveDateCreator";
+import DateDayDashboard from "@/assets/projects/dateday/dateday-dashboard.png";
+import DateDayIdeasTable from "@/assets/projects/dateday/dateday-ideas-table.png";
+import DateDayCalendar from "@/assets/projects/dateday/dateday-calendar.png";
+import DateDayScheduleModal from "@/assets/projects/dateday/dateday-schedule-modal.png";
 
 type Project = {
   id: string;
@@ -23,6 +28,7 @@ type Project = {
   coverImage: string;
   coverVideo?: string;
   coverImageBorder?: boolean;
+  coverImageDark?: boolean;
   body: string | React.ReactNode;
   href: string;
 };
@@ -793,10 +799,285 @@ const projects: Project[] = [
     id: "date-day",
     title: "DateDay",
     description: "A platform for finding and tracking dates with your partner",
-    coverImage: "",
+    coverImage: DateDayDashboard,
+    coverImageDark: true,
 
-    overview: "",
-    body: "",
+    overview: (
+      <span>
+        My girlfriend and I have been doing a date every Sunday since we started
+        dating. After a while, we wanted a way to keep track of where we've
+        been, plan upcoming dates, and pull from a bucket of ideas based on what
+        we're feeling for budget, travel time, vibe, all of that.
+        <br />
+        <br />
+        DateDay is a little app to capture, schedule, and rate your dates.
+        A shared backlog for your relationship, so every "oh we should try that"
+        moment doesn't evaporate by Sunday morning.
+      </span>
+    ),
+    body: (
+      <>
+        <section id="the-routine" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            The Routine
+          </Typography>
+          <br />
+          Since my girlfriend and I started dating, we've done a date every
+          Sunday. Sometimes it's a full day trip, sometimes it's just trying a
+          new restaurant down the street, but every week we do something
+          together.
+          <br />
+          <br />
+          After a while we started running into the same few problems. We'd
+          hear about a great spot and forget about it by the weekend. We'd
+          accidentally go back to the place that was just okay because neither
+          of us remembered we'd already been. And every Sunday morning we'd
+          have the same conversation: "What do you want to do?" "I don't know,
+          what do you want to do?" followed by ten minutes of scrolling Yelp
+          before defaulting to somewhere safe.
+          <br />
+          <br />
+          What we actually wanted was a bucket of ideas to pull from, something
+          where we could filter by mood. How far do we want to travel, what's
+          the budget, are we feeling active or low-key? And a way to keep track
+          of the dates we've been on, so we could look back and say "remember
+          that place? That was a five-star Sunday."
+          <br />
+          <br />
+          So I built DateDay over a weekend. The whole thing follows one idea:
+          a date has a lifecycle, and each stage of that lifecycle deserves a
+          little bit of structure. You hear about a spot, you capture it, you
+          schedule it, you go, you remember how it went.
+          <br />
+          <br />
+          <img
+            src={DateDayDashboard}
+            alt="DateDay home dashboard showing upcoming dates carousel, date ideas list with ratings, and April calendar with activity dots"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+        </section>
+        <section id="capture" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Capture
+          </Typography>
+          <br />
+          The moment a date idea exists, it needs to be captured fast enough
+          that you'll actually do it. You're walking past a cool-looking bar,
+          a friend texts you a recommendation, you overhear someone raving
+          about a new place. If it takes more than a minute to log, you're
+          just going to say "I'll remember" and you won't.
+          <br />
+          <br />
+          DateDay's creation flow is a five-step wizard: name it, pick a type,
+          search for the location, estimate the duration, and set a cost tier.
+          Thirty seconds, tops. Each step captures just enough to be useful
+          later without turning it into a chore.
+          <br />
+          <br />
+          I recreated the actual flow below so you can walk through the five
+          steps and see how it feels:
+          <br />
+          <InteractiveDateCreator />
+          <br />
+          <br />
+          The data model behind this is intentionally coarse. A date idea is a
+          template, a reusable thing you might do more than once. It carries a
+          name, a location pulled from Google Places, and three dimensions that
+          I think of as "mood filters":
+          <br />
+          <br />
+          <strong>Type</strong> is one of three buckets: adventure, dining, or
+          entertainment. Adventure is anything active or outdoorsy (hiking,
+          kayaking, exploring a new neighborhood). Dining is self-explanatory.
+          Entertainment is everything else: movies, concerts, mini golf, comedy
+          shows. I could have made this a freeform tag system or a list of 30
+          categories, but the question you're actually answering when you pick
+          a date is "what kind of vibe are we going for?" and three buckets
+          answers that without overthinking it.
+          <br />
+          <br />
+          <strong>Cost</strong> is an ordinal tier, not a dollar amount: Free,
+          $1–29, $30–59, $60–79, $80+, stored as an integer 0 through 4.
+          When you're planning a date, you know your budget roughly, not
+          precisely. "Let's do something cheap this weekend" maps to a filter,
+          not a spreadsheet cell. Storing it as an ordinal makes filtering and
+          sorting trivial without having to parse currency strings or worry
+          about whether someone typed "$30" or "30 dollars."
+          <br />
+          <br />
+          <strong>Duration</strong> is stored in minutes. The display layer
+          converts it to human-readable chunks like "2h 30m" or "45m," but
+          under the hood it's just an integer. Minutes are the right base unit
+          here because dates span a wide range (a 30-minute coffee run vs. a
+          full-day road trip) and you want to sort and compare them without
+          unit conversion headaches.
+          <br />
+          <br />
+          The key design decision is the separation between a date{" "}
+          <em>idea</em> and a date <em>event</em>. A date idea is the template:
+          "that ramen place on South Lamar." A date event is an instance of it:
+          "we went there last Saturday at 7pm." This separation means you can
+          schedule the same idea multiple times, rate each instance, and the
+          template sticks around in your backlog for next time. It doesn't get
+          consumed; it's reusable.
+        </section>
+        <section id="schedule" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Schedule
+          </Typography>
+          <br />
+          A backlog of date ideas is only useful if you actually pull from it.
+          DateDay has a calendar, just a simple month view with little activity
+          dots on days that have something planned. It's not trying to replace
+          Google Calendar; it's a dedicated lens on just your dates.
+          <br />
+          <br />
+          <img
+            src={DateDayCalendar}
+            alt="DateDay calendar view showing April with colored activity dots on scheduled dates and Zilker Botanical Garden details"
+            className="w-80 rounded-lg border border-gray-200 my-6 block mx-auto"
+          />
+          <br />
+          Scheduling a date idea creates an event record that points back to
+          the original template. You pick a day, pick a time slot from
+          15-minute intervals, and attach notes. The notes are the underrated
+          part: "make a reservation," "bring the picnic blanket," "they close
+          early on Sundays." The kind of context that makes the difference
+          between a smooth evening and a "wait, I thought you were going to
+          call ahead" situation.
+          <br />
+          <br />
+          Under the hood, scheduled times are Unix timestamps in seconds. The
+          frontend converts your local date and time selection to UTC before
+          sending it to the API, the backend stores it as a PostgreSQL
+          datetime, and on the way back out it gets converted back to a
+          timestamp. It's a boring solution to a boring problem, which is
+          exactly what you want from time handling. Anything clever with dates
+          and times will eventually bite you.
+          <br />
+          <br />
+          The calendar groups events by day using a simple string key
+          (year-month-day) which gives you O(1) lookups when rendering the
+          month view. Click a day, see its dates. Navigate between months with
+          a slide transition. The home dashboard shows your upcoming dates
+          front and center so you can glance at what's next without digging
+          through a calendar.
+        </section>
+        <section id="remember" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Remember
+          </Typography>
+          <br />
+          After the date, you rate it. Five stars, that's it.
+          <br />
+          <br />
+          <img
+            src={DateDayIdeasTable}
+            alt="Date Ideas table showing 14 date ideas across Austin and Eugene with star ratings, durations, costs, and locations"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+          <br />
+          The ideas table is where the history lives. Every date idea is a row,
+          sortable by name, rating, cost, duration, location, and type. The
+          ratings column is what transforms it from a backlog into a sort of
+          recommendation engine for yourselves. "We need a date this Sunday and
+          don't want to think too hard about it" becomes: sort by rating, pick
+          something from the top five.
+          <br />
+          <br />
+          Over time you build up this curated record. The five-star places
+          float to the top, the duds sink, and you stop accidentally revisiting
+          the place that gave you food poisoning because you can see right
+          there that it got one star. There's something oddly satisfying about
+          scrolling through a list of dates you've been on together, with
+          ratings and locations and little notes attached. It's a weird,
+          data-driven scrapbook, but it's <em>your</em> scrapbook.
+          <br />
+          <br />
+          The rating itself is just a numeric score stored against the date
+          template and the user who rated it. No elaborate review system, no
+          written critiques (though you can attach a note if you want). The
+          constraint is intentional: if rating a date takes effort, you won't
+          do it. A quick star tap right after dinner is the whole interaction.
+        </section>
+        <section id="the-wiring" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            The Wiring
+          </Typography>
+          <br />
+          DateDay is built with{" "}
+          <TechChip
+            name="React"
+            logo="/logos/react.svg"
+            href="https://react.dev/"
+          />{" "}
+          and{" "}
+          <TechChip
+            name="TypeScript"
+            logo="/logos/typescript.svg"
+            href="https://www.typescriptlang.org/"
+          />
+          , using{" "}
+          <TechChip
+            name="MUI"
+            logo="/logos/mui.svg"
+            href="https://mui.com/"
+          />{" "}
+          for the component library. Google does a lot of heavy lifting here:
+          OAuth for sign-in, Places API for location search, Maps for
+          rendering locations. State lives in two React Context providers, one
+          for auth and one for everything date-related. For an app this size,
+          that's the right call. Two providers cover the entire domain without
+          reaching for Redux.
+          <br />
+          <br />
+          The backend is{" "}
+          <TechChip
+            name="AWS Lambda"
+            logo="/logos/aws-lambda.svg"
+            href="https://aws.amazon.com/lambda/"
+          />{" "}
+          with Python handlers behind API Gateway, talking to{" "}
+          <TechChip
+            name="PostgreSQL"
+            logo="/logos/postgresql.svg"
+            href="https://www.postgresql.org/"
+          />
+          . Four tables: users, date ideas, scheduled events, and ratings.
+          The API is thin. Create, read, and delete for ideas; create and read
+          for scheduled events; create for ratings and users. Serverless was
+          the obvious choice here because the traffic pattern is two people
+          hitting the app a few times a week, and I'm not paying for an
+          always-on server for that.
+          <br />
+          <br />
+          One pattern I like in this codebase is the endpoint abstraction. Each
+          API resource is declared as an Endpoint instance with flags for which
+          operations it supports (create, get, delete) and the class wraps
+          Axios calls with consistent error handling and auth headers. It's a
+          small thing, but it keeps the API layer clean and makes adding new
+          endpoints a one-liner.
+        </section>
+        <section id="the-point" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            The Point
+          </Typography>
+          <br />
+          We use DateDay every week. There's a running tally of places we
+          want to try and a history of every Sunday date we've been on, and
+          I genuinely didn't expect it to be as useful as it is. What started
+          as a weekend project has quietly become part of our routine.
+          <br />
+          <br />
+          I think the best side projects are like that. You build something
+          small because you're curious, or because there's a little friction
+          in your life that you want to smooth out, and then it just kind of
+          sticks. Our Sunday mornings went from "I don't know, what do you
+          want to do?" to "oh, that ramen place has five stars, let's go
+          back." That feels like a good trade for a weekend of building.
+        </section>
+      </>
+    ),
     href: "",
   },
   {
