@@ -1063,18 +1063,20 @@ const projects: Project[] = [
             The Point
           </Typography>
           <br />
-          We use DateDay every week. There's a running tally of places we
-          want to try and a history of every Sunday date we've been on, and
-          I genuinely didn't expect it to be as useful as it is. What started
-          as a weekend project has quietly become part of our routine.
+          DateDay has been sunset. After a couple years of using it, we got
+          good enough at organically planning our Sundays that we didn't really
+          need the app anymore, which I think is kind of the best outcome for
+          something like this. It served a really useful purpose while we were
+          building the rhythm, and once the rhythm was second nature, the
+          scaffolding could come down.
           <br />
           <br />
           I think the best side projects are like that. You build something
-          small because you're curious, or because there's a little friction
-          in your life that you want to smooth out, and then it just kind of
-          sticks. Our Sunday mornings went from "I don't know, what do you
-          want to do?" to "oh, that ramen place has five stars, let's go
-          back." That feels like a good trade for a weekend of building.
+          small because there's a little friction in your life that you want to
+          smooth out, it does its job for a while, and eventually you outgrow
+          it. Our Sunday mornings went from "I don't know, what do you want to
+          do?" to just knowing what we're feeling, and that feels like a good
+          trade for a weekend of building.
         </section>
       </>
     ),
