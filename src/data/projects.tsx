@@ -15,10 +15,12 @@ import { Typography } from "@/components/ui/typography";
 import { TechChip } from "@/pages/blog/components/TechChip";
 import { InteractiveSchema } from "@/components/InteractiveSchema";
 import { InteractiveDateCreator } from "@/components/InteractiveDateCreator";
+import { TylePipelineVisual } from "@/components/TylePipelineVisual";
 import DateDayDashboard from "@/assets/projects/dateday/dateday-dashboard.png";
 import DateDayIdeasTable from "@/assets/projects/dateday/dateday-ideas-table.png";
 import DateDayCalendar from "@/assets/projects/dateday/dateday-calendar.png";
-import DateDayScheduleModal from "@/assets/projects/dateday/dateday-schedule-modal.png";
+
+import TyleDashboard from "@/assets/projects/tyle/tyle-dashboard.png";
 
 type Project = {
   id: string;
@@ -789,10 +791,238 @@ const projects: Project[] = [
     id: "Tyle",
     title: "Tyle",
     description: "Understanding user sentiment on Reddit using AI",
-    coverImage: "",
+    coverImage: TyleDashboard,
+    coverImageDark: true,
 
-    overview: "",
-    body: "",
+    overview: (
+      <span>
+        I was between projects and looking for something to tinker with. I had
+        been wanting to play with AWS Comprehend and some NLP tooling, and
+        Reddit's API was free at the time, so I had a massive firehose of text
+        data to work with. The question was simple: can I build a pipeline
+        that scrapes Reddit, analyzes the sentiment of every comment, and
+        correlates it with market data?
+        <br />
+        <br />
+        Tyle was the result. A "can I do this? can I learn this?" project
+        above all else.
+      </span>
+    ),
+    body: (
+      <>
+        <section id="the-pipeline" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            The Pipeline
+          </Typography>
+          <br />
+          Tyle's backend is essentially a data pipeline that runs in three
+          stages: collect, analyze, store.
+          <br />
+          <br />
+          <strong>Collect</strong> uses{" "}
+          <TechChip
+            name="PRAW"
+            logo="/logos/reddit.svg"
+            href="https://praw.readthedocs.io/"
+          />{" "}
+          (Python Reddit API Wrapper) to pull posts and comments from a given
+          subreddit. Each post gets its metadata (title, content, author,
+          timestamp) and each comment gets captured alongside it. The scraper
+          also takes snapshots of upvotes, downvotes, and comment counts at
+          the time of collection, so you can track how engagement changes
+          over time rather than just seeing the final numbers.
+          <br />
+          <br />
+          <strong>Analyze</strong> is where it gets interesting. Every comment
+          gets sent through{" "}
+          <TechChip
+            name="AWS Comprehend"
+            logo="/logos/aws-lambda.svg"
+            href="https://aws.amazon.com/comprehend/"
+          />
+          , Amazon's NLP service, which returns two things:
+          <br />
+          <br />
+          <ul className="list-disc pl-6 space-y-2">
+            <li>
+              <strong>Sentiment scoring</strong> — four scores for positive,
+              negative, neutral, and mixed, each between 0 and 1. A comment
+              like "this stock is going to the moon" might come back 0.85
+              positive, 0.05 negative, 0.08 neutral, 0.02 mixed.
+            </li>
+            <li>
+              <strong>Named entity recognition (NER)</strong> — pulls out the
+              people, organizations, locations, and concepts mentioned in
+              each comment.
+            </li>
+          </ul>
+          <br />
+          Comments are batched in groups of 25 (Comprehend's limit per
+          request) and run through{" "}
+          <a href="https://docs.aws.amazon.com/comprehend/latest/APIReference/API_BatchDetectSentiment.html" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">BatchDetectSentiment</a>
+          {" "}and{" "}
+          <a href="https://docs.aws.amazon.com/comprehend/latest/APIReference/API_BatchDetectEntities.html" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">BatchDetectEntities</a>
+          {" "}to keep the API calls efficient.
+          <br />
+          <br />
+          <strong>Store</strong> puts everything into{" "}
+          <TechChip
+            name="PostgreSQL"
+            logo="/logos/postgresql.svg"
+            href="https://www.postgresql.org/"
+          />
+          . Posts, comments, sentiment scores, entities, and engagement
+          snapshots all live in normalized tables with UUID keys and timestamp
+          tracking. The schema uses an append-only snapshot pattern: rather
+          than updating a comment's sentiment score, you add a new snapshot
+          row with the current timestamp. This means you can look back and see
+          how sentiment around a specific post or entity evolved over hours
+          or days.
+          <TylePipelineVisual />
+        </section>
+        <section id="connecting-the-dots" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Connecting the Dots
+          </Typography>
+          <br />
+          The other half of Tyle is market data. A separate Lambda function
+          pulls intraday OHLCV (open, high, low, close, volume) data from
+          AlphaVantage for any ticker symbol, storing it as timestamped
+          snapshots in the same database.
+          <br />
+          <br />
+          The idea is that you can look at a subreddit like r/wallstreetbets,
+          see that sentiment around "GME" spiked positive at 2pm, and then
+          check whether the price moved in the hours that followed. Tyle
+          doesn't try to draw the causal line for you. It just puts the two
+          datasets side by side and lets you see the correlation (or lack of
+          it) for yourself.
+          <br />
+          <br />
+          The frontend shows this as a combination of sentiment cards and
+          candlestick charts. Each subreddit gets a card showing its most
+          frequently mentioned entities (people, organizations, tickers),
+          recent posts with their dominant sentiment, and the raw sentiment
+          scores for each comment.
+          <br />
+          <br />
+          <img
+            src={TyleDashboard}
+            alt="Tyle dashboard showing subreddit search bar and sentiment cards for r/superstonk, r/politics, and r/wallstreetbets with popular subjects and post sentiments"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+        </section>
+        <section id="what-surfaces" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            What Surfaces
+          </Typography>
+          <br />
+          The entity recognition turned out to be the most interesting part.
+          When you aggregate entities across hundreds of comments in a
+          subreddit, you start to see what a community is actually focused on,
+          not just what the post titles say. A subreddit might have a post
+          about one topic, but the comments reveal that people are really
+          talking about three or four adjacent things. Tyle surfaces those
+          as subject chips grouped by type: organizations, people, locations,
+          events.
+          <br />
+          <br />
+          Sentiment scoring at the individual comment level is also more
+          revealing than you'd expect. A post with 500 comments and a title
+          that reads bullish might actually have deeply mixed sentiment in
+          the discussion. The aggregate sentiment of the comments tells a
+          different story than the headline, and that gap is often where the
+          interesting information lives.
+        </section>
+        <section id="tyle-stack" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            The Stack
+          </Typography>
+          <br />
+          The frontend is{" "}
+          <TechChip
+            name="React"
+            logo="/logos/react.svg"
+            href="https://react.dev/"
+          />{" "}
+          with{" "}
+          <TechChip
+            name="TypeScript"
+            logo="/logos/typescript.svg"
+            href="https://www.typescriptlang.org/"
+          />{" "}
+          and{" "}
+          <TechChip
+            name="MUI"
+            logo="/logos/mui.svg"
+            href="https://mui.com/"
+          />
+          . Charts are rendered with ApexCharts for the candlestick
+          financial data. State management uses Redux with thunks, though
+          honestly for the size of this app Context would have been fine.
+          <br />
+          <br />
+          The backend is entirely serverless, built on{" "}
+          <TechChip
+            name="AWS Lambda"
+            logo="/logos/aws-lambda.svg"
+            href="https://aws.amazon.com/lambda/"
+          />{" "}
+          with the Serverless Application Model (SAM) for infrastructure.
+          Four Lambda functions handle the different data operations: two
+          for Reddit data (collection and serving), two for ticker data
+          (collection and serving). Each function connects to a shared{" "}
+          <TechChip
+            name="PostgreSQL"
+            logo="/logos/postgresql.svg"
+            href="https://www.postgresql.org/"
+          />{" "}
+          instance on RDS. The Reddit integration uses PRAW, sentiment
+          analysis and entity recognition run through AWS Comprehend, and
+          market data comes from the AlphaVantage API.
+        </section>
+        <section id="tyle-reflection" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Where It Landed
+          </Typography>
+          <br />
+          Tyle was built during a specific moment in time, when Reddit was
+          genuinely moving markets and the idea of social sentiment as a
+          leading indicator felt electric. The pipeline worked, the data was
+          real, and the correlations were sometimes genuinely surprising.
+          <br />
+          <br />
+          Then, in April 2023, Reddit announced it would start charging for
+          API access, a feature that had been free since 2008. The new pricing
+          came in at $0.24 per 1,000 requests, or about $12,000 per 50
+          million calls. To put that in perspective, Apollo (one of the most
+          popular Reddit clients) was making around 7 billion requests per
+          month, which would have cost roughly $2 million monthly. By July
+          2023, Apollo, Reddit Is Fun, BaconReader, and a wave of other
+          third-party apps had shut down entirely. Thousands of subreddits
+          went dark in protest.
+          <br />
+          <br />
+          Tyle was a casualty of the same shift. The entire premise depended
+          on being able to scrape subreddits at volume, and the new pricing
+          made that untenable for a side project. PRAW still works, but the
+          economics of pulling thousands of comments per hour across multiple
+          subreddits went from "free" to "real money, fast."
+          <br />
+          <br />
+          I think the most valuable thing I took from building Tyle was
+          learning how to think about NLP as a data pipeline problem rather
+          than a modeling problem. You don't need to build your own sentiment
+          model. You need to figure out how to get the right text to an
+          existing model, store the results in a way that's queryable over
+          time, and present them in a way that's actually useful. The
+          interesting engineering is in the plumbing, not the AI. It's also
+          a good reminder that building on top of someone else's platform
+          means your project lives and dies by their decisions, and
+          sometimes those decisions come out of left field.
+        </section>
+      </>
+    ),
     href: "",
   },
   {
