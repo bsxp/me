@@ -130,16 +130,22 @@ function HomeWorkSection() {
         </div>
 
         {/* Image side (desktop) */}
-        {featured.coverImage && (
+        {(featured.coverComponent || featured.coverImage) && (
           <div
             id="home-work-image"
             className="flex-1 relative hidden md:block"
           >
-            <img
-              src={featured.coverImage}
-              alt={featured.title}
-              className="w-full h-[70vh] object-cover rounded-sm"
-            />
+            {featured.coverComponent ? (
+              <div className="w-full h-[70vh] rounded-sm overflow-hidden">
+                {featured.coverComponent}
+              </div>
+            ) : (
+              <img
+                src={featured.coverImage}
+                alt={featured.title}
+                className="w-full h-[70vh] object-cover rounded-sm"
+              />
+            )}
           </div>
         )}
       </div>

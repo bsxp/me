@@ -21,6 +21,14 @@ import DateDayIdeasTable from "@/assets/projects/dateday/dateday-ideas-table.png
 import DateDayCalendar from "@/assets/projects/dateday/dateday-calendar.png";
 
 import TyleDashboard from "@/assets/projects/tyle/tyle-dashboard.png";
+import { FoundryDataFlow } from "@/components/FoundryDataFlow";
+
+import FoundryDashboard from "@/assets/projects/foundry/foundry-dashboard.png";
+import FoundryPipeline from "@/assets/projects/foundry/foundry-pipeline.png";
+import FoundryActivity from "@/assets/projects/foundry/foundry-activity.png";
+import FoundryFinancials from "@/assets/projects/foundry/foundry-financials.png";
+import FoundryTasks from "@/assets/projects/foundry/foundry-tasks.png";
+import FoundryTools from "@/assets/projects/foundry/foundry-tools.png";
 
 type Project = {
   id: string;
@@ -29,6 +37,7 @@ type Project = {
   overview: string | React.ReactNode;
   coverImage: string;
   coverVideo?: string;
+  coverComponent?: React.ReactNode;
   coverImageBorder?: boolean;
   coverImageDark?: boolean;
   body: string | React.ReactNode;
@@ -187,9 +196,302 @@ const projects: Project[] = [
     title: "Foundry",
     description: "A complete toolkit for helping founders go from 0 to 1",
     coverImage: FoundryCover,
+    coverComponent: <FoundryDataFlow />,
 
-    overview: "",
-    body: "",
+    overview: (
+      <span>
+        After working on enough projects, I noticed the same categories of
+        work kept showing up: tracking finances, managing subscriptions,
+        keeping tabs on the different people involved, running customer
+        interviews, basic project management. Every time, I'd stitch
+        together a different set of tools for the same set of problems.
+        <br />
+        <br />
+        Foundry came out of wanting one workspace that covered all of it.
+        Pipeline, books, tasks, team, all in one place and built to work
+        together from the start.
+      </span>
+    ),
+    body: (
+      <>
+        <section id="why-one-tool" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Why one tool
+          </Typography>
+          <br />
+          Every project I've worked on has the same moving parts. There are
+          people to keep track of: prospects, customers, collaborators,
+          vendors. There's money coming in and going out, and I need to
+          know where I stand. There are tasks scattered across sales,
+          product, and marketing. There are subscriptions quietly charging
+          my card every month. There are customer interviews to run and
+          insights to capture. Every time, the same categories of work, and
+          every time, a different patchwork of tools to manage them.
+          <br />
+          <br />
+          The usual approach is to reach for what's already out there.
+          HubSpot for CRM. QuickBooks for accounting. Notion or Linear for
+          tasks. Google Sheets for the stuff that doesn't fit anywhere else.
+          Before I know it, I'm managing a constellation of apps, each
+          with its own login, its own data model, its own idea of what a
+          "contact" or a "deal" is. The information I need to make a
+          decision is scattered across five tabs, and the mental overhead
+          of keeping it all in sync starts eating into the time I should
+          be spending on the actual work.
+          <br />
+          <br />
+          Foundry started as an answer to that. Not a jack-of-all-trades
+          that does everything poorly, but a focused set of modules that
+          cover the things I actually touch every day, built to work
+          together from the start. The dashboard is the proof of concept
+          for that idea: a single screen where pipeline value, revenue,
+          expenses, cash position, budget health, and upcoming tasks are all
+          visible at once, all computed in real time from the underlying data.
+          <br />
+          <br />
+          <img
+            src={FoundryDashboard}
+            alt="Foundry dashboard showing pipeline value, revenue, expenses, cash position, revenue vs expenses chart, pipeline summary, budget tracking, and upcoming tasks"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+          <span className="text-sm text-gray-500 block -mt-4 mb-6">
+            The dashboard pulls from every module. Pipeline, revenue,
+            expenses, and runway are all live numbers, not manually
+            entered summaries.
+          </span>
+          None of these numbers are entered separately. Revenue comes from
+          confirmed deals. Expenses come from the ledger. Burn rate and
+          runway are derived from both. Budget alerts fire when actual
+          spending crosses a threshold. The "Next Up" panel pulls my most
+          pressing tasks by due date. Every number is a view into data that
+          lives somewhere else in the system, which means it's always current
+          and never a stale snapshot from last Tuesday.
+        </section>
+        <section id="selling" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Selling
+          </Typography>
+          <br />
+          Foundry's CRM follows a deal through its full lifecycle. A new
+          lead enters the pipeline, gets moved through stages (reached out,
+          responded, demo, proposal, negotiation), and eventually lands on
+          won or lost. Each deal card shows the contact, value, source, and
+          how long it's been sitting in its current stage.
+          <br />
+          <br />
+          <img
+            src={FoundryPipeline}
+            alt="Pipeline Kanban board showing deals across stages from New Lead through Won, with deal values and days in stage"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+          <span className="text-sm text-gray-500 block -mt-4 mb-6">
+            Eight active deals totaling $189,500 in raw pipeline value,
+            $110.8k weighted by stage probability. The orange day
+            counts flag deals going stale.
+          </span>
+          Each stage carries a win probability, so the weighted pipeline
+          number on the dashboard is a real forecast, not just a sum. A
+          $55,000 deal at proposal stage (40% probability) contributes
+          $22,000. Deals that sit too long get flagged as stale, both on
+          the dashboard and in the pipeline view, as a nudge to follow up
+          or move on.
+          <br />
+          <br />
+          Behind the pipeline, contacts and activity work as one connected
+          layer. Every person, whether a prospect, customer, investor, or
+          vendor, lives in one table. Every interaction (emails, calls,
+          meetings, notes) is logged to an activity feed and linked to both
+          the contact and the deal, so I can trace the full history of a
+          relationship from first intro to closed deal.
+          <br />
+          <br />
+          <img
+            src={FoundryActivity}
+            alt="Activity feed showing emails, calls, meetings, and notes with contacts and dates"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+          <span className="text-sm text-gray-500 block -mt-4 mb-6">
+            The activity feed. Each entry is tagged by type (email, call,
+            meeting, note) and linked to the contact and company.
+          </span>
+          The most interesting moment is when a deal moves to "won." A
+          pending revenue entry is automatically created in the ledger,
+          tied to the deal's contact and value. It shows up as a banner
+          on the financials page with one-click confirmation. That bridge
+          between CRM and accounting is the kind of thing that only works
+          when the data lives in one place. In separate tools, closing a
+          deal means switching apps and manually logging the revenue.
+        </section>
+        <section id="real-books" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Real books from day one
+          </Typography>
+          <br />
+          I've seen the same pattern play out multiple times: either track
+          finances in spreadsheets until things get complicated enough to
+          justify QuickBooks (and then deal with a messy migration where
+          half the data gets lost or recategorized), or overcommit to
+          QuickBooks too early and waste money on software you barely use
+          while the project is still finding its legs. Foundry's approach
+          is to do real double-entry accounting from the start, but hide
+          the complexity behind a simple interface.
+          <br />
+          <br />
+          <img
+            src={FoundryFinancials}
+            alt="Financials page showing transaction ledger with pending CRM revenue banner, expense and revenue entries"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+          <span className="text-sm text-gray-500 block -mt-4 mb-6">
+            The ledger, with a pending revenue entry from a won deal at the
+            top. Recurring expenses are tagged "rec," CRM-sourced revenue
+            is tagged "CRM."
+          </span>
+          Every transaction creates balanced debit and credit entries across
+          a chart of accounts that gets seeded automatically when I create
+          an organization. When I log $847 to AWS for cloud hosting, the
+          system debits the Software expense account and credits Cash. I
+          never see that machinery unless I want to. From the surface,
+          I'm just logging transactions. But under the hood, the books
+          balance, and that means the financial statements are real: P&L,
+          balance sheet, and cash flow, all computed on the fly from
+          transaction lines grouped by account type and month.
+          <br />
+          <br />
+          The dashboard numbers (burn rate, runway, cash position) flow from
+          the same source. There's no separate "update the financials" step.
+          Log a transaction, and every derived number in the system updates
+          immediately.
+        </section>
+        <section id="everything-else" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Everything else
+          </Typography>
+          <br />
+          Beyond the core CRM and accounting, Foundry has a handful of
+          features that round out the day-to-day.
+          <br />
+          <br />
+          <strong>Tasks</strong> are goal-oriented rather than just
+          checkboxes. "Call prospective customers" is 6 of 10 calls, with a
+          progress ring and a bar that fills as I go. Each task has a
+          category, priority, assignee, and due date. It's not trying to
+          replace Linear for product work. It's a lightweight way to track
+          the cross-functional tasks that come with building a company: sales
+          calls, customer interviews, testimonials, investor updates.
+          <br />
+          <br />
+          <img
+            src={FoundryTasks}
+            alt="Tasks page with progress rings, priority tags, assignees, and progress bars"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+          <span className="text-sm text-gray-500 block -mt-4 mb-6">
+            21 of 44 units complete across 8 tasks. Progress rings give
+            an at-a-glance sense of where each task stands.
+          </span>
+          <strong>Subscriptions</strong> track every SaaS tool and
+          infrastructure cost: name, category, renewal date, price, and a
+          login link for quick access. The summary breaks out monthly vs.
+          yearly spend, paid vs. free tools, and total monthly burn from
+          software alone. Knowing that my tooling costs $1,032/mo (and
+          that $847 of that is AWS) is a more useful number than a vague
+          sense that "I spend a lot on software."
+          <br />
+          <br />
+          <strong>Tools</strong> includes an equity dilution calculator
+          (model a raise with post-money cap and option pool to see the
+          ownership split) and a runway projection that visualizes the
+          burn trajectory month by month.
+          <br />
+          <br />
+          <img
+            src={FoundryTools}
+            alt="Equity dilution calculator and runway projection side by side"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+          <span className="text-sm text-gray-500 block -mt-4 mb-6">
+            A $500k raise at a $5M post-money cap with a 10% option
+            pool. Runway projection shows ~5 months at the current
+            burn rate.
+          </span>
+          <strong>Modules</strong> let me toggle everything on or off.
+          I didn't need every feature from day one, so the sidebar adapts
+          to show only what's enabled. Dashboard is required; everything
+          else is optional. The app grows with me.
+        </section>
+        <section id="how-its-built" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            How it's built
+          </Typography>
+          <br />
+          Foundry is{" "}
+          <TechChip
+            name="React"
+            logo="/logos/react.svg"
+            href="https://react.dev/"
+          />{" "}
+          and{" "}
+          <TechChip
+            name="Vite"
+            logo="/vite.svg"
+            href="https://vite.dev/"
+          />
+          {" "}with no component library. Every button, card, table, and
+          toggle is custom-built with inline styles and a Zinc-based color
+          palette.
+          <br />
+          <br />
+          The backend is entirely{" "}
+          <TechChip
+            name="Supabase"
+            logo="/logos/supabase.svg"
+            href="https://supabase.com/"
+          />
+          , and there is no API layer. The React client talks directly to
+          Supabase's JavaScript SDK, and all authorization is enforced
+          through PostgreSQL row-level security. Every table has a policy
+          that checks the user's active organization, so multi-tenancy is
+          enforced at the data layer, not in application code. Business
+          logic that needs to be atomic (creating an org, handling signups,
+          managing invites) lives in Supabase RPCs, which are just
+          PostgreSQL functions called from the client.
+          <br />
+          <br />
+          State management is vanilla React with no external libraries. A
+          generic <code>useTable()</code> hook provides a reusable
+          data-fetching pattern that about ten domain-specific hooks build
+          on: <code>useDeals()</code>, <code>useContacts()</code>,{" "}
+          <code>useTransactions()</code>, <code>useFinancials()</code>, and
+          so on. The financials hook is the most interesting one: it fetches
+          all transaction lines, groups them by account type and month, and
+          computes the P&L, balance sheet, and cash flow on every render.
+          The database is 13 migrations deep, and Supabase Edge Functions
+          handle the one thing that can't live in the client: sending
+          invitation emails.
+        </section>
+        <section id="where-its-going" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Where it's going
+          </Typography>
+          <br />
+          Any individual module here is simpler than its standalone
+          equivalent. HubSpot is a better CRM. QuickBooks is better
+          accounting software. Linear is a better task tracker. But none
+          of them know about each other, and that's the point. The power
+          of one system is the connections: a deal closes and revenue
+          appears in the ledger. Budget alerts fire from actual
+          transactions, not manual entries. Runway is a real number
+          derived from real books, not a guess in a spreadsheet.
+          <br />
+          <br />
+          Foundry is still actively evolving. Fundraising and cap table
+          modules are on the roadmap, and there's room to go deeper on
+          reporting. But even in its current form, it's the tool I wish
+          I'd had from the beginning.
+        </section>
+      </>
+    ),
     href: "",
   },
   {
