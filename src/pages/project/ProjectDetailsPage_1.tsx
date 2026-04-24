@@ -30,8 +30,9 @@ function ProjectDetailsPage_1() {
     });
 
     headerTimeline.to(
-      "#title-area",
+      "#about-projects-header",
       {
+        autoAlpha: 0,
         duration: 0.5,
         ease: "power2.inOut",
       },
@@ -420,7 +421,7 @@ function ProjectDetailsPage_1() {
         </div>
       </footer>
 
-      <div id="table-of-contents" className="fixed right-20 top-20">
+      <div id="table-of-contents" className="fixed right-20 top-20 pointer-events-none">
         <TableOfContents bodyRef={bodyRef} />
       </div>
       <div

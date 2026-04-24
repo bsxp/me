@@ -219,7 +219,7 @@ const TableOfContents = forwardRef<HTMLDivElement, TableOfContentsProps>(
               <a
                 href={section.id ? `#${section.id}` : undefined}
                 onClick={(event) => handleScrollToSection(event, section.id)}
-                className="hover:text-sky-700 inline-block relative"
+                className="hover:text-sky-700 inline-block relative pointer-events-auto"
               >
                 <span className="relative z-10">{section.title}</span>
                 <div
