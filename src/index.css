@@ -177,3 +177,28 @@ h1 {
     transform: translateY(-15px);
   }
 }
+
+@keyframes lumon-scanlines {
+  from { background-position: 0 0; }
+  to   { background-position: 0 -10px; }
+}
+
+@keyframes lumon-spring-bounce {
+  0%   { transform: translateY(0)    rotate(var(--tilt, 0deg)); }
+  20%  { transform: translateY(-3px) rotate(var(--tilt, 0deg)); }
+  40%  { transform: translateY(2px)  rotate(var(--tilt, 0deg)); }
+  60%  { transform: translateY(-1px) rotate(var(--tilt, 0deg)); }
+  80%  { transform: translateY(2px)  rotate(var(--tilt, 0deg)); }
+  100% { transform: translateY(0)    rotate(var(--tilt, 0deg)); }
+}
+
+.lumon-crt-demo {
+  background: linear-gradient(to top, #000, #000, #333, #333);
+  background-size: 100% 3px;
+  animation: lumon-scanlines 55s linear infinite;
+}
+
+.lumon-spring-bounce {
+  animation: lumon-spring-bounce 12s ease-in-out infinite;
+  will-change: transform;
+}

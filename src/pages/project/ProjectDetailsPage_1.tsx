@@ -333,6 +333,15 @@ function ProjectDetailsPage_1() {
           <div className={`flex-1 relative${project.coverImageBorder ? " border-l border-gray-300" : ""}`} id="image-container">
             {project.coverComponent ? (
               <div className="w-full h-full">{project.coverComponent}</div>
+            ) : project.coverVideo ? (
+              <video
+                src={project.coverVideo}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover z-50"
+              />
             ) : project.coverImageDark ? (
               <div className="w-full h-full bg-gray-950 flex items-center justify-center p-12">
                 <img

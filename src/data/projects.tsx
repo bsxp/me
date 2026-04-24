@@ -21,7 +21,7 @@ import RaterTablesPanel from "@/assets/projects/rater/rater-tables-panel.png";
 import RaterOutputs from "@/assets/projects/rater/rater-outputs.png";
 import RaterTableEditor from "@/assets/projects/rater/rater-table-editor.png";
 import RaterAddNode from "@/assets/projects/rater/rater-add-node.png";
-import LumonVideo from "@/assets/projects/lumon/lumon-cover.mov";
+import LumonVideo from "@/assets/projects/lumon/lumon-cover.mp4";
 import OneFeedVideo from "@/assets/projects/onefeed/onefeed-cover.mov";
 import { Typography } from "@/components/ui/typography";
 import { TechChip } from "@/pages/blog/components/TechChip";
@@ -1114,8 +1114,261 @@ const projects: Project[] = [
     description: "Finding the scary numbers",
     coverImage: "",
     coverVideo: LumonVideo,
-    overview: "",
-    body: "",
+    overview: (
+      <span>
+        Severance dropped a new season, I watched it, and I couldn't stop
+        thinking about how the Lumon terminals looked on screen.
+        Wobbling cyan numbers, CRT scanlines, outlined typography that
+        shouldn't work but does. I spent a weekend rebuilding the screen
+        in the browser to see how close I could get with pure CSS.
+      </span>
+    ),
+    body: (
+      <>
+        <section id="effects" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            The effects
+          </Typography>
+          <br />
+          Nothing here is rendered on a canvas or driven by JavaScript.
+          It's all CSS, and most of it is one or two lines.
+          <br />
+          <br />
+          <Typography variant="h5" className="pt-6 pb-3 block">
+            CRT scanlines
+          </Typography>
+          A three-pixel horizontal-band gradient with the background
+          position shifting on an infinite loop.
+          <br />
+          <br />
+          <div className="lumon-crt-demo h-32 rounded-lg my-4 flex items-center justify-center">
+            <span
+              className="text-2xl"
+              style={{
+                fontFamily: "'Google Sans Code', monospace",
+                WebkitTextStroke: "1.4px #53eafd",
+                color: "transparent",
+              }}
+            >
+              LUMON
+            </span>
+          </div>
+          <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs my-6 font-mono leading-relaxed">
+            <code>{`.crt {
+  background: linear-gradient(to top, #000, #000, #333, #333);
+  background-size: 100% 3px;
+  animation: scanlines 55s linear infinite;
+}
+@keyframes scanlines {
+  from { background-position: 0 0; }
+  to   { background-position: 0 -10px; }
+}`}</code>
+          </pre>
+
+          <Typography variant="h5" className="pt-6 pb-3 block">
+            Outlined digits
+          </Typography>
+          <code>-webkit-text-stroke</code> on a transparent fill. The
+          counters of each glyph stay visible, which is what gives the
+          numbers that hollow-neon look the show is after. The stroke
+          width bumps up across states to signal emphasis without
+          filling the glyph in.
+          <br />
+          <br />
+          <div
+            className="bg-black rounded-lg my-4 p-8 grid grid-cols-4 gap-x-10 gap-y-2 place-items-center"
+            style={{ fontFamily: "'Google Sans Code', monospace" }}
+          >
+            <span
+              className="text-3xl"
+              style={{
+                WebkitTextStroke: "3px #53eafd",
+                color: "transparent",
+              }}
+            >
+              0
+            </span>
+            <span
+              className="text-3xl"
+              style={{
+                WebkitTextStroke: "2.4px #53eafd",
+                color: "transparent",
+              }}
+            >
+              0
+            </span>
+            <span
+              className="text-3xl"
+              style={{
+                WebkitTextStroke: "2px #53eafd",
+                color: "transparent",
+              }}
+            >
+              0
+            </span>
+            <span
+              className="text-3xl"
+              style={{
+                WebkitTextStroke: "1.4px #53eafd",
+                color: "transparent",
+              }}
+            >
+              0
+            </span>
+            <span />
+            <span />
+            <span />
+            <span className="flex flex-col items-center text-cyan-300 text-xs leading-tight">
+              <span className="text-lg leading-none">↑</span>
+              <span className="mt-1">1.4px stroke</span>
+            </span>
+          </div>
+          <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs my-6 font-mono leading-relaxed">
+            <code>{`.digit {
+  -webkit-text-stroke: 1.4px #53eafd;
+  -webkit-text-fill-color: transparent;
+  transition: all 0.2s ease-in-out;
+}
+.digit:hover    { -webkit-text-stroke-width: 2.4px; }
+.digit.selected { -webkit-text-stroke-width: 3px;   }`}</code>
+          </pre>
+
+          <Typography variant="h5" className="pt-6 pb-3 block">
+            Per-digit bounce
+          </Typography>
+          A 12-second spring keyframe on every digit, with a random{" "}
+          <code>animation-delay</code> between -6s and 0s and a per-digit{" "}
+          <code>--tilt</code> variable that one in four numbers uses to
+          sit at a small angle.
+          <br />
+          <br />
+          <div
+            className="bg-black rounded-lg my-4 p-6 grid grid-cols-6 gap-6 place-items-center"
+            style={{ fontFamily: "'Google Sans Code', monospace" }}
+          >
+            {[
+              { n: 3, tilt: 0, delay: -1.2 },
+              { n: 7, tilt: 5, delay: -3.8 },
+              { n: 1, tilt: 0, delay: -0.4 },
+              { n: 9, tilt: 0, delay: -5.1 },
+              { n: 4, tilt: 3, delay: -2.7 },
+              { n: 6, tilt: 0, delay: -4.5 },
+              { n: 2, tilt: 0, delay: -1.9 },
+              { n: 8, tilt: 6, delay: -0.1 },
+              { n: 5, tilt: 0, delay: -3.3 },
+              { n: 0, tilt: 0, delay: -2.2 },
+              { n: 1, tilt: 0, delay: -4.8 },
+              { n: 7, tilt: 2, delay: -0.7 },
+            ].map(({ n, tilt, delay }, i) => (
+              <span
+                key={i}
+                className="lumon-spring-bounce text-3xl"
+                style={{
+                  WebkitTextStroke: "1.4px #53eafd",
+                  color: "transparent",
+                  ["--tilt" as never]: `${tilt}deg`,
+                  animationDelay: `${delay}s`,
+                }}
+              >
+                {n}
+              </span>
+            ))}
+          </div>
+          <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs my-6 font-mono leading-relaxed">
+            <code>{`.digit {
+  --tilt: 0deg;
+  animation: spring-bounce 12s ease-in-out infinite;
+}
+@keyframes spring-bounce {
+  0%   { transform: translateY(0)    rotate(var(--tilt)); }
+  20%  { transform: translateY(-3px) rotate(var(--tilt)); }
+  40%  { transform: translateY(2px)  rotate(var(--tilt)); }
+  60%  { transform: translateY(-1px) rotate(var(--tilt)); }
+  80%  { transform: translateY(2px)  rotate(var(--tilt)); }
+  100% { transform: translateY(0)    rotate(var(--tilt)); }
+}`}</code>
+          </pre>
+
+          <Typography variant="h5" className="pt-6 pb-3 block">
+            mix-blend-difference on the percentage bar
+          </Typography>
+          The label uses <code>mix-blend-mode: difference</code>. Cyan
+          text over cyan fill inverts to dark; cyan text over black
+          stays cyan. The label reads in both regions as the fill
+          slides underneath it.
+          <br />
+          <br />
+          <div className="bg-black rounded-lg my-4 p-8 flex items-center justify-center">
+            <div className="relative w-full max-w-md h-10 border-2 border-cyan-300 overflow-hidden">
+              <div
+                className="absolute inset-y-0 left-0 bg-cyan-300"
+                style={{ width: "50%" }}
+              />
+              <div
+                className="relative flex h-full w-full items-center px-3 text-xl text-cyan-300"
+                style={{
+                  mixBlendMode: "difference",
+                  fontFamily: "'Google Sans Code', monospace",
+                }}
+              >
+                50%
+              </div>
+            </div>
+          </div>
+          <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs my-6 font-mono leading-relaxed">
+            <code>{`.fill  { position: absolute; inset: 0 auto 0 0; width: 50%; background: #53eafd; }
+.label { mix-blend-mode: difference; color: #53eafd; }`}</code>
+          </pre>
+
+          <Typography variant="h5" className="pt-6 pb-3 block">
+            Layered outline text
+          </Typography>
+          Two copies of the same string stacked: a back copy stroked
+          with transparent fill, a front copy filled solid. The filled
+          label sits inside the glowing outline.
+          <br />
+          <br />
+          <div className="bg-black rounded-lg my-4 p-8 flex items-center justify-center">
+            <div
+              className="relative text-3xl"
+              style={{ fontFamily: "'Google Sans Code', monospace" }}
+            >
+              <div
+                className="absolute inset-0"
+                style={{
+                  WebkitTextStroke: "5px #53eafd",
+                  color: "transparent",
+                }}
+              >
+                50% COMPLETE
+              </div>
+              <div className="relative text-black">50% COMPLETE</div>
+            </div>
+          </div>
+          <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs my-6 font-mono leading-relaxed">
+            <code>{`.back  {
+  position: absolute; inset: 0;
+  -webkit-text-stroke: 5px #53eafd;
+  -webkit-text-fill-color: transparent;
+}
+.front { position: relative; color: #000; }`}</code>
+          </pre>
+        </section>
+
+        <section id="closing" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Just for fun
+          </Typography>
+          <br />
+          Watched Severance, loved the way the terminal looked, built
+          one. The fun was all in the CSS:{" "}
+          <code>-webkit-text-stroke</code>, <code>mix-blend-mode</code>,
+          a background-position that just keeps drifting. Not tools I
+          reach for in day-to-day product work, which is exactly why it
+          felt good to spend a weekend here.
+        </section>
+      </>
+    ),
     href: "",
   },
   {
