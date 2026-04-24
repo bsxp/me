@@ -33,7 +33,7 @@ function ProjectDetailsPage_1() {
     headerTimeline.to(
       "#about-projects-header",
       {
-        autoAlpha: 0,
+        pointerEvents: "none",
         duration: 0.5,
         ease: "power2.inOut",
       },
