@@ -13,7 +13,9 @@ import LabbookChartRendered from "@/assets/projects/labbook/labbook-chart-render
 import LabbookCommittedEntry from "@/assets/projects/labbook/labbook-committed-entry.png";
 import LabbookActivity from "@/assets/projects/labbook/labbook-activity.png";
 import LabbookFindings from "@/assets/projects/labbook/labbook-findings.png";
-import PlaybookCover from "@/assets/projects/playbook/playbook-cover.png";
+import PlaybookCover from "@/assets/projects/playbook/playbook-cover.jpg";
+import PlaybookDashboard from "@/assets/projects/playbook/playbook-dashboard.png";
+import PlaybookProfile from "@/assets/projects/playbook/playbook-profile.png";
 import RaterDashboard from "@/assets/projects/rater/rater-dashboard.png";
 import RaterBuilder from "@/assets/projects/rater/rater-builder.png";
 import RaterGraphZoom from "@/assets/projects/rater/rater-graph-zoom.png";
@@ -1378,8 +1380,238 @@ const projects: Project[] = [
     title: "Playbook",
     description: "Simplifying the process of organizing live events",
     coverImage: PlaybookCover,
-    overview: "",
-    body: "",
+    overview: (
+      <span>
+        My best friend's band in Austin, Tokyo Vinyl, started a booking
+        company to help organize shows for themselves and the bands they
+        like to play with. The work was getting done the way it always
+        has in music: a pile of DMs, group chats, and phone calls.
+        Playbook is the single place I built for them, for bands,
+        booking companies, and venues to plan and run shows together.
+      </span>
+    ),
+    body: (
+      <>
+        <section id="origin" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            A band in a group chat
+          </Typography>
+          <br />
+          Tokyo Vinyl is a band out of Austin, and my best friend Nick
+          is their lead guitarist. I'm at their shows most weekends,
+          and by the time they decided to make the booking company a
+          real thing, I'd been hearing about the logistics chaos from
+          him for months. A couple of years in, they realized they were
+          already doing half the work of a booking company. They were
+          lining up openers they liked, introducing bands to venues
+          they'd played, and helping each other land gigs. So they made
+          it official and started booking shows for other people too.
+          <br />
+          <br />
+          The tooling to do any of that didn't exist in a real way.
+          Every show was a new round of Instagram DMs, group chats,
+          phone calls, and PDFs getting texted around. Each show has
+          the same shape: a lineup, showtimes, a venue with its own
+          quirks, a stage plot that needs to get to the sound tech,
+          compensation terms, and a list of people who all need to know
+          when things change. Multiply that by a dozen shows in flight
+          at once and every weekend was spent re-reading old messages
+          looking for where a detail was agreed to.
+          <br />
+          <br />
+          Playbook is the thing I wanted them to have. One place where
+          a show lives, with everyone who has anything to do with it
+          already in the room.
+        </section>
+
+        <section id="three-sides" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Three sides of the same table
+          </Typography>
+          <br />
+          Three kinds of people care about a show: the band playing it,
+          the booking company putting it together, and the venue
+          hosting it. They need mostly the same information (who's on
+          stage, when, and what it looks like), but each one has a
+          different job to do with it.
+          <br />
+          <br />
+          Playbook models all three as first-class roles. A user signs
+          in and lands on whichever dashboard makes sense for them, and
+          if they wear multiple hats (a band member who also books
+          shows for other bands, or a venue owner who's in a band of
+          their own), they can toggle between "artist platform" and
+          "venue platform" without signing out or switching accounts.
+          It sounds like a small thing, but the Austin music scene is
+          full of people doing both at once, so making it a single
+          account mattered.
+          <br />
+          <br />
+          <img
+            src={PlaybookDashboard}
+            alt="Playbook artist dashboard for Tokyo Vinyl showing artist counts, upcoming and past shows, show requests, a messages panel, and a show management panel"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+          <span className="text-sm text-gray-500 block -mt-4 mb-6">
+            The artist dashboard for Tokyo Vinyl. Show counts at the top,
+            active message threads on the left, and show management
+            (upcoming, past, and pending requests) on the right.
+          </span>
+          Each band and venue also has a public profile at{" "}
+          <code>useplaybook.io/band/&lt;slug&gt;</code>. The profile is
+          shareable and customizable, and stitches together Spotify and
+          Apple Music links, social media, a bio, and whatever photos
+          or videos they want. It's the page you send to a venue when
+          you're pitching a show, and it's the page a talent buyer
+          lands on when they're looking for openers. It doubles as a
+          searchable listing inside the app for anyone trying to fill
+          a night.
+          <br />
+          <br />
+          <img
+            src={PlaybookProfile}
+            alt="Playbook band profile editor for Tokyo Vinyl with a live preview on the left and tabs for basic info, social media, music links, and customize on the right"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+          <span className="text-sm text-gray-500 block -mt-4 mb-6">
+            The profile editor. Live preview on the left, tabbed fields
+            on the right, and a public slug that the band controls
+            directly.
+          </span>
+        </section>
+
+        <section id="from-request-to-conversation" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            From request to conversation
+          </Typography>
+          <br />
+          Setting up a show starts with a request. A band can request a
+          show at a venue with a date, a time, and a short pitch. A
+          venue can request a band for a night they're trying to fill.
+          Once both sides approve, a show exists with its own identity,
+          and the original request stays attached so you can always see
+          the pitch, the approval, and the date it all lined up on.
+          <br />
+          <br />
+          Building the show itself runs through a small wizard: event
+          name, then timing, then the lineup (drag to reorder), then
+          the venue. Four steps instead of a thirty-field form, and
+          the order isn't arbitrary. Locking the date first means the
+          next three decisions get made against a real constraint.
+          <br />
+          <br />
+          Once a show is on the books, a chat thread is spun up with
+          everyone attached to it: the bands on the lineup, the venue
+          point person, and the booking company member who put it
+          together. Messages run over Supabase Realtime, so replies
+          show up live for everyone in the thread. Files uploaded into
+          the chat get auto-labeled based on their filename and type.
+          A PDF called <code>tokyo-vinyl-stage-plot.pdf</code> gets
+          tagged as <strong>Stage Map</strong>, an image named{" "}
+          <code>poster.png</code> becomes a <strong>Poster</strong>,
+          and the message renders with the right label next to the
+          attachment. You can always override the auto-detection from
+          a dropdown. It isn't an interactive stage-map tool; it's the
+          pragmatic middle ground. Whatever PDF the sound tech is
+          already used to looking at, tagged once and findable later
+          without anyone having to fight the tool.
+        </section>
+
+        <section id="how-its-built" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            How it's built
+          </Typography>
+          <br />
+          The front end is{" "}
+          <TechChip
+            name="React"
+            logo="/logos/react.svg"
+            href="https://react.dev/"
+          />{" "}
+          and{" "}
+          <TechChip
+            name="TypeScript"
+            logo="/logos/typescript.svg"
+            href="https://www.typescriptlang.org/"
+          />{" "}
+          on{" "}
+          <TechChip name="Vite" logo="/vite.svg" href="https://vite.dev/" />
+          , with{" "}
+          <TechChip
+            name="Tailwind"
+            logo="/logos/tailwind.svg"
+            href="https://tailwindcss.com/"
+          />{" "}
+          and a shadcn-style component library on top of Radix
+          primitives. Small pieces of cross-page state live in Zustand,
+          server data lives in TanStack Query, forms run through
+          react-hook-form and Zod, and routing is React Router 7.
+          <br />
+          <br />
+          The backend is{" "}
+          <TechChip
+            name="Supabase"
+            logo="/logos/supabase.svg"
+            href="https://supabase.com/"
+          />{" "}
+          end-to-end.{" "}
+          <TechChip
+            name="PostgreSQL"
+            logo="/logos/postgresql.svg"
+            href="https://www.postgresql.org/"
+          />{" "}
+          for data, Auth for users, Realtime for chat sync, and Storage
+          for attachments. Chat messages ride Supabase Realtime
+          broadcast channels, the same pattern Labbook uses for its
+          CRDT sync, and for the same reason: one fewer service to run,
+          which matters when the whole thing is one person maintaining
+          it. The client talks directly to Supabase and row-level
+          security enforces which bands, venues, and shows a given user
+          can see. No separate API layer.
+          <br />
+          <br />
+          Migrations handle the multi-role policies, including the edge
+          case where chat participants are polymorphic (artists,
+          venues, or individuals), which is where RLS starts to get
+          interesting.
+        </section>
+
+        <section id="where-it-landed" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Where it landed
+          </Typography>
+          <br />
+          Playbook is still up at{" "}
+          <a
+            href="https://useplaybook.io"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:no-underline"
+          >
+            useplaybook.io
+          </a>
+          , but the tank is running on reserve. I don't have the time
+          to keep building on it, and it's been on life support for a
+          while now. What it got to do is the part I'm happiest about.
+          It ran a season for Tokyo Vinyl and the booking company, took
+          a lot of the show coordination out of Instagram DMs and phone
+          calls, and kept the context with the show instead of
+          scattered across a dozen threads.
+          <br />
+          <br />
+          The best part of the project had nothing to do with the code.
+          I'm at Tokyo Vinyl shows constantly; they're my friends
+          before they're users, and that meant feedback came back in
+          the most direct way possible. I could watch them use the app
+          on a Tuesday night between sets, hear what wasn't working
+          from across a bar, and have a fix out the next morning. Being
+          that close to the problem you're solving, and to the people
+          solving it with you, is the thing I'd try to replicate on
+          anything I build next. It's rare, and it's worth more than
+          any amount of user research.
+        </section>
+      </>
+    ),
     href: "",
   },
   {
