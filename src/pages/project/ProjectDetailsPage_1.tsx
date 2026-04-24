@@ -1,6 +1,7 @@
 import { projects } from "@/data/projects";
 import { Typography } from "@/components/ui/typography";
 import { Link, useParams } from "react-router-dom";
+import { Github } from "lucide-react";
 import { BouncingArrow } from "@/components/ui/bouncing-arrow";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -321,6 +322,17 @@ function ProjectDetailsPage_1() {
                     {project.overview}
                   </Typography>
                 </div>
+                {project.repoUrl && (
+                  <a
+                    href={project.repoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-4 inline-flex items-center gap-2 text-sm font-[Google Sans Code] text-gray-700 hover:text-black w-fit"
+                  >
+                    <Github className="size-4" />
+                    View source on GitHub
+                  </a>
+                )}
                 <div
                   id="scroll-down-arrow"
                   className="animate-[arrow-bounce_3.2s_cubic-bezier(0.445,0.05,0.55,0.95)_infinite] w-full flex justify-center mt-8"

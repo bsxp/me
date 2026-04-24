@@ -54,6 +54,7 @@ type Project = {
   coverImageDark?: boolean;
   body: string | React.ReactNode;
   href: string;
+  repoUrl?: string;
 };
 
 const projects: Project[] = [
@@ -1114,6 +1115,7 @@ const projects: Project[] = [
     description: "Finding the scary numbers",
     coverImage: "",
     coverVideo: LumonVideo,
+    repoUrl: "https://github.com/bsxp/lumon-terminal-pro",
     overview: (
       <span>
         Severance dropped a new season, I watched it, and I couldn't stop
@@ -1130,8 +1132,8 @@ const projects: Project[] = [
             The effects
           </Typography>
           <br />
-          Nothing here is rendered on a canvas or driven by JavaScript.
-          It's all CSS, and most of it is one or two lines.
+          The visuals are pure CSS. No canvas, no animation libraries,
+          and most of the tricks are one or two lines.
           <br />
           <br />
           <Typography variant="h5" className="pt-6 pb-3 block">
