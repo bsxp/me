@@ -1,6 +1,18 @@
 import HearthCover from "@/assets/projects/hearth/hearth-cover.png";
 import FoundryCover from "@/assets/projects/foundry/foundry-cover.png";
-import LabbookCover from "@/assets/projects/labbook/labbook-cover.png";
+import LabbookCover from "@/assets/projects/labbook/labbook-landing.png";
+import LabbookDashboard from "@/assets/projects/labbook/labbook-dashboard.png";
+import LabbookProtocols from "@/assets/projects/labbook/labbook-protocols.png";
+import LabbookSearch from "@/assets/projects/labbook/labbook-search.png";
+import LabbookSlashMenu from "@/assets/projects/labbook/labbook-slash-menu.png";
+import LabbookChartEntry from "@/assets/projects/labbook/labbook-chart-entry.png";
+import LabbookChartTypes from "@/assets/projects/labbook/labbook-chart-types.png";
+import LabbookDataTable from "@/assets/projects/labbook/labbook-data-table.png";
+import LabbookImport from "@/assets/projects/labbook/labbook-import.png";
+import LabbookChartRendered from "@/assets/projects/labbook/labbook-chart-rendered.png";
+import LabbookCommittedEntry from "@/assets/projects/labbook/labbook-committed-entry.png";
+import LabbookActivity from "@/assets/projects/labbook/labbook-activity.png";
+import LabbookFindings from "@/assets/projects/labbook/labbook-findings.png";
 import PlaybookCover from "@/assets/projects/playbook/playbook-cover.png";
 import RaterDashboard from "@/assets/projects/rater/rater-dashboard.png";
 import RaterBuilder from "@/assets/projects/rater/rater-builder.png";
@@ -185,10 +197,612 @@ const projects: Project[] = [
   {
     id: "labbook",
     title: "Labbook.io",
-    description: "The electronic lab notebook built for how scientists actually work",
+    description: "The electronic lab notebook of the future",
     coverImage: LabbookCover,
-    overview: "",
-    body: "",
+    overview: (
+      <span>
+        In 2024, the NIH mandated that its entire Intramural Research
+        Program move off paper and onto approved electronic lab notebooks.
+        A lifelong friend, whose family and partner's family are both full
+        of scientists, had been watching the space from the inside for
+        years and saw the opening.
+        <br />
+        <br />
+        Labbook.io is what came out of that conversation: an electronic lab
+        notebook built around how scientists actually think and work, with
+        a tamper-evident hash chain underneath so the record holds up when
+        it matters.
+      </span>
+    ),
+    body: (
+      <>
+        <section id="origin" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            A federal mandate and an open door
+          </Typography>
+          <br />
+          In 2024, the{" "}
+          <a
+            href="https://oir.nih.gov/sourcebook/intramural-program-oversight/electronic-lab-notebooks/intramural-electronic-lab-notebook-policy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:no-underline"
+          >
+            NIH required every new research project in its Intramural
+            Research Program
+          </a>{" "}
+          to move off paper notebooks and onto approved electronic lab
+          notebooks by June 30th. Ongoing research had to be transitioned
+          by the same date, and no new paper notebooks could be started
+          after the cutoff. The practical effect was immediate: thousands
+          of labs that had been using paper for decades suddenly had to
+          pick an ELN and get everyone onto it.
+          <br />
+          <br />
+          A lifelong friend came to me around that time with an
+          observation. His family and his partner's family are both full
+          of scientists, and he'd spent years listening to them talk about
+          their work. He had firsthand exposure to how researchers
+          actually keep notes, what workflows matter, and what gets in the
+          way. What he saw was an underdeveloped space meeting a
+          mandate-driven wave of new buyers, and an opportunity to build
+          something that actually fit how scientists work rather than
+          forcing them into a tool that didn't.
+          <br />
+          <br />
+          The resistance to ELNs isn't irrational; paper has real
+          advantages that tend to get dismissed by people who haven't
+          worked at a bench. Handwriting is faster than typing for
+          quick observations; a blank page is more flexible than any
+          template; pen and paper don't crash, don't need a charger, and
+          don't care if you spill something on them. The question we kept
+          coming back to during requirements gathering was whether you
+          could have both: the freedom of a blank page with the structure
+          and integrity guarantees that make digital records worth the
+          transition in the first place.
+          <br />
+          <br />
+          We'd built things together before, so it wasn't a hard decision.
+          We spent a few weeks gathering requirements from people in his
+          network, spun up a prototype, and were off.
+        </section>
+
+        <section id="how-scientists-think" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Mirroring how research is actually organized
+          </Typography>
+          <br />
+          The first thing we wanted to get right was the data model,
+          because it's the part that either matches how a researcher
+          already thinks about their work or quietly fights them every
+          time they open the app. Get the shape wrong and you spend your
+          time wrestling the tool into submission; get it right and the
+          tool disappears into the work.
+          <br />
+          <br />
+          Research doesn't live in a flat list. Each level of the
+          hierarchy corresponds to a real organizational unit researchers
+          already use when they talk about their work:
+          <br />
+          <br />
+          <ul className="list-disc pl-6 space-y-2">
+            <li>
+              <strong>Organization</strong> — the lab itself, with its
+              members, roles, and shared resources.
+            </li>
+            <li>
+              <strong>Notebook</strong> — a research area or theme the lab
+              is pursuing (e.g. CRISPR knockouts, single-cell RNA-seq).
+            </li>
+            <li>
+              <strong>Project</strong> — a specific line of investigation
+              inside that area, often running in parallel with others.
+            </li>
+            <li>
+              <strong>Experiment</strong> — the unit that actually gets
+              designed, run, and written up.
+            </li>
+            <li>
+              <strong>Entry</strong> — a day-to-day note capturing what
+              happened at the bench.
+            </li>
+          </ul>
+          <br />
+          It's like nested folders, but with meaning. Labbook mirrors the
+          structure directly, because if the shape doesn't match how
+          researchers already think, they'll spend their time fighting the
+          tool instead of using it.
+          <br />
+          <br />
+          <img
+            src={LabbookDashboard}
+            alt="Labbook dashboard showing the Nakamura Lab with two notebooks, projects and experiments nested underneath, and committed and draft entries at the leaves"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+          <span className="text-sm text-gray-500 block -mt-4 mb-6">
+            The Nakamura Lab dashboard. Two notebooks (single-cell RNA-seq
+            and CRISPR knockouts), with projects, experiments, and committed
+            vs. draft entries all visible in one tree.
+          </span>
+          <Typography variant="h5" className="pt-6 pb-3 block">
+            Protocols
+          </Typography>
+          Once the structure is in place, the next thing that surfaces is
+          repetition. Labs run the same procedures over and over; a Western
+          blot is a Western blot, a 10x scRNA-seq library prep is eight
+          hours of steps that haven't meaningfully changed in a year.
+          Rewriting procedures from scratch every time is a waste, but
+          copy-pasting from an old entry is how protocols drift, get
+          outdated, and stop matching what the lab actually does. Labbook
+          handles this with reusable protocol templates that have variable
+          slots ({`{sample_name}`}, {`{concentration}`}, {`{incubation_time}`})
+          filled in at the moment a new experiment starts. The lab maintains
+          one canonical version of each procedure, and every instantiation
+          is traceable back to the template it came from.
+          <br />
+          <br />
+          <img
+            src={LabbookProtocols}
+            alt="Labbook protocols library showing reusable templates tagged by category and author"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+          <span className="text-sm text-gray-500 block -mt-4 mb-6">
+            The protocol library. Each template is authored by a lab member,
+            tagged by category (sequencing, biochemistry, flow cytometry,
+            molecular biology, cell culture), and scoped to either the
+            individual or the whole organization.
+          </span>
+          <Typography variant="h5" className="pt-6 pb-3 block">
+            Search
+          </Typography>
+          And once you have a structured hierarchy with hundreds of entries
+          and protocols flowing through it, findability becomes the thing
+          that makes or breaks daily use. Cmd+K opens a global search that
+          spans every level of the hierarchy with full-text indexing, tag
+          filtering, and faceted counts by entity type. It's the kind of
+          thing you don't think about until you don't have it, at which
+          point you realize you're spending twenty minutes a day clicking
+          through nested folders looking for an entry you wrote last
+          Tuesday.
+          <br />
+          <br />
+          <img
+            src={LabbookSearch}
+            alt="Labbook Cmd+K search overlay showing faceted results across notebooks, projects, experiments, and entries"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+          <span className="text-sm text-gray-500 block -mt-4 mb-6">
+            Cmd+K search for "crispr" returning results across notebooks,
+            projects, and entries, with faceted counts for each entity type.
+          </span>
+        </section>
+
+        <section id="write-draw-say" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Write it, draw it, say it
+          </Typography>
+          <br />
+          A real lab entry is not a paragraph of text. It's notes about
+          what you did, tables of numbers you measured, plots of those
+          numbers, sketches of the plate layout or experimental design, a
+          reference to the protocol you followed, files from the
+          instrument, and maybe a voice note you recorded between samples
+          because your hands were gloved and you couldn't type. If the tool
+          only handles text well, the rest of the work scatters: a Google
+          Doc for the notes, an Excel file for the tables, a whiteboard
+          photo for the sketch, a voice memo on your phone. The notebook
+          stops being a notebook and becomes a coordination problem.
+          <br />
+          <br />
+          Labbook's editor is built around a single idea: everything
+          should live inside one entry. A slash command menu exposes every
+          block type the editor supports, and the set was chosen
+          specifically around what researchers actually reach for at the
+          bench.
+          <br />
+          <br />
+          <img
+            src={LabbookSlashMenu}
+            alt="Slash command menu showing image, file, drawing, voice note, dictate, and divider block options"
+            className="w-80 rounded-lg border border-gray-200 my-6 block mx-auto"
+          />
+          <span className="text-sm text-gray-500 block -mt-4 mb-6 text-center">
+            The slash menu. Images, file attachments, freehand drawings,
+            voice recordings, and live dictation alongside the usual text
+            blocks.
+          </span>
+          <Typography variant="h5" className="pt-6 pb-3 block">
+            Data visualization
+          </Typography>
+          Charts were the most involved piece to build, because scientific
+          plotting is specific in a way that general-purpose tools will
+          never be. We built over twenty chart types into the editor,
+          ranging from the ordinary (line, bar, scatter) to the deeply
+          domain-specific: Kaplan-Meier survival curves for clinical
+          research, volcano plots for genomics, 96-well plate heatmaps for
+          screening work, dose-response curves for pharmacology, box plots,
+          violin plots, forest plots for meta-analysis. These aren't nice
+          to have. A Kaplan-Meier curve is how you communicate survival
+          data; a volcano plot is how you visualize differential gene
+          expression. They're the native language of their respective
+          fields, and if a scientist has to leave the notebook to make one,
+          the analysis and the notes fall out of sync.
+          <br />
+          <br />
+          <img
+            src={LabbookChartEntry}
+            alt="A draft entry with inline tables and the chart configuration drawer open on the right"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+          <span className="text-sm text-gray-500 block -mt-4 mb-6">
+            A draft entry with the chart drawer open. Paclitaxel treatment
+            capture with inline QC tables, a Python snippet for downstream
+            analysis, and the chart configuration panel, all in the same
+            entry.
+          </span>
+          <img
+            src={LabbookChartTypes}
+            alt="Chart selector showing Heatmap, Sankey, Kaplan-Meier, Volcano Plot, Dose-Response, Forest Plot, ROC Curve, and Plate Heatmap"
+            className="w-80 rounded-lg border border-gray-200 my-6 block mx-auto"
+          />
+          <span className="text-sm text-gray-500 block -mt-4 mb-6 text-center">
+            Further down the selector. Heatmaps, Sankey diagrams, and the
+            biology and clinical plots: Kaplan-Meier, volcano, dose-response,
+            forest, ROC, and plate heatmap.
+          </span>
+          Each chart has an inline data editor where the numbers that feed
+          the plot live right next to it. No separate spreadsheet to
+          maintain, no copy-paste step to forget. For data that already
+          lives somewhere else, there's an import path for CSVs, Excel
+          files, and Google Sheets directly. The Sheets connection matters
+          because a lot of labs already live there for raw data capture;
+          asking them to re-enter numbers into a new tool every day is a
+          reliable way to ensure they stop using the new tool.
+          <br />
+          <br />
+          <img
+            src={LabbookDataTable}
+            alt="Inline chart data editor showing editable rows with cells and conditions"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+          <span className="text-sm text-gray-500 block -mt-4 mb-6">
+            The inline data editor. Add rows directly, or pull data in
+            from a file.
+          </span>
+          <img
+            src={LabbookImport}
+            alt="Import menu with CSV, Excel, and Google Sheets options"
+            className="w-80 rounded-lg border border-gray-200 my-6 block mx-auto"
+          />
+          <span className="text-sm text-gray-500 block -mt-4 mb-6 text-center">
+            CSV, Excel, and a direct Google Sheets connection.
+          </span>
+          <img
+            src={LabbookChartRendered}
+            alt="Rendered bar chart showing sample QC cellranger output with cells loaded, recovered, and mitochondrial percentage across conditions"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+          <span className="text-sm text-gray-500 block -mt-4 mb-6">
+            The rendered chart lives in the entry itself. Change the
+            underlying data and the plot updates in place.
+          </span>
+          <Typography variant="h5" className="pt-6 pb-3 block">
+            Natural language capture
+          </Typography>
+          A lot of scientists already lean on voice memos during bench
+          work; it's the path of least resistance when your hands are
+          gloved, when you're in a fume hood, or when you're in the middle
+          of a timed step and can't reach for a keyboard. The problem is
+          that those memos then live on a phone somewhere, disconnected
+          from the experiment they belong to, and get transcribed (or
+          not) later when the researcher has time. Our goal was to meet
+          that habit where it already exists and make it native to the
+          entry itself. A voice note block records audio directly into
+          the entry; the dictation overlay transcribes speech to text in
+          real time; the transcript lands as editable text alongside
+          whatever else is in the entry. Same instinct, no extra
+          coordination.
+          <br />
+          <br />
+          Accuracy is the whole game here, and it's where generic
+          speech-to-text tends to fall over. The browser's built-in Web
+          Speech API was the obvious first stop, since it's free and
+          doesn't need a vendor wired up, but after enough testing I
+          couldn't get it to a place that felt usable enough to clear
+          the bar I set for Labbook's recording quality. Lab dictation
+          is a torrent of
+          specialized vocabulary: cell lines like HEK293T and RPE-1, gene
+          names like TP53 or CDKN1A, compounds like paclitaxel and
+          ribonucleoprotein, concentrations read off a pipette in molar
+          quantities. A transcript that turns "Cas9" into "cast nine" is
+          worse than useless, because now the researcher has to stop and
+          fix it instead of continuing the experiment. We use{" "}
+          <a
+            href="https://deepgram.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:no-underline"
+          >
+            Deepgram
+          </a>
+          's Nova-3 model for this, which handles specialized and
+          technical vocabulary meaningfully better than general-purpose
+          alternatives, with smart formatting and live punctuation turned
+          on. For recorded voice notes we send the audio blob to the REST
+          endpoint; for the live dictation overlay we stream raw PCM over
+          a WebSocket with interim results on, so partial transcripts
+          appear in real time and the researcher can catch and correct
+          mistakes as they're speaking rather than reading the whole
+          paragraph back at the end. The edge function that mints
+          Deepgram tokens issues short-lived JWTs (10-120 second TTL), so
+          the API key never leaves the server.
+          <br />
+          <br />
+          Drawings are the other half of this. Plate layouts, reaction
+          schemes, experimental design sketches; scientists draw
+          constantly, and most ELN templates flatten that back into linear
+          text boxes. A canvas-backed drawing block gives you smooth
+          freehand strokes with pen and stylus input, which is
+          non-negotiable for a tool that wants to compete on ergonomics.
+          <br />
+          <br />
+          Real-time collaboration runs through all of it. Multiple people
+          can work in the same entry simultaneously, with live cursors and
+          presence avatars showing who's where. Labs are teams; a PI and
+          three grad students touching the same experiment is the norm, not
+          the exception. If the notebook doesn't handle concurrent editing
+          gracefully, people fall back to emailing Word documents or
+          maintaining separate copies that slowly diverge. We'll get into
+          how the collaboration layer works under the hood in the stack
+          section, but from a user's perspective it's straightforward:
+          everyone can type at once, edits merge cleanly, and you can see
+          who's there.
+        </section>
+
+        <section id="sealed-signed-provable" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Sealed, signed, and provable
+          </Typography>
+          <br />
+          A lab notebook is a weirdly load-bearing object. On one hand
+          it's somewhere to scribble; on the other it's a record that
+          gets subpoenaed in patent disputes, audited during FDA
+          inspections, and cited when someone tries to reproduce your
+          work a decade later. If you can't prove your data wasn't
+          altered after the fact, the notebook is worthless to the
+          systems that need to trust it, which turns out to be most of
+          the systems that matter.
+          <br />
+          <br />
+          The FDA's taste in acronyms is unmatched. Their rubric for what
+          "good" research records look like is ALCOA+: attributable,
+          legible, contemporaneous, original, and accurate, plus
+          complete, consistent, enduring, and available. Those nine
+          words sit underneath almost every regulatory standard that
+          touches lab data, from 21 CFR Part 11 in US pharma to EU GMP
+          Annex 11 on the European side. None of them care how pretty
+          the UI is. They care about who recorded what, when, and
+          whether anyone has quietly changed it since.
+          <br />
+          <br />
+          Every entry starts as a draft. Edit freely, save as often as
+          you want, collaborate, change your mind; nothing is locked
+          down. When you're ready to finalize, you commit it, and the
+          word is doing real work. Under the hood, the commit:
+          <br />
+          <br />
+          <ul className="list-disc pl-6 space-y-2">
+            <li>hashes the entry's content,</li>
+            <li>
+              verifies it slots cleanly onto the notebook's
+              tamper-evident chain,
+            </li>
+            <li>signs the chain hash with the author's key,</li>
+            <li>and writes the whole thing back atomically.</li>
+          </ul>
+          <br />
+          Once committed, the entry is immutable. Any later tampering
+          breaks the chain in a way that's detectable from any point in
+          the future.
+          <br />
+          <br />
+          <img
+            src={LabbookCommittedEntry}
+            alt="A committed Labbook entry showing data tables and a green Committed badge at the top with hash ID in the footer"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+          <span className="text-sm text-gray-500 block -mt-4 mb-6">
+            A committed entry. Green "Committed" badge, hash ID in the
+            footer, and the Export PDF button. Underneath, the content hash
+            is linked into the notebook's chain and signed by the author.
+          </span>
+          Every change to every entity also gets logged to a full audit
+          trail: who made the change, when, what the old value was, what
+          the new value is. The activity panel surfaces this per-entry, so
+          you can trace exactly when someone edited content, when the entry
+          was committed, and who was present during a collaborative session.
+          For a lab preparing for an inspection or filing a patent, the
+          distinction matters: it's the difference between "we think we
+          know what happened" and "here is a timestamped, signed,
+          verifiable record of what happened."
+          <br />
+          <br />
+          <img
+            src={LabbookActivity}
+            alt="Per-entry activity panel showing filtered edit events with actor and timestamp"
+            className="w-80 rounded-lg border border-gray-200 my-6 block mx-auto"
+          />
+          <span className="text-sm text-gray-500 block -mt-4 mb-6 text-center">
+            The per-entry activity panel. Content edits, commits, and
+            collaborative sessions with actor and timestamp, filterable by
+            entity type.
+          </span>
+          Entries also carry tags, findings, and follow-up task lists.
+          Research generates next steps constantly ("run this analysis,"
+          "email Alex about those CRISPR targets," "draft Figure 5"), and
+          those next steps need to stay attached to the data that
+          generated them rather than drifting off into a separate project
+          management tool where they lose their context.
+          <br />
+          <br />
+          <img
+            src={LabbookFindings}
+            alt="Findings block below the data with a follow-up task list and tags at the bottom"
+            className="w-full rounded-lg border border-gray-200 my-6"
+          />
+          <span className="text-sm text-gray-500 block -mt-4 mb-6">
+            Findings and follow-up tasks live inside the entry itself,
+            right below the data that generated them.
+          </span>
+          For labs whose data can't live on someone else's server under
+          normal terms (pre-patent research, proprietary compounds,
+          patient-adjacent work), Labbook supports optional end-to-end
+          encryption at the organization level. Entry content is
+          encrypted client-side before it ever hits the database, with
+          keys managed in a way that keeps the server unable to read the
+          underlying content. The search index is maintained in encrypted
+          form separately, so full-text search still works even with
+          encryption enabled. It's the kind of feature where the
+          complexity is almost entirely invisible to the user, but the
+          absence of it would be a dealbreaker for certain customers.
+          <br />
+          <br />
+          Regulators, collaborators, and journals all want PDFs, and the export can
+          produce them at any level of the hierarchy (a single entry, a
+          whole experiment, an entire notebook) with an embedded audit
+          trail and chain validation baked into the document. Exports are
+          content-addressed and cached, so re-exporting identical content
+          is instant. Share links add visibility controls (public,
+          org-only, specific users) with expiry dates and access tracking.
+        </section>
+
+        <section id="how-its-built" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            How it's built
+          </Typography>
+          <br />
+          The front end is{" "}
+          <TechChip
+            name="React"
+            logo="/logos/react.svg"
+            href="https://react.dev/"
+          />{" "}
+          and{" "}
+          <TechChip
+            name="TypeScript"
+            logo="/logos/typescript.svg"
+            href="https://www.typescriptlang.org/"
+          />{" "}
+          on{" "}
+          <TechChip name="Vite" logo="/vite.svg" href="https://vite.dev/" />,
+          with{" "}
+          <TechChip
+            name="Tailwind"
+            logo="/logos/tailwind.svg"
+            href="https://tailwindcss.com/"
+          />{" "}
+          for styling. The editor is TipTap 3 (a ProseMirror wrapper),
+          extended with custom node views for every block type described
+          above: charts, drawings, voice recordings, dictation overlays,
+          and the twenty-plus chart type renderers are all custom
+          extensions built on top of TipTap's plugin system.
+          <br />
+          <br />
+          Real-time collaboration is where the architecture gets
+          interesting. Most collaborative editors that use Yjs (the CRDT
+          library that powers Notion, Figma's FigJam, and a growing list
+          of others) run a dedicated Yjs server, typically Hocuspocus, to
+          relay document updates between clients. Labbook doesn't. Instead,
+          it uses{" "}
+          <TechChip
+            name="Supabase"
+            logo="/logos/supabase.svg"
+            href="https://supabase.com/"
+          />
+          's realtime broadcast channels as the transport layer. Yjs binary
+          updates get base64-encoded and shipped as broadcast events;
+          the CRDT handles conflict resolution on each client
+          independently. The result is one fewer service to deploy, one
+          fewer bill to pay, and one fewer thing to keep running at 3 AM.
+          The tradeoff is that the transport layer is doing slightly more
+          work than it was designed for, but for the scale a lab actually
+          operates at (a handful of people editing the same entry) it
+          works cleanly and keeps the infrastructure meaningfully simpler.
+          <br />
+          <br />
+          The backend is{" "}
+          <TechChip
+            name="Supabase"
+            logo="/logos/supabase.svg"
+            href="https://supabase.com/"
+          />{" "}
+          end-to-end.{" "}
+          <TechChip
+            name="PostgreSQL"
+            logo="/logos/postgresql.svg"
+            href="https://www.postgresql.org/"
+          />{" "}
+          for data, Auth for users and organizations, Storage for images
+          and files and audio, Realtime for presence and CRDT sync, and
+          Edge Functions for the handful of operations that need
+          server-side trust:{" "}
+          <code>commit-entry</code>, <code>verify-chain</code>,{" "}
+          <code>export-audit</code>, <code>share-pdf</code>,{" "}
+          <code>invite-member</code>, <code>deepgram-token</code>. There's
+          no separate API layer; the client talks to Supabase directly, and
+          row-level security policies enforce multi-tenancy and
+          notebook-level permissions at the database layer. It's the same
+          pattern I've used across several projects now, and it continues
+          to hold up well for apps where the authorization model is
+          expressible in SQL.
+          <br />
+          <br />
+          The encryption layer runs entirely in the browser on top of a
+          well-audited cryptography library. When E2EE is enabled, every
+          content write is encrypted before it leaves the client, and
+          the search index is maintained in encrypted form so queries
+          still work. Voice transcription runs through Deepgram under a
+          short-lived token model so the client never holds long-lived
+          credentials. PDF generation uses jsPDF plus a custom
+          ProseMirror-to-PDF renderer that knows how to convert every
+          block type into a final document, charts included.
+        </section>
+
+        <section id="where-its-going" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Where it's going
+          </Typography>
+          <br />
+          Labbook is in closed beta as of early 2026, with a handful of
+          labs from my friend's network using it day-to-day. The things
+          we've learned most from real use are the things we couldn't
+          have predicted from requirements gathering alone: voice notes
+          and drawings get used far more than we expected; some chart
+          types barely get touched; the commit flow needs more friction
+          in some places and less in others. Real users have a way of
+          rearranging your assumptions about what matters.
+          <br />
+          <br />
+          The NIH mandate is still playing out across US research
+          institutions, and the window for something better in this space
+          is wider than people outside it realize. The tool has to be
+          genuinely good enough that people want to use it, not just
+          compliant enough that administrators can check a box. That's
+          the bar we're trying to clear.
+          <br />
+          <br />
+          The roadmap from here is more of what the beta users are already
+          asking for: deeper instrument integrations, better handling of
+          large datasets inside entries, a more opinionated template
+          library for common experimental types, and eventually the
+          compliance certifications that let Labbook compete for
+          regulated-industry contracts. The core (the hierarchy, the
+          editor, the commit flow, the audit trail) is the part we want
+          to keep stable. The edges are where we expect to spend most of
+          the next year.
+        </section>
+      </>
+    ),
     href: "",
   },
   {
