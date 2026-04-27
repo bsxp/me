@@ -442,7 +442,7 @@ function ProjectDetailsPage_1() {
         </div>
       </footer>
 
-      <div id="table-of-contents" className="fixed right-20 top-20 pointer-events-none">
+      <div id="table-of-contents" className="hidden lg:block fixed right-20 top-20 pointer-events-none">
         <TableOfContents bodyRef={bodyRef} />
       </div>
       <div
