@@ -138,7 +138,7 @@ export default function MyEngineeringToolsGraveyard() {
             <li>
               <TechChip
                 name="AWS"
-                logo="/logos/aws.svg"
+                logo="/logos/aws-lambda.svg"
                 href="https://aws.amazon.com/"
               />
               {" "}provisioned infra, managed by Pulumi — super
