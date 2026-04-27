@@ -1,4 +1,6 @@
 import { type ComponentType } from "react";
+import { POST_META as txdotBbqMeta } from "./4-27-2026-txdot-bbq";
+import TxDOTBBQ from "./4-27-2026-txdot-bbq";
 import { POST_META as sideProjectMeta } from "./4-4-2026-my-side-project-starter-pack";
 import SideProjectStarterPack from "./4-4-2026-my-side-project-starter-pack";
 import { POST_META as beWeirdMeta } from "./3-13-2026-be-weird";
@@ -20,6 +22,10 @@ export interface Post {
 }
 
 export const POSTS: Post[] = [
+  {
+    meta: txdotBbqMeta,
+    Component: TxDOTBBQ,
+  },
   {
     meta: sideProjectMeta,
     Component: SideProjectStarterPack,
