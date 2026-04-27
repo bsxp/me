@@ -4,7 +4,7 @@ export const POST_META = {
   description:
     "On accidentally finding a Texas Monthly Top 50 BBQ overlay while poking around the TxDOT data portal.",
   tags: ["Urbanism", "Austin", "Thoughts"],
-  date: new Date(2026, 3, 27),
+  date: new Date(2026, 3, 20),
 };
 
 const IMG = "/blog/txdot-bbq";
