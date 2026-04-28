@@ -9,8 +9,33 @@ import { ProjectsShowcase, NUM_SHOWCASE_PROJECTS, SHOWCASE_CYCLE_DISTANCE } from
 import { AboutOverlay } from "./AboutSection";
 import { projects } from "@/data/projects";
 import AustinSvg from "@/assets/austin-infrastructure.svg";
+import austinSvgRaw from "@/assets/austin-infrastructure.svg?raw";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
+
+let cachedAustinSvg: SVGSVGElement | null = null;
+let austinSvgStyleOverrideInjected = false;
+function ensureAustinSvgStyleOverride() {
+  if (austinSvgStyleOverrideInjected) return;
+  austinSvgStyleOverrideInjected = true;
+  const style = document.createElement("style");
+  // One stylesheet rule replaces ~10k inline writes that disabled the in-SVG
+  // CSS keyframe animations. The residential layer is drawn instantly and
+  // fades in as a group (per-path drawing isn't visible at 0.25 opacity /
+  // 0.4 stroke-width anyway), which removes ~4500 tweens from setup.
+  style.textContent = `
+    #austin-svg-map .layer-water path,
+    #austin-svg-map .layer-highways path,
+    #austin-svg-map .layer-roads path,
+    #austin-svg-map .layer-residential path,
+    #austin-svg-map .title-text {
+      animation: none !important;
+    }
+    #austin-svg-map .layer-residential { opacity: 0; }
+    #austin-svg-map .layer-residential path { stroke-dashoffset: 0 !important; }
+  `;
+  document.head.appendChild(style);
+}
 
 const FEATURED = [
   {
@@ -764,20 +789,50 @@ function AustinSvgMap() {
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-    fetch(AustinSvg)
-      .then((r) => r.text())
-      .then((text) => {
-        el.innerHTML = text;
-        const svgEl = el.querySelector("svg");
-        if (svgEl) {
-          svgEl.setAttribute("width", "100%");
-          svgEl.setAttribute("height", "100%");
-          svgEl.style.pointerEvents = "none";
-          requestAnimationFrame(() => {
-            svgEl.classList.add("svg-running");
-          });
-        }
-      });
+    if (cachedAustinSvg) {
+      if (cachedAustinSvg.parentElement !== el) el.appendChild(cachedAustinSvg);
+      return;
+    }
+    ensureAustinSvgStyleOverride();
+    el.innerHTML = austinSvgRaw;
+    const svgEl = el.querySelector("svg");
+    if (!svgEl) return;
+    svgEl.setAttribute("width", "100%");
+    svgEl.setAttribute("height", "100%");
+    (svgEl as SVGSVGElement).style.pointerEvents = "none";
+    cachedAustinSvg = svgEl as SVGSVGElement;
+
+    // CSS keyframe animations restart whenever the browser's renderer state
+    // resets — ScrollTrigger pinning appendChild's the pinned element into
+    // its pinSpacer, and the auto-refresh that fires after fonts/images
+    // finish loading (~1s after first paint) was the visible trigger. GSAP
+    // tweens live in JS state and don't care about DOM moves.
+    gsap.fromTo(
+      svgEl.querySelectorAll(".layer-water path"),
+      { strokeDashoffset: (_i: number, t: SVGPathElement) => parseFloat(t.style.getPropertyValue("--len")) || 0 },
+      { strokeDashoffset: 0, duration: 8, ease: "power2.inOut" }
+    );
+    gsap.fromTo(
+      svgEl.querySelectorAll(".layer-highways path, .layer-roads path"),
+      { strokeDashoffset: (_i: number, t: SVGPathElement) => parseFloat(t.style.getPropertyValue("--len")) || 0 },
+      {
+        strokeDashoffset: 0,
+        duration: (_i: number, t: SVGPathElement) => parseFloat(t.style.getPropertyValue("--dur")) || 0.3,
+        delay: (_i: number, t: SVGPathElement) => parseFloat(t.style.getPropertyValue("--del")) || 0,
+        ease: "power2.inOut",
+      }
+    );
+    gsap.to(svgEl.querySelector(".layer-residential"), {
+      opacity: 0.25,
+      duration: 5,
+      delay: 1,
+      ease: "power2.inOut",
+    });
+    gsap.fromTo(
+      svgEl.querySelectorAll(".title-text"),
+      { opacity: 0 },
+      { opacity: 0.25, duration: 2, delay: 10, ease: "power2.inOut" }
+    );
   }, []);
 
   return (
