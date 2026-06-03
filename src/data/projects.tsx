@@ -1011,6 +1011,7 @@ const projects: Project[] = [
     id: "localized-conventions",
     title: "Voice AI Localization",
     description: "Why voice agents need localized context to sound human, and how I built an open database to solve it.",
+    coverImage: "",
     overview: (
       <span>
         A British listener hears "half eight" and thinks 8:30 PM. A German listener hearing the exact same English words thinks 7:30 PM. Voice agents don't intrinsically come with enough localized context to sound human. I built an open database of how things are spoken in different places.
