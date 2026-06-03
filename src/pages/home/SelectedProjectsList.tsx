@@ -8,7 +8,7 @@ const SELECTED_PROJECT_IDS = [
   "foundry",
   "playbook",
   "OneFeed",
-  "lumon",
+  "localized-conventions",
 ];
 
 const selectedProjects = SELECTED_PROJECT_IDS.map(
@@ -30,7 +30,7 @@ export function SelectedProjectsList() {
           <Link
             key={project.id}
             id={`selected-project-${i}`}
-            to={`/projects/${project.id}`}
+            to={project.href && project.href.startsWith("/blog") ? project.href : `/projects/${project.id}`}
             className="group relative block no-underline py-3 lg:py-5"
           >
             <div className="flex items-center justify-between">

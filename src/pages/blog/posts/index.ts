@@ -1,4 +1,6 @@
 import { type ComponentType } from "react";
+import { POST_META as localizedConventionsMeta } from "./6-3-2026-localized-conventions";
+import LocalizedConventions from "./6-3-2026-localized-conventions";
 import { POST_META as graveyardMeta } from "./4-27-2026-my-engineering-tools-graveyard";
 import MyEngineeringToolsGraveyard from "./4-27-2026-my-engineering-tools-graveyard";
 import { POST_META as txdotBbqMeta } from "./4-20-2026-txdot-bbq";
@@ -24,6 +26,10 @@ export interface Post {
 }
 
 export const POSTS: Post[] = [
+  {
+    meta: localizedConventionsMeta,
+    Component: LocalizedConventions,
+  },
   {
     meta: graveyardMeta,
     Component: MyEngineeringToolsGraveyard,

@@ -21,7 +21,11 @@ function ProjectListItem({
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/projects/${id}`);
+    if (href && href.startsWith("/blog")) {
+      navigate(href);
+    } else {
+      navigate(`/projects/${id}`);
+    }
   };
 
   return (

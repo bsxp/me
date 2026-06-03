@@ -63,11 +63,6 @@ const FEATURED = [
     tags: ["Developer Tools", "Notifications", "Integrations", "Productivity"],
     bgColor: "#181818",
   },
-  {
-    id: "lumon",
-    tags: ["Terminal", "Retro UI", "Easter Egg", "Severance"],
-    bgColor: "#0d1117",
-  },
 ];
 
 const featuredProjects = FEATURED.map((f) => ({

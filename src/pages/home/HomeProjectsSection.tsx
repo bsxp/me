@@ -11,7 +11,7 @@ import { GRID_SPACING } from "./config";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const FEATURED_IDS = ["hearth", "foundry", "lumon", "rater", "labbook", "Lytic"];
+const FEATURED_IDS = ["hearth", "labbook", "foundry", "playbook", "onefeed", "localized-conventions"];
 const featuredProjects = FEATURED_IDS.map((id) =>
   projects.find((p) => p.id === id)!
 );
