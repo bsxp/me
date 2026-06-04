@@ -27,7 +27,7 @@ export default function LocalizedConventions() {
         The underlying agents powering voices know grammar and can construct sentences, but they often don't know that an American says "five fifty" for $5.50 while a British person might say "five pounds and fifty pence" or "five quid." They don't know that "the third of June" is how you say June 3rd in London, while in New York you'd say "June third." They don't know that UK ground floor is US first floor. The agents are perfectly capable of making these parlance adjustments, but often need an opinionated input to get there.
       </p>
 
-      <h2>The Same Time, A Half-Dozen Ways</h2>
+      <h2>The Same Time, A Dozen Ways</h2>
 
       <p>
         Take a single, boring moment on the clock—<strong>2:30 PM</strong>—and
@@ -78,7 +78,7 @@ export default function LocalizedConventions() {
           >
             <strong>Mexico:</strong>
           </a>{" "}
-          "las dos y media de la tarde"
+          "las dos y media"—literally <em>two and a half</em>
         </p>
         <p className="m-0">
           🇫🇷{" "}
@@ -124,14 +124,62 @@ export default function LocalizedConventions() {
           </a>{" "}
           "두 시 반" (<em>du si ban</em>)—literally <em>two o'clock half</em>
         </p>
+        <p className="m-0">
+          🇯🇵{" "}
+          <a
+            href="https://github.com/bsxp/localized-conventions/blob/main/locales/ja/_base.yaml#L400"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <strong>Japan:</strong>
+          </a>{" "}
+          "二時三十分" (<em>ni-ji san-jū-pun</em>)—no shortcut; you say the full{" "}
+          <em>two hour, thirty minutes</em>
+        </p>
+        <p className="m-0">
+          🇨🇳{" "}
+          <a
+            href="https://github.com/bsxp/localized-conventions/blob/main/locales/zh/_base.yaml#L364"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <strong>China:</strong>
+          </a>{" "}
+          "两点半" (<em>liǎng diǎn bàn</em>)—literally <em>two o'clock half</em>
+        </p>
+        <p className="m-0">
+          🇳🇱{" "}
+          <a
+            href="https://github.com/bsxp/localized-conventions/blob/main/locales/nl/nl-NL.yaml#L7"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <strong>Netherlands:</strong>
+          </a>{" "}
+          "half drie"—literally <em>half three</em>, counting toward the{" "}
+          <em>next</em> hour like German
+        </p>
+        <p className="m-0">
+          🇷🇺{" "}
+          <a
+            href="https://github.com/bsxp/localized-conventions/blob/main/locales/ru/_base.yaml#L345"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <strong>Russia:</strong>
+          </a>{" "}
+          "половина третьего" (<em>polovina tret'evo</em>)—literally{" "}
+          <em>half of the third</em>, also counting forward
+        </p>
       </div>
 
       <p>
-        Same instant in time. Eight completely different sentences. And notice
-        the trap in the German one: "halb drei" sounds like it should mean 3:30
-        to an English speaker, but it's 2:30. That's the exact confusion from the
-        top of this post—a German hearing "half eight" lands on 7:30, not 8:30,
-        because "halb" points forward, not back. The Dutch do the same thing:{" "}
+        Same instant in time. A dozen completely different sentences. And notice
+        the trap in the German, Dutch, and Russian ones: "halb drei" sounds like
+        it should mean 3:30 to an English speaker, but it's 2:30. That's the
+        exact confusion from the top of this post—a German hearing "half eight"
+        lands on 7:30, not 8:30, because "halb" points forward, not back. The
+        Dutch do the same thing:{" "}
         <a
           href="https://github.com/bsxp/localized-conventions/blob/main/locales/nl/nl-NL.yaml#L7"
           target="_blank"
