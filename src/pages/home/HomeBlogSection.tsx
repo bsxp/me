@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { FAKE_ARTICLES } from "@/data/articles";
-import { GRID_SPACING, BG_DARK } from "./config";
+import { GRID_SPACING, BG_LIGHT, BG_DARK } from "./config";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,29 +19,12 @@ function HomeBlogSection() {
   const navigate = useNavigate();
 
   useGSAP(() => {
-    // Page-level dark backdrop. Animating the opacity of a fixed overlay stays
-    // on the compositor (cheap on mobile); animating #root's backgroundColor
-    // forced a full-page repaint every scroll frame. The overlay lives inside
-    // #root so it sits behind the z-50 sections rather than over them.
-    const root = document.getElementById("root");
-    const overlay = document.createElement("div");
-    overlay.id = "home-bg-overlay";
-    Object.assign(overlay.style, {
-      position: "fixed",
-      inset: "0",
-      backgroundColor: BG_DARK,
-      opacity: "0",
-      pointerEvents: "none",
-      zIndex: "0",
-    });
-    root?.insertBefore(overlay, root.firstChild);
-
-    // Background crossfade: light → dark (overlay opacity 0 → 1)
+    // Background crossfade: light → dark
     gsap.fromTo(
-      overlay,
-      { opacity: 0 },
+      "#root",
+      { backgroundColor: BG_LIGHT },
       {
-        opacity: 1,
+        backgroundColor: BG_DARK,
         ease: "power2.inOut",
         scrollTrigger: {
           trigger: "#home-blog",
@@ -70,22 +53,18 @@ function HomeBlogSection() {
       }
     );
 
-    // Reverse bg on scroll back
+    // Reverse bg color on scroll back
     ScrollTrigger.create({
       trigger: "#home-blog",
       start: "top bottom",
       onLeaveBack: () => {
-        gsap.to(overlay, {
-          opacity: 0,
+        gsap.to("#root", {
+          backgroundColor: BG_LIGHT,
           duration: 0.3,
           ease: "power2.inOut",
         });
       },
     });
-
-    return () => {
-      overlay.remove();
-    };
   }, []);
 
   return (
