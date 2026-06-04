@@ -1,73 +1,122 @@
-# React + TypeScript + Vite
+# chris-site-v2
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Chris Porter's personal portfolio and blog — [chrisporter.org](https://chrisporter.org).
 
-Currently, two official plugins are available:
+A single-page React app with a heavily animated, scroll-driven home page, a
+blog where each post is a React component, and a project gallery driven from a
+single content registry.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tech stack
 
-## React Compiler
+| Area | Choice |
+| --- | --- |
+| Framework | [React 19](https://react.dev) + [TypeScript](https://www.typescriptlang.org/) |
+| Build tool | [Vite 7](https://vite.dev) |
+| Styling | [Tailwind CSS v4](https://tailwindcss.com) |
+| UI primitives | [Radix UI](https://www.radix-ui.com/) (shadcn-style components in `src/components/ui`) |
+| Animation | [GSAP](https://gsap.com/) + ScrollTrigger (via `@gsap/react`) |
+| Routing | [React Router 7](https://reactrouter.com/) |
+| Forms / validation | react-hook-form + [Zod](https://zod.dev/) |
+| State | [Zustand](https://github.com/pmndrs/zustand) (used sparingly) |
+| Charts | [Recharts](https://recharts.org/) |
+| Icons | lucide-react, react-icons |
+| Analytics | Google Analytics 4 (manual page-view events) |
+| Hosting | Netlify |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Getting started
 
-## Expanding the ESLint configuration
+Requires **Node 22+** and npm.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev        # start the dev server (http://localhost:5173)
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Scripts
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+| Script | What it does |
+| --- | --- |
+| `npm run dev` | Start the Vite dev server with HMR |
+| `npm run build` | Type-check (`tsc -b`) then build to `dist/` |
+| `npm run preview` | Serve the production build locally |
+| `npm run lint` | Run ESLint over the project |
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Project structure
+
 ```
+src/
+├── assets/              Images, video, and the Austin map SVG (project art under assets/projects/)
+├── components/
+│   ├── ui/              shadcn-style primitives (button, dialog, etc.)
+│   └── util/            Shared helpers
+├── data/
+│   ├── projects.tsx     The project registry — title, copy, cover art, and case-study body
+│   └── articles.ts      Article metadata
+├── hooks/               Custom hooks (breakpoints, mobile detection)
+├── lib/                 Utilities (cn(), etc.)
+├── pages/
+│   ├── home/            The animated landing page (hero → about morph, featured carousel)
+│   ├── about/           About page
+│   ├── blog/            Blog index, category, and post pages; posts live in blog/posts/
+│   ├── contact/         Contact page
+│   └── project/         Project detail page
+└── router.tsx           Route definitions + GA page-view tracking
+```
+
+The `@` import alias points at `src/` (configured in `vite.config.ts`).
+
+### Routes
+
+| Path | Page |
+| --- | --- |
+| `/` | Animated home page |
+| `/about` | About |
+| `/contact` | Contact |
+| `/blog` | Blog index |
+| `/blog/categories/:category` | Posts filtered by category |
+| `/blog/posts/:postId` | Individual post |
+| `/projects/:projectId` | Project case study |
+
+## Authoring content
+
+### Add a blog post
+
+1. Create `src/pages/blog/posts/<m-d-yyyy>-<slug>.tsx`. Export a `POST_META`
+   object (`slug`, `title`, `description`, `tags`, `date`) and a default
+   component that returns the article JSX.
+2. Register it in `src/pages/blog/posts/index.ts` by importing its `POST_META`
+   and component and adding an entry to the `POSTS` array (newest first).
+
+Posts are plain React components, so they can embed interactive demos, code
+blocks, images, and links — not just markdown.
+
+### Add a project
+
+Add an entry to the `projects` array in `src/data/projects.tsx`. Each project
+has an `id`, `title`, `description`, `coverImage` (and optional `coverVideo`),
+an `overview`, and a `body` (the case-study content). Featured ordering for the
+home page lives in `src/pages/home/SelectedProjectsList.tsx` and `HomePage.tsx`.
+
+## Performance notes
+
+The home page runs several pinned, scrubbed GSAP timelines and ships a fair
+amount of media, so a few conventions keep it smooth — especially on mobile:
+
+- **Optimized media.** Cover images are resized WebP (`cwebp -q 80`); cover
+  videos are downscaled, `faststart` MP4 (`ffmpeg ... -crf 28 -movflags
+  +faststart`). Keep new art well under ~400 KB.
+- **Lazy media.** Below-the-fold cover images/video load only when their panel
+  nears the viewport (IntersectionObserver in `FeaturedProject.tsx`), so they
+  don't compete with the hero animation on first paint.
+- **`?perf` FPS overlay.** Append `?perf` to any URL to show a live FPS /
+  rolling-min readout (`src/components/PerfOverlay.tsx`) — handy for diagnosing
+  scroll jank on a real device. It's invisible without the query param.
+
+## Deployment
+
+Built and hosted on **Netlify**.
+
+- Build command: `npm run build`
+- Publish directory: `dist`
+
+Pushing to `main` triggers a deploy.
