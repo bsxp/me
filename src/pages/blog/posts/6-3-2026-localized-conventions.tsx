@@ -11,20 +11,34 @@ export default function LocalizedConventions() {
   return (
     <article>
       <p>
-        A British listener hears "half eight" and thinks 8:30 PM. A German listener hearing the exact same English words thinks 7:30 PM.
+        A British listener hears "half eight" and thinks 8:30 PM. A German
+        listener hearing the exact same English words thinks 7:30 PM.
       </p>
 
       <p>This is the problem:</p>
       <div className="bg-gray-50 border-l-4 border-gray-300 pl-4 py-3 my-6">
-        <strong>today, voice agents don't intrinsically come with enough localized context to sound human.</strong>
+        <strong>
+          today, voice agents don't intrinsically come with enough localized
+          context to sound human.
+        </strong>
       </div>
 
       <p>
-        I discovered this discrepancy while tuning voice agents in four different languages: Portuguese, Spanish, English (American), English (British), and Norwegian. Each locality had its own nuanced pronunciation of sizes, currency, and even phone number rhythm.
+        I discovered this discrepancy while tuning voice agents in four
+        different languages: Portuguese, Spanish, English (American), English
+        (British), and Norwegian. Each locality had its own nuanced
+        pronunciation of sizes, currency, and even phone number rhythm.
       </p>
 
       <p>
-        The underlying agents powering voices know grammar and can construct sentences, but they often don't know that an American says "five fifty" for $5.50 while a British person might say "five pounds and fifty pence" or "five quid." They don't know that "the third of June" is how you say June 3rd in London, while in New York you'd say "June third." They don't know that UK ground floor is US first floor. The agents are perfectly capable of making these parlance adjustments, but often need an opinionated input to get there.
+        The underlying agents powering voices know grammar and can construct
+        sentences, but they often don't know that an American says "five fifty"
+        for $5.50 while a British person might say "five pounds and fifty pence"
+        or "five quid." They don't know that "the third of June" is how you say
+        June 3rd in London, while in New York you'd say "June third." They don't
+        know that UK ground floor is US first floor. The agents are perfectly
+        capable of making these parlance adjustments, but often need an
+        opinionated input to get there.
       </p>
 
       <h2>The Same Time, A Dozen Ways</h2>
@@ -198,45 +212,76 @@ export default function LocalizedConventions() {
       <h2>Why This Matters</h2>
 
       <p>
-        Voice interfaces are one of the fastest-growing software interfaces. Dozens of voice-agent companies spring up every quarter, backed by venture money anywhere from seed to series. Everyone building these voice agents has to go through the same iterative process of tweaking the agents to speak the localized parlance, or make adjustments to meet the desired formality of their agent.
+        Voice interfaces are one of the fastest-growing software interfaces.
+        Dozens of voice-agent companies spring up every quarter, backed by
+        venture money anywhere from seed to series. Everyone building these
+        voice agents has to go through the same iterative process of tweaking
+        the agents to speak the localized parlance, or make adjustments to meet
+        the desired formality of their agent.
       </p>
 
       <p>
-        These adjustments aren't just accents or inflections, but the fundamental conventions of how things are said. A voice agent trained on American English data will sound foreign in London. Not <em>wrong</em>, exactly—a British person will understand it—but like a non-native speaker, which ultimately erodes user trust.
+        These adjustments aren't just accents or inflections, but the
+        fundamental conventions of how things are said. A voice agent trained on
+        American English data will sound foreign in London. Not <em>wrong</em>,
+        exactly—a British person will understand it—but like a non-native
+        speaker, which ultimately erodes user trust.
       </p>
 
       <p>
-        Discovery of the long-tail of these cases is hard—often as a result of negative feedback from customer calls. It's similar to the adage about OSHA: "The regulations are written in blood." If your agent is handling customer calls without sounding like it knows the language of your industry or region, some of the customers will be skeptical of the business' ability to deliver value. As such, every high quality voice agent has been built atop feedback loops where these minor corrections about language and convention have been finely tuned in response to negative customer signals.
+        Discovery of the long-tail of these cases is hard—often as a result of
+        negative feedback from customer calls. It's similar to the adage about
+        OSHA: "The regulations are written in blood." If your agent is handling
+        customer calls without sounding like it knows the language of your
+        industry or region, some of the customers will be skeptical of the
+        business' ability to deliver value. As such, every high quality voice
+        agent has been built atop feedback loops where these minor corrections
+        about language and convention have been finely tuned in response to
+        negative customer signals.
       </p>
 
       <h2>The Solution</h2>
 
       <p>
-        I built an open database of how things are spoken in different places. Not a translation service. Just a structured reference that documents the actual rules: in British English, £5.50 is "five fifty" (casual), "five pounds and fifty pence" (formal), or "five quid" (colloquial).
+        I built an open database of how things are spoken in different places.
+        Not a translation service. Just a structured reference that documents
+        the actual rules: in British English, £5.50 is "five fifty" (casual),
+        "five pounds and fifty pence" (formal), or "five quid" (colloquial).
       </p>
 
       <p>
-        It covers 13 languages and 33 regions. Originally generated by Haiku as a starting point, but I'd love for corrections and improvements to be made by people who are native to the regions and actually using it.
+        It covers 13 languages and 33 regions. Originally generated by Haiku as
+        a starting point, but I'd love for corrections and improvements to be
+        made by people who are native to the regions and actually using it.
       </p>
 
       <p>
-        The whole point is to make it easier to teach your voice agent to say five o'clock a dozen different ways—and to get each one right—without rediscovering every convention the hard way.
+        The whole point is to make it easier to teach your voice agent to say
+        five o'clock a dozen different ways in a way that feels natural for the
+        intended user, without every person or startup building a voice agent
+        having to rediscover every convention the hard way.
       </p>
 
       <h2>What's Next</h2>
 
       <p>
-        The immediate roadmap: deepen existing languages, add more specialized categories (weather, navigation, finance, industry-specific conventions), and make it consumable as an npm package or API.
+        The immediate roadmap: deepen existing languages, add more specialized
+        categories (weather, navigation, finance, industry-specific
+        conventions), and make it consumable as an npm package or API.
       </p>
 
       <p>
-        But the bigger question is whether this model works. Do voice teams want a shared reference? Will they contribute improvements?
+        But the bigger question is whether this model works. Do voice teams want
+        a shared reference? Will they contribute improvements?
       </p>
 
       <h2>You Can Help</h2>
 
       <p>
-        If you build voice agents, try using a locale from the repo in your system prompt. If you speak a language we're covering, review the conventions. If you speak a language we're not covering, adding a base and one region seeds the whole thing.
+        If you build voice agents, try using a locale from the repo in your
+        system prompt. If you speak a language we're covering, review the
+        conventions. If you speak a language we're not covering, adding a base
+        and one region seeds the whole thing.
       </p>
 
       <p>
@@ -251,7 +296,9 @@ export default function LocalizedConventions() {
       </p>
 
       <p>
-        Every voice interface that misses the mark on pronouncing the simple things makes people less likely to trust it. Every call that sounds native is one less barrier to adoption.
+        Every voice interface that misses the mark on pronouncing the simple
+        things makes people less likely to trust it. Every call that sounds
+        native is one less barrier to adoption.
       </p>
     </article>
   );
