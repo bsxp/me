@@ -1,6 +1,6 @@
 export const POST_META = {
   slug: "localized-conventions",
-  title: "Teaching my Voice AI to say five-o-clock a dozen different ways",
+  title: "Teaching voice AI to say five-o-clock a dozen different ways",
   description:
     "Why voice agents need localized context to sound human, and how I built an open database to solve it.",
   tags: ["Voice AI", "Localization", "Open Source", "AI"],
