@@ -127,7 +127,7 @@ export default function LocalizedConventions() {
       </div>
 
       <p>
-        Same instant in time. Four completely different sentences. And notice
+        Same instant in time. Eight completely different sentences. And notice
         the trap in the German one: "halb drei" sounds like it should mean 3:30
         to an English speaker, but it's 2:30. That's the exact confusion from the
         top of this post—a German hearing "half eight" lands on 7:30, not 8:30,
