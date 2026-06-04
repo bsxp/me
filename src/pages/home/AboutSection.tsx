@@ -1,7 +1,7 @@
 import { useState } from "react";
-import ChrisCoffee from "@/assets/chris-coffee.png";
-import AboutLeadenhall from "@/assets/about-leadenhall.png";
-import AboutPragueTram from "@/assets/about-prague-tram.png";
+import ChrisCoffee from "@/assets/chris-coffee.webp";
+import AboutLeadenhall from "@/assets/about-leadenhall.webp";
+import AboutPragueTram from "@/assets/about-prague-tram.webp";
 
 export function AboutOverlay() {
   const [expandedImage, setExpandedImage] = useState(0);

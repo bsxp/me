@@ -1,5 +1,5 @@
-import HearthCover from "@/assets/projects/hearth/hearth-cover.png";
-import FoundryCover from "@/assets/projects/foundry/foundry-cover.png";
+import HearthCover from "@/assets/projects/hearth/hearth-cover.webp";
+import FoundryCover from "@/assets/projects/foundry/foundry-cover.webp";
 import LabbookCover from "@/assets/projects/labbook/labbook-landing.png";
 import LabbookDashboard from "@/assets/projects/labbook/labbook-dashboard.png";
 import LabbookProtocols from "@/assets/projects/labbook/labbook-protocols.png";
@@ -13,7 +13,7 @@ import LabbookChartRendered from "@/assets/projects/labbook/labbook-chart-render
 import LabbookCommittedEntry from "@/assets/projects/labbook/labbook-committed-entry.png";
 import LabbookActivity from "@/assets/projects/labbook/labbook-activity.png";
 import LabbookFindings from "@/assets/projects/labbook/labbook-findings.png";
-import PlaybookCover from "@/assets/projects/playbook/playbook-cover.jpg";
+import PlaybookCover from "@/assets/projects/playbook/playbook-cover.webp";
 import PlaybookDashboard from "@/assets/projects/playbook/playbook-dashboard.png";
 import PlaybookProfile from "@/assets/projects/playbook/playbook-profile.png";
 import RaterDashboard from "@/assets/projects/rater/rater-dashboard.png";
@@ -24,7 +24,7 @@ import RaterOutputs from "@/assets/projects/rater/rater-outputs.png";
 import RaterTableEditor from "@/assets/projects/rater/rater-table-editor.png";
 import RaterAddNode from "@/assets/projects/rater/rater-add-node.png";
 import LumonVideo from "@/assets/projects/lumon/lumon-cover.mp4";
-import OneFeedVideo from "@/assets/projects/onefeed/onefeed-cover.mov";
+import OneFeedVideo from "@/assets/projects/onefeed/onefeed-cover.mp4";
 import { Typography } from "@/components/ui/typography";
 import { TechChip } from "@/pages/blog/components/TechChip";
 import { InteractiveSchema } from "@/components/InteractiveSchema";
