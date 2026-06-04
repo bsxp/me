@@ -30,6 +30,8 @@ export function ProjectsShowcase({ activeIndex }: ProjectsShowcaseProps) {
               <img
                 src={project.coverImage}
                 alt=""
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover"
               />
             )}

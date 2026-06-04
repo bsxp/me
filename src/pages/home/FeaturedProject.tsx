@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import type { Project } from "@/data/projects";
@@ -26,6 +26,27 @@ export function FeaturedProject({
   const titleRef = useRef<HTMLDivElement>(null);
   const { atLeast } = useBreakpoint();
   const inset = atLeast.lg ? 64 : 16;
+
+  // Defer loading the cover media until the panel is near the viewport. These
+  // panels live below the fold, so eagerly fetching/decoding every cover (and
+  // autoplaying the video) on first paint starves the hero→about animation.
+  const mediaRef = useRef<HTMLDivElement>(null);
+  const [mediaInView, setMediaInView] = useState(false);
+  useEffect(() => {
+    const el = mediaRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setMediaInView(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "300px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   // Set all title lines hidden initially
   useGSAP(() => {
@@ -166,23 +187,29 @@ export function FeaturedProject({
               className="block no-underline h-full"
             >
               <div
+                ref={mediaRef}
                 className="w-full h-full overflow-hidden flex items-center justify-center"
                 style={{ borderRadius: 4 }}
               >
                 {project.coverVideo ? (
-                  <video
-                    src={project.coverVideo}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="max-w-full max-h-full object-contain pointer-events-none"
-                    style={{ borderRadius: 4 }}
-                  />
+                  mediaInView && (
+                    <video
+                      src={project.coverVideo}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      preload="none"
+                      className="max-w-full max-h-full object-contain pointer-events-none"
+                      style={{ borderRadius: 4 }}
+                    />
+                  )
                 ) : (
                   <img
-                    src={project.coverImage}
+                    src={mediaInView ? project.coverImage : undefined}
                     alt={project.title}
+                    loading="lazy"
+                    decoding="async"
                     className="max-w-full max-h-full object-contain"
                     style={{ borderRadius: 4 }}
                   />
