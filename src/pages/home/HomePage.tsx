@@ -88,6 +88,28 @@ export function HomePage() {
         (allSlideTransitions + 2) * buffer +
         SHOWCASE_CYCLE_DISTANCE;
 
+      // Layers animated during the hero→about morph. GPU-promoting them while
+      // the transition is active makes the opacity/transform tweens composite
+      // instead of repaint — the heaviest being the full-bleed Austin image.
+      // will-change is set only while the pin is active and released after, so
+      // we don't hold large compositor layers for the rest of the page.
+      const promotedLayers = [
+        "#home-intro img[alt='']",
+        "#home-intro .desktop-svg-map",
+        "#selected-project-0",
+        "#selected-project-1",
+        "#selected-project-2",
+        "#selected-project-3",
+        "#selected-project-4",
+        "#selected-project-5",
+        "#selected-projects-header",
+        "#nav-logo",
+        "#nav-links",
+        "#hero-name",
+        "#hero-tagline",
+        "#hero-vertical-line",
+      ];
+
       // Pin the intro and drive the hero→about transition as one scrubbed timeline
       // First 800px: hero fades out. Next: about fades in. Then 800px hold before featured.
       let wasInAbout = false;
@@ -99,6 +121,11 @@ export function HomePage() {
           pin: true,
           pinReparent: false,
           scrub: 0.3,
+          onToggle: (self) => {
+            gsap.set(promotedLayers, {
+              willChange: self.isActive ? "transform, opacity" : "auto",
+            });
+          },
           onUpdate: (self) => {
             const inAbout = self.progress > 0.5;
             if (inAbout !== wasInAbout) {
