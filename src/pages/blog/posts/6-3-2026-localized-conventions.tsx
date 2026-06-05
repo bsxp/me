@@ -1,8 +1,7 @@
 export const POST_META = {
   slug: "localized-conventions",
-  title: "Teaching voice AI to say five-o-clock a dozen different ways",
-  description:
-    "Why voice agents need localized context to sound human, and how I built an open database to solve it.",
+  title: "Teaching AI voice agents to say two-thirty a dozen different ways",
+  description: "Helping voice agent startups figure out voice agent parlance",
   tags: ["Voice AI", "Localization", "Open Source", "AI"],
   date: new Date(2026, 5, 3),
 };
@@ -41,7 +40,7 @@ export default function LocalizedConventions() {
         opinionated input to get there.
       </p>
 
-      <h2>The Same Time, A Dozen Ways</h2>
+      <h2>The Same Time, A Dozen Different Ways</h2>
 
       <p>
         Take a single, boring moment on the clock—<strong>2:30 PM</strong>—and
@@ -207,6 +206,21 @@ export default function LocalizedConventions() {
       <p>
         A voice agent that doesn't know this doesn't just sound a little off. It
         tells your customer the wrong time.
+      </p>
+
+      <p>
+        And localized conventions go well beyond the clock. For example, in
+        self-storage in the U.S. we describe units in feet:{" "}
+        <em>"I want to rent a 5-by-10 unit."</em> That same call, in British
+        English or Portuguese, will need to refer to the unit by its square
+        footage. The same inquiry becomes,{" "}
+        <em>"I want to rent a 4.7 square meter unit."</em>
+      </p>
+
+      <p>
+        It compounds across languages, too. If you ask a voice agent to swap
+        between languages mid-call, you may end up with on-call drift where it's
+        using mixed conventions from different languages.
       </p>
 
       <h2>Why This Matters</h2>
