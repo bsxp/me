@@ -17,7 +17,7 @@ export default function LocalizedConventions() {
       <p>This is the problem:</p>
       <div className="bg-gray-50 border-l-4 border-gray-300 pl-4 py-3 my-6">
         <strong>
-          today, voice agents don't intrinsically come with enough localized
+          Today, voice agents don't intrinsically come with enough localized
           context to sound human.
         </strong>
       </div>
@@ -26,7 +26,9 @@ export default function LocalizedConventions() {
         I discovered this discrepancy while tuning voice agents in four
         different languages: Portuguese, Spanish, English (American), English
         (British), and Norwegian. Each locality had its own nuanced
-        pronunciation of sizes, currency, and even phone number rhythm.
+        pronunciation of sizes, currency, and even phone number rhythm. Without
+        explicit instruction, the agents would carry over linguistic
+        conventions into other languages, much to my chagrin.
       </p>
 
       <p>
@@ -35,12 +37,13 @@ export default function LocalizedConventions() {
         for $5.50 while a British person might say "five pounds and fifty pence"
         or "five quid." They don't know that "the third of June" is how you say
         June 3rd in London, while in New York you'd say "June third." They don't
-        know that UK ground floor is US first floor. The agents are perfectly
-        capable of making these parlance adjustments, but often need an
-        opinionated input to get there.
+        know that UK ground floor is US first floor. Or in some parts of the
+        U.S. there is no "ground floor", only a "first floor" (which is
+        ground-level). The agents are perfectly capable of making these language
+        adjustments, but often need opinionated guidance to get there.
       </p>
 
-      <h2>The Same Time, A Dozen Different Ways</h2>
+      <h2>The same time, a dozen different ways</h2>
 
       <p>
         Take a single, boring moment on the clock—<strong>2:30 PM</strong>—and
@@ -187,43 +190,23 @@ export default function LocalizedConventions() {
       </div>
 
       <p>
-        Same instant in time. A dozen completely different sentences. And notice
-        the trap in the German, Dutch, and Russian ones: "halb drei" sounds like
-        it should mean 3:30 to an English speaker, but it's 2:30. That's the
-        exact confusion from the top of this post—a German hearing "half eight"
-        lands on 7:30, not 8:30, because "halb" points forward, not back. The
-        Dutch do the same thing:{" "}
-        <a
-          href="https://github.com/bsxp/localized-conventions/blob/main/locales/nl/nl-NL.yaml#L7"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          "half negen"
-        </a>{" "}
-        is 8:30, not 9:30.
+        If you ask a foundation model (like Anthropic's Opus) to read out this
+        time in XYZ language, it's likely to get it right on the first try. If
+        you ask a voice agent to swap between languages mid-call, you may end up
+        with on-call drift where it's using mixed conventions from different
+        languages. Providing guidance to the agents helps keep it on track.
       </p>
 
       <p>
-        A voice agent that doesn't know this doesn't just sound a little off. It
-        tells your customer the wrong time.
+        This is especially true when the conventions <em>change</em> the
+        measurement type depending on the locality. For example, in self-storage
+        in the U.S. we describe units in feet. <em>"I want to rent a 5-by-10
+        unit."</em>. That same call, in British English or Portuguese will need
+        to refer to the unit by its square footage. The same inquiry becomes,{" "}
+        <em>"I want to rent a 4.7 square meter unit."</em>.
       </p>
 
-      <p>
-        And localized conventions go well beyond the clock. For example, in
-        self-storage in the U.S. we describe units in feet:{" "}
-        <em>"I want to rent a 5-by-10 unit."</em> That same call, in British
-        English or Portuguese, will need to refer to the unit by its square
-        footage. The same inquiry becomes,{" "}
-        <em>"I want to rent a 4.7 square meter unit."</em>
-      </p>
-
-      <p>
-        It compounds across languages, too. If you ask a voice agent to swap
-        between languages mid-call, you may end up with on-call drift where it's
-        using mixed conventions from different languages.
-      </p>
-
-      <h2>Why This Matters</h2>
+      <h2>Why this matters</h2>
 
       <p>
         Voice interfaces are one of the fastest-growing software interfaces.
@@ -254,7 +237,7 @@ export default function LocalizedConventions() {
         negative customer signals.
       </p>
 
-      <h2>The Solution</h2>
+      <h2>The solution</h2>
 
       <p>
         I built an open database of how things are spoken in different places.
@@ -269,27 +252,23 @@ export default function LocalizedConventions() {
         made by people who are native to the regions and actually using it.
       </p>
 
-      <p>
-        The whole point is to make it easier to teach your voice agent to say
-        five o'clock a dozen different ways in a way that feels natural for the
-        intended user, without every person or startup building a voice agent
-        having to rediscover every convention the hard way.
-      </p>
-
       <h2>What's Next</h2>
 
       <p>
         The immediate roadmap: deepen existing languages, add more specialized
-        categories (weather, navigation, finance, industry-specific
-        conventions), and make it consumable as an npm package or API.
+        categories (especially industry-specific conventions, but also weather,
+        navigation, and finance) and make it consumable as an npm package or
+        API.
       </p>
 
       <p>
         But the bigger question is whether this model works. Do voice teams want
-        a shared reference? Will they contribute improvements?
+        a shared reference? Are other builders interested in building this
+        shared knowledge base? Will it be solved by the next set of frontier
+        models?
       </p>
 
-      <h2>You Can Help</h2>
+      <h2>You can help</h2>
 
       <p>
         If you build voice agents, try using a locale from the repo in your
