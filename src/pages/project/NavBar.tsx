@@ -7,7 +7,7 @@ function NavBar() {
   const navigate = useNavigate();
 //bg-[#e9f0f1]
   return (
-    <div id="blog-nav-bar"className="flex items-center py-2 justify-between w-full h-16 z-9999 bg-[#e9f0f1]" style={{ padding: '0 20%' }}> 
+    <div id="blog-nav-bar" className="flex items-center py-2 justify-between w-full h-16 z-9999 bg-[#e9f0f1] px-1 sm:px-4 lg:px-[20%]">
       <Button 
         variant="ghost"
 

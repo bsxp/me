@@ -1,14 +1,28 @@
-import { createBrowserRouter, Outlet, useLocation } from "react-router-dom";
+import { createBrowserRouter, Navigate, Outlet, useLocation } from "react-router-dom";
 import { HomePage } from "./pages/home/HomePage";
-// import { BlogCategoryPage } from "./pages/blog/BlogCategoryPage";
+import { NotFoundPage } from "./pages/NotFoundPage";
+import { lazy, Suspense, useEffect, useLayoutEffect } from "react";
 
-import { BlogPage } from "./pages/blog/BlogPage";
-import { BlogPostPage } from "./pages/blog/BlogPostPage";
-import { BlogCategoryPageRevamp } from "./pages/blog/BlogCategoryPageRevamp";
-import { AboutPage } from "./pages/about/AboutPage";
-import { ContactPage } from "./pages/contact/ContactPage";
-import { ProjectDetailsPage_1 } from "./pages/project/ProjectDetailsPage_1";
-import { useEffect, useLayoutEffect } from "react";
+// Everything except the landing page is split into its own chunk so a visit
+// to "/" doesn't download the blog, contact, and project pages up front.
+const loadBlogPage = () => import("./pages/blog/BlogPage");
+const loadBlogPostPage = () => import("./pages/blog/BlogPostPage");
+const loadContactPage = () => import("./pages/contact/ContactPage");
+const loadProjectPage = () => import("./pages/project/ProjectDetailsPage_1");
+
+const BlogPage = lazy(() => loadBlogPage().then((m) => ({ default: m.BlogPage })));
+const BlogPostPage = lazy(() => loadBlogPostPage().then((m) => ({ default: m.BlogPostPage })));
+const ContactPage = lazy(() => loadContactPage().then((m) => ({ default: m.ContactPage })));
+const ProjectDetailsPage_1 = lazy(() =>
+  loadProjectPage().then((m) => ({ default: m.ProjectDetailsPage_1 }))
+);
+
+// Warm the route chunks once the browser is idle so navigation stays instant.
+function prefetchRoutes() {
+  [loadProjectPage, loadBlogPage, loadBlogPostPage, loadContactPage].forEach(
+    (load) => load().catch(() => {})
+  );
+}
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -31,9 +45,19 @@ function RootLayout() {
     });
   }, [location.pathname, location.search]);
 
+  useEffect(() => {
+    const idle = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 2000));
+    idle(prefetchRoutes);
+  }, []);
+
   return (
     <div className="app w-full min-h-svh overflow-x-hidden">
-      <Outlet />
+      {/* Keyed so every route change remounts and gets a short fade-in */}
+      <div key={location.pathname} className="page-enter">
+        <Suspense fallback={<div className="min-h-svh" style={{ backgroundColor: "#fafafa" }} />}>
+          <Outlet />
+        </Suspense>
+      </div>
     </div>
   );
 }
@@ -43,6 +67,9 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
+    // Styled fallback for render/loader errors instead of React Router's
+    // developer error screen
+    errorElement: <NotFoundPage />,
     children: [
       {
         index: true,
@@ -53,16 +80,14 @@ export const router = createBrowserRouter([
         element: <BlogPage />,
       },
       {
-        path: "blog/categories/:category",
-        element: <BlogCategoryPageRevamp />,
-      },
-      {
         path: "blog/posts/:postId",
         element: <BlogPostPage />,
       },
       {
+        // The old standalone about page was retired; the about section on
+        // the home page replaces it
         path: "about",
-        element: <AboutPage />,
+        element: <Navigate to="/#about" replace />,
       },
       {
         path: "contact",
@@ -71,6 +96,10 @@ export const router = createBrowserRouter([
       {
         path: "projects/:projectId",
         element: <ProjectDetailsPage_1 />,
+      },
+      {
+        path: "*",
+        element: <NotFoundPage />,
       },
     ],
   },

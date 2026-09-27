@@ -4,6 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { POSTS } from "./posts";
+import { usePageMeta } from "@/hooks/use-page-meta";
 
 gsap.registerPlugin(useGSAP);
 
@@ -42,10 +43,9 @@ const allArticles = getAllArticles();
 const grouped = groupByYear(allArticles);
 const sortedYears = Object.keys(grouped).sort((a, b) => Number(b) - Number(a));
 
-const COMING_SOON_COUNT = 3;
-
 export function BlogPage() {
   const containerRef = useRef<HTMLDivElement>(null);
+  usePageMeta("Blog", "Writing on engineering, urbanism & design.");
 
   useGSAP(() => {
     const tl = gsap.timeline();
@@ -61,13 +61,6 @@ export function BlogPage() {
       { opacity: 0, y: 12 },
       { opacity: 1, y: 0, duration: 0.4, ease: "power2.out", stagger: 0.07 },
       "-=0.3"
-    );
-
-    tl.fromTo(
-      ".blog-coming-soon",
-      { opacity: 0 },
-      { opacity: 1, duration: 0.3, ease: "power2.out", stagger: 0.07 },
-      "-=0.2"
     );
   }, { scope: containerRef });
 
@@ -159,25 +152,6 @@ function ArticleList() {
         {sortedYears.map((year) => (
           <YearGroup key={year} year={year} articles={grouped[year]} />
         ))}
-
-        {/* Coming soon placeholders */}
-        <div>
-          <div className="w-full h-px" style={{ backgroundColor: "#e5e5e5" }} />
-          {Array.from({ length: COMING_SOON_COUNT }).map((_, i) => (
-            <div
-              key={i}
-              className="blog-coming-soon flex items-center py-5"
-              style={{ borderBottom: "1px solid #e5e5e5", opacity: 0 }}
-            >
-              <span
-                className="font-['Space_Mono'] text-sm font-normal"
-                style={{ color: "#ccc" }}
-              >
-                Coming soon
-              </span>
-            </div>
-          ))}
-        </div>
       </div>
     </section>
   );
@@ -191,7 +165,7 @@ function YearGroup({
   articles: ArticleEntry[];
 }) {
   return (
-    <div style={{ paddingBottom: 112 }}>
+    <div style={{ paddingBottom: 64 }}>
       {/* Top border */}
       <div className="w-full h-px" style={{ backgroundColor: "#e5e5e5" }} />
 

@@ -1,8 +1,8 @@
 
-import PatternImage1 from "@/assets/pattern-1.jpg";
-import PatternImage2 from "@/assets/pattern-2.jpg";
-import PatternImage3 from "@/assets/pattern-3.jpg";
-import PatternImage4 from "@/assets/pattern-4.jpg";
+import PatternImage1 from "@/assets/pattern-1.webp";
+import PatternImage2 from "@/assets/pattern-2.webp";
+import PatternImage3 from "@/assets/pattern-3.webp";
+import PatternImage4 from "@/assets/pattern-4.webp";
 
 const CIRCLE_DIAMETER = 120;
 

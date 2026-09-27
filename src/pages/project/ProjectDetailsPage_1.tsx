@@ -9,16 +9,24 @@ import gsap from "gsap";
 import { TableOfContents } from "@/pages/project/TableOfContents";
 import { useRef } from "react";
 import { NavBar } from "./NavBar";
+import { usePageMeta } from "@/hooks/use-page-meta";
+import { NotFoundPage } from "../NotFoundPage";
 
 gsap.registerPlugin(ScrollTrigger);
 
 function ProjectDetailsPage_1() {
   const { projectId } = useParams<{ projectId: string }>();
   const project = projects.find(({ id }) => id === projectId);
+  usePageMeta(project?.title, project?.description);
   const bodyRef = useRef<HTMLDivElement>(null);
   const headerLineRef = useRef<HTMLDivElement>(null);
   const headerLineCompleted = useRef(false);
   useGSAP(() => {
+    const mm = gsap.matchMedia();
+
+    // The split-screen header (pinned, image slides away, nav widens) only
+    // exists at lg+. Below that the header stacks and scrolls normally.
+    mm.add("(min-width: 1024px)", () => {
     const headerTimeline = gsap.timeline({
       scrollTrigger: {
         trigger: "#about-projects-header",
@@ -97,6 +105,7 @@ function ProjectDetailsPage_1() {
       { opacity: 1 },
       "100px"
     );
+    });
 
     const tableOfContentsTimeline = gsap.timeline({
       scrollTrigger: {
@@ -225,25 +234,7 @@ function ProjectDetailsPage_1() {
   }, [headerLineRef]);
 
   if (!project) {
-    return (
-      <div className="w-full flex justify-center px-4 py-12">
-        <div className="w-full max-w-3xl border border-gray-200 rounded-lg bg-white/90 shadow-sm p-6">
-          <Typography variant="h3" className="mb-3">
-            Project not found
-          </Typography>
-          <Typography variant="p" className="text-gray-600 mb-6">
-            I couldn&apos;t locate that project. Try choosing another one from
-            the projects list.
-          </Typography>
-          <Link
-            to="/"
-            className="text-sky-600 hover:text-sky-700 font-semibold underline"
-          >
-            Back to projects
-          </Link>
-        </div>
-      </div>
-    );
+    return <NotFoundPage title="Project not found" />;
   }
 
   const hasContent = project.overview || project.body;
@@ -264,7 +255,7 @@ function ProjectDetailsPage_1() {
           className="font-[Inter] font-normal mt-4"
           style={{ fontSize: 16, color: "#999" }}
         >
-          Migrating from old site, coming soon.
+          The write-up for this one is still in progress.
         </p>
         <Link
           to="/"
@@ -279,18 +270,18 @@ function ProjectDetailsPage_1() {
 
   return (
     <div>
-      <div id="nav-bar-container" className="fixed top-0 z-999">
+      <div id="nav-bar-container" className="fixed top-0 z-999 w-full lg:w-[40%]">
         <NavBar />
       </div>
       <div className="w-full flex justify-center">
         <div
           id="about-projects-header"
-          className="flex w-full h-svh overflow-hidden z-50"
+          className="flex flex-col-reverse lg:flex-row w-full lg:h-svh overflow-hidden z-50"
         >
           <div className="flex-1 " id="title-container">
             <div className="flex flex-col justify-center items-center h-full">
-              <div id="title-area" className="flex flex-col gap-y-2 w-full max-w-2xl px-4">
-                <Typography variant="h1" className="font-medium font-[Forum]">
+              <div id="title-area" className="flex flex-col gap-y-2 w-full max-w-2xl px-5 sm:px-8 lg:px-4 pt-8 pb-4 lg:py-0">
+                <Typography variant="h1" className="font-medium font-[Forum] text-5xl sm:text-6xl">
                   {project.title}
                 </Typography>
                 <div
@@ -301,7 +292,7 @@ function ProjectDetailsPage_1() {
                 <div>
                   <Typography
                     variant="h6"
-                    className="font-medium text-2xl font-[Google Sans Code]"
+                    className="font-medium text-2xl font-[Inter]"
                   >
                     <span
                       className="box-decoration-clone"
@@ -317,7 +308,7 @@ function ProjectDetailsPage_1() {
                 <div>
                   <Typography
                     variant="div"
-                    className="font-extralight text-md font-[Google Sans Code] max-w-2xl"
+                    className="font-extralight text-md font-[Inter] max-w-2xl"
                   >
                     {project.overview}
                   </Typography>
@@ -327,7 +318,7 @@ function ProjectDetailsPage_1() {
                     href={project.repoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-4 inline-flex items-center gap-2 text-sm font-[Google Sans Code] text-gray-700 hover:text-black w-fit"
+                    className="mt-4 inline-flex items-center gap-2 text-sm font-[Inter] text-gray-700 hover:text-black w-fit"
                   >
                     <Github className="size-4" />
                     View source on GitHub
@@ -335,14 +326,17 @@ function ProjectDetailsPage_1() {
                 )}
                 <div
                   id="scroll-down-arrow"
-                  className="animate-[arrow-bounce_3.2s_cubic-bezier(0.445,0.05,0.55,0.95)_infinite] w-full flex justify-center mt-8"
+                  className="animate-[arrow-bounce_3.2s_cubic-bezier(0.445,0.05,0.55,0.95)_infinite] w-full hidden lg:flex justify-center mt-8"
                 >
                   <BouncingArrow id="about-grid-arrow" direction="down" />
                 </div>
               </div>
             </div>
           </div>
-          <div className={`flex-1 relative${project.coverImageBorder ? " border-l border-gray-300" : ""}`} id="image-container">
+          <div
+            className={`relative mt-16 lg:mt-0 h-[45svh] lg:h-auto flex-none lg:flex-1 ${project.coverImageBorder ? "lg:border-l border-gray-300" : ""}`}
+            id="image-container"
+          >
             {project.coverComponent ? (
               <div className="w-full h-full">{project.coverComponent}</div>
             ) : project.coverVideo ? (
@@ -355,7 +349,7 @@ function ProjectDetailsPage_1() {
                 className="w-full h-full object-cover z-50"
               />
             ) : project.coverImageDark ? (
-              <div className="w-full h-full bg-gray-950 flex items-center justify-center p-12">
+              <div className="w-full h-full bg-gray-950 flex items-center justify-center p-6 lg:p-12">
                 <img
                   src={project.coverImage}
                   alt={project.title}
@@ -373,11 +367,11 @@ function ProjectDetailsPage_1() {
         </div>
       </div>
       <div className="w-full flex justify-center">
-        <div className="w-full max-w-2xl">
+        <div className="w-full max-w-2xl px-5 sm:px-8 lg:px-0">
           <Typography
             variant="div"
             ref={bodyRef}
-            className="font-extralight text-md font-[Google Sans Code]"
+            className="font-extralight text-md font-[Inter]"
             id="article-body"
           >
             {project.body}
@@ -415,7 +409,7 @@ function ProjectDetailsPage_1() {
               <p className="font-[Inter] text-xs uppercase tracking-widest mb-2" style={{ color: "#666" }}>
                 Site
               </p>
-              <Link to="/about" className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity" style={{ color: "#999" }}>
+              <Link to="/#about" className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity" style={{ color: "#999" }}>
                 About
               </Link>
               <Link to="/" className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity" style={{ color: "#999" }}>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import ChrisCoffee from "@/assets/chris-coffee.webp";
 import AboutLeadenhall from "@/assets/about-leadenhall.webp";
 import AboutPragueTram from "@/assets/about-prague-tram.webp";
@@ -23,10 +24,11 @@ export function AboutOverlay() {
         {/* 5-column grid filling the remaining height */}
         <div
           id="about-grid"
-          className="grid grid-cols-1 lg:grid-cols-5 gap-2 flex-1 min-h-0"
+          className="grid grid-cols-1 grid-rows-[auto_minmax(0,1fr)] lg:grid-cols-5 lg:grid-rows-1 gap-2 flex-1 min-h-0"
         >
-          {/* Mobile accordion images */}
-          <div className="lg:hidden flex flex-col gap-1" style={{ height: 360 }}>
+          {/* Mobile accordion images — sized off the viewport so the text
+              below still fits on shorter phones */}
+          <div className="lg:hidden flex flex-col gap-1" style={{ height: "clamp(140px, 24svh, 360px)" }}>
             {[
               { src: AboutLeadenhall, alt: "Leadenhall Market" },
               { src: ChrisCoffee, alt: "Chris at a coffee shop" },
@@ -79,7 +81,7 @@ export function AboutOverlay() {
           {/* Columns 4-5: text content */}
           <div
             id="about-text"
-            className="lg:col-span-2 flex flex-col justify-between py-2 lg:pl-6"
+            className="lg:col-span-2 flex flex-col justify-between py-1 lg:py-2 lg:pl-6 min-h-0 overflow-y-auto lg:overflow-visible"
             style={{ opacity: 0 }}
           >
             <div />
@@ -87,9 +89,9 @@ export function AboutOverlay() {
             {/* Headline + body text at bottom */}
             <div>
               <h2
-                className="font-['Bebas_Neue'] font-normal uppercase leading-[0.95] tracking-tight mb-4"
+                className="font-['Bebas_Neue'] font-normal uppercase leading-[0.95] tracking-tight mb-3 sm:mb-4"
                 style={{
-                  fontSize: "clamp(32px, 4vw, 48px)",
+                  fontSize: "clamp(28px, 4vw, 48px)",
                   color: "#1a1a1a",
                 }}
               >
@@ -98,7 +100,7 @@ export function AboutOverlay() {
                 <span className="text-[#b9c6ca]">I build to make dreams come alive.</span>
               </h2>
               <p
-                className="font-['Space_Mono'] text-sm font-normal leading-relaxed"
+                className="font-['Space_Mono'] text-[13px] sm:text-sm font-normal leading-relaxed"
                 style={{
                   color: "#1a1a1a",
                 }}
@@ -111,10 +113,14 @@ export function AboutOverlay() {
                 <br /><br />
                 I believe software is the most powerful vector to realize the value of good ideas; an empty file is a blank canvas on which we paint brighter futures.
               </p>
-              <div className="flex flex-col gap-2 mt-8">
-                <ContactLink href="/contact" label="Email" slug="hi@chrisporter.org" />
-                <ContactLink href="https://linkedin.com/in/chris-porterwa" label="LinkedIn" slug="chris-porterwa" external />
-                <ContactLink href="https://github.com/bsxp" label="GitHub" slug="bsxp" external />
+              <div className="flex flex-col gap-2 mt-5 sm:mt-8">
+                {/* One row on phones to save vertical space; stacked from sm up
+                    where there's room for the hover slugs */}
+                <div className="flex flex-row flex-wrap gap-x-5 gap-y-2 sm:flex-col">
+                  <ContactLink href="/contact" label="Email" slug="hi@chrisporter.org" />
+                  <ContactLink href="https://linkedin.com/in/chris-porterwa" label="LinkedIn" slug="chris-porterwa" external />
+                  <ContactLink href="https://github.com/bsxp" label="GitHub" slug="bsxp" external />
+                </div>
                 <span
                   className="font-['Space_Mono'] text-xs"
                   style={{ color: "#999" }}
@@ -150,20 +156,32 @@ function ContactLink({
   slug: string;
   external?: boolean;
 }) {
-  return (
-    <a
-      href={href}
-      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className="group font-['Space_Mono'] text-xs no-underline transition-opacity hover:opacity-70 flex items-center gap-2"
-      style={{ color: "#1a1a1a" }}
-    >
+  const className =
+    "group font-['Space_Mono'] text-xs no-underline transition-opacity hover:opacity-70 flex items-center gap-2";
+  const content = (
+    <>
       <span className="underline underline-offset-2">{label}</span>
       <span
-        className="opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+        className="hidden sm:inline opacity-0 group-hover:opacity-100 transition-opacity duration-200"
         style={{ color: "#999", textDecoration: "none" }}
       >
         — {slug}
       </span>
+    </>
+  );
+
+  // Internal links go through the router so they don't trigger a full reload
+  if (!external) {
+    return (
+      <Link to={href} className={className} style={{ color: "#1a1a1a" }}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className={className} style={{ color: "#1a1a1a" }}>
+      {content}
     </a>
   );
 }

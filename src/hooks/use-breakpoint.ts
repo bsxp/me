@@ -26,7 +26,11 @@ const getBreakpointFromWidth = (width: number): Breakpoint => {
 }
 
 export function useBreakpoint() {
-  const [breakpoint, setBreakpoint] = React.useState<Breakpoint>("base")
+  // Read the real width on first render so layouts don't flash the mobile
+  // variant (and re-lay out) on desktop before the effect runs.
+  const [breakpoint, setBreakpoint] = React.useState<Breakpoint>(() =>
+    typeof window === "undefined" ? "base" : getBreakpointFromWidth(window.innerWidth)
+  )
 
   React.useEffect(() => {
     const update = () => {

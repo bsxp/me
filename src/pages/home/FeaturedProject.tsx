@@ -22,6 +22,11 @@ export function FeaturedProject({
   overlay?: React.ReactNode;
 }) {
   const number = String(index + 1).padStart(2, "0");
+  const meta = [
+    { label: "Project", value: project.title },
+    { label: "Role", value: project.role },
+    { label: "Date", value: project.year },
+  ].filter((m): m is { label: string; value: string } => Boolean(m.value));
   const totalStr = String(total).padStart(2, "0");
   const titleRef = useRef<HTMLDivElement>(null);
   const { atLeast } = useBreakpoint();
@@ -32,6 +37,9 @@ export function FeaturedProject({
   // autoplaying the video) on first paint starves the hero→about animation.
   const mediaRef = useRef<HTMLDivElement>(null);
   const [mediaInView, setMediaInView] = useState(false);
+  // Fade the cover in once it has decoded instead of popping in (and showing
+  // a broken-image placeholder while the request is in flight)
+  const [mediaLoaded, setMediaLoaded] = useState(false);
   useEffect(() => {
     const el = mediaRef.current;
     if (!el) return;
@@ -117,47 +125,29 @@ export function FeaturedProject({
             {/* Project / Role / Date row */}
             <div className="mt-auto pt-12">
               <div
-                className="grid grid-cols-3 gap-8 pb-3 mb-3"
-                style={{ borderBottom: "1px solid #333" }}
+                className="grid gap-8 pb-3 mb-3"
+                style={{ gridTemplateColumns: `repeat(${meta.length}, minmax(0, 1fr))`, borderBottom: "1px solid #333" }}
               >
-                <span
-                  className="font-[Inter] text-xs font-normal uppercase tracking-widest"
-                  style={{ color: "#555" }}
-                >
-                  Project
-                </span>
-                <span
-                  className="font-[Inter] text-xs font-normal uppercase tracking-widest"
-                  style={{ color: "#555" }}
-                >
-                  Role
-                </span>
-                <span
-                  className="font-[Inter] text-xs font-normal uppercase tracking-widest"
-                  style={{ color: "#555" }}
-                >
-                  Date
-                </span>
+                {meta.map(({ label }) => (
+                  <span
+                    key={label}
+                    className="font-[Inter] text-xs font-normal uppercase tracking-widest"
+                    style={{ color: "#555" }}
+                  >
+                    {label}
+                  </span>
+                ))}
               </div>
-              <div className="grid grid-cols-3 gap-8">
-                <span
-                  className="font-[Inter] text-sm font-normal"
-                  style={{ color: "#ccc" }}
-                >
-                  {project.title}
-                </span>
-                <span
-                  className="font-[Inter] text-sm font-normal"
-                  style={{ color: "#ccc" }}
-                >
-                  Engineer & Designer
-                </span>
-                <span
-                  className="font-[Inter] text-sm font-normal"
-                  style={{ color: "#ccc" }}
-                >
-                  2024
-                </span>
+              <div className="grid gap-8" style={{ gridTemplateColumns: `repeat(${meta.length}, minmax(0, 1fr))` }}>
+                {meta.map(({ label, value }) => (
+                  <span
+                    key={label}
+                    className="font-[Inter] text-sm font-normal"
+                    style={{ color: "#ccc" }}
+                  >
+                    {value}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
@@ -191,8 +181,8 @@ export function FeaturedProject({
                 className="w-full h-full overflow-hidden flex items-center justify-center"
                 style={{ borderRadius: 4 }}
               >
-                {project.coverVideo ? (
-                  mediaInView && (
+                {mediaInView &&
+                  (project.coverVideo ? (
                     <video
                       src={project.coverVideo}
                       autoPlay
@@ -200,20 +190,20 @@ export function FeaturedProject({
                       muted
                       playsInline
                       preload="none"
-                      className="max-w-full max-h-full object-contain pointer-events-none"
-                      style={{ borderRadius: 4 }}
+                      onLoadedData={() => setMediaLoaded(true)}
+                      className="max-w-full max-h-full object-contain pointer-events-none transition-opacity duration-700 ease-out"
+                      style={{ borderRadius: 4, opacity: mediaLoaded ? 1 : 0 }}
                     />
-                  )
-                ) : (
-                  <img
-                    src={mediaInView ? project.coverImage : undefined}
-                    alt={project.title}
-                    loading="lazy"
-                    decoding="async"
-                    className="max-w-full max-h-full object-contain"
-                    style={{ borderRadius: 4 }}
-                  />
-                )}
+                  ) : (
+                    <img
+                      src={project.coverImage}
+                      alt={project.title}
+                      decoding="async"
+                      onLoad={() => setMediaLoaded(true)}
+                      className="max-w-full max-h-full object-contain transition-opacity duration-700 ease-out"
+                      style={{ borderRadius: 4, opacity: mediaLoaded ? 1 : 0 }}
+                    />
+                  ))}
               </div>
             </Link>
           </div>

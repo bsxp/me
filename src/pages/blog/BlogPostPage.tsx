@@ -3,37 +3,28 @@ import { Link, useParams } from "react-router-dom";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { getPostBySlug } from "./posts";
+import { getPostBySlug, type Post } from "./posts";
+import { usePageMeta } from "@/hooks/use-page-meta";
+import { NotFoundPage } from "../NotFoundPage";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 function BlogPostPage() {
   const { postId } = useParams<{ postId: string }>();
   const post = postId ? getPostBySlug(postId) : undefined;
+  usePageMeta(post?.meta.title, post?.meta.description);
 
   if (!post) {
-    return (
-      <div
-        className="min-h-screen flex flex-col items-center justify-center"
-        style={{ backgroundColor: "#fafafa" }}
-      >
-        <h1
-          className="font-[Inter] font-bold tracking-tight"
-          style={{ fontSize: "clamp(32px, 5vw, 48px)", color: "#1a1a1a" }}
-        >
-          Post not found
-        </h1>
-        <Link
-          to="/blog"
-          className="font-[Inter] text-sm font-normal no-underline mt-8 px-6 py-2.5 rounded-full transition-colors hover:bg-neutral-800 text-white"
-          style={{ backgroundColor: "#1a1a1a" }}
-        >
-          Back to blog
-        </Link>
-      </div>
-    );
+    return <NotFoundPage title="Post not found" />;
   }
 
+  // Keyed so moving between posts remounts and re-runs the entrance animation
+  return <BlogPostContent key={post.meta.slug} post={post} />;
+}
+
+// Split out so its hooks always run in the same order (they used to sit
+// after the "not found" early return)
+function BlogPostContent({ post }: { post: Post }) {
   const { meta, Component } = post;
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -280,7 +271,7 @@ function BlogPostPage() {
                 Site
               </p>
               <Link
-                to="/about"
+                to="/#about"
                 className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
                 style={{ color: "#666" }}
               >

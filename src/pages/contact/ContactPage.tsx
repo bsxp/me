@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
+import { usePageMeta } from "@/hooks/use-page-meta";
 import Conservatory from "@/assets/about-conservatory.png";
 import AlleyNight from "@/assets/about-alley-night.png";
 import PhoneBooths from "@/assets/about-phone-booths.png";
 
 function ContactPage() {
+  usePageMeta("Contact", "Get in touch with Chris Porter.");
+
   return (
     <div
       className="min-h-screen lg:h-screen w-full lg:overflow-hidden"

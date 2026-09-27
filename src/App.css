@@ -36,3 +36,19 @@
     opacity: 1;
   }
 }
+/* Route enter: a short opacity-only fade (no transform, so fixed/pinned
+   children and ScrollTrigger measurements are unaffected). */
+@keyframes page-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.page-enter {
+  animation: page-enter 0.35s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter {
+    animation: none;
+  }
+}

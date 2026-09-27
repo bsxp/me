@@ -9,9 +9,61 @@ import { ProjectsShowcase, NUM_SHOWCASE_PROJECTS, SHOWCASE_CYCLE_DISTANCE } from
 import { AboutOverlay } from "./AboutSection";
 import { projects } from "@/data/projects";
 import AustinSvg from "@/assets/austin-infrastructure.svg";
-import austinSvgRaw from "@/assets/austin-infrastructure.svg?raw";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
+
+// px of scroll pause between each featured-panel transition
+const PANEL_BUFFER = 200;
+// Scroll distance the hero→about timeline is pinned for
+const INTRO_PIN_DISTANCE = 2000;
+
+// The map markup is fetched from the same asset URL the mobile <img> uses
+// (one cached file) instead of being inlined into the JS bundle via ?raw,
+// which put ~2 MB of SVG text in front of every page's first render.
+let austinSvgMarkup: Promise<string> | null = null;
+function loadAustinSvgMarkup() {
+  austinSvgMarkup ??= fetch(AustinSvg).then((r) => r.text());
+  return austinSvgMarkup;
+}
+
+// Scroll targets for the nav, read from the live ScrollTriggers so they stay
+// correct regardless of banner height or viewport size.
+function scrollToAbout(behavior: ScrollBehavior = "smooth") {
+  const intro = ScrollTrigger.getById("home-intro");
+  const top = intro ? intro.start + INTRO_PIN_DISTANCE * 0.85 : 1500;
+  window.scrollTo({ top, behavior });
+}
+
+function scrollToProjects() {
+  const featured = ScrollTrigger.getById("featured");
+  if (!featured) return;
+  // Land where the all-projects showcase starts cycling (first project active)
+  const slides = featuredProjects.length;
+  const cycleStart = slides * window.innerHeight + (slides + 2) * PANEL_BUFFER;
+  window.scrollTo({ top: featured.start + cycleStart + 1 });
+}
+
+// Scroll positions the arrow keys step between: hero, about, each featured
+// panel fully in, each project in the showcase list, then the footer.
+function getKeyboardStops() {
+  const stops = [0];
+  const intro = ScrollTrigger.getById("home-intro");
+  if (intro) stops.push(intro.start + INTRO_PIN_DISTANCE * 0.85);
+
+  const featured = ScrollTrigger.getById("featured");
+  if (featured) {
+    featuredProjects.forEach((_, i) => stops.push(featured.labelToScroll(`panel-${i}`)));
+    const slides = featuredProjects.length;
+    const cycleStart = slides * window.innerHeight + (slides + 2) * PANEL_BUFFER;
+    const step = SHOWCASE_CYCLE_DISTANCE / NUM_SHOWCASE_PROJECTS;
+    for (let i = 0; i < NUM_SHOWCASE_PROJECTS; i++) {
+      stops.push(featured.start + cycleStart + (i + 0.5) * step);
+    }
+  }
+
+  stops.push(document.documentElement.scrollHeight - window.innerHeight);
+  return stops.map(Math.round).sort((a, b) => a - b);
+}
 
 let cachedAustinSvg: SVGSVGElement | null = null;
 let austinSvgStyleOverrideInjected = false;
@@ -38,6 +90,11 @@ function ensureAustinSvgStyleOverride() {
 }
 
 const FEATURED = [
+  {
+    id: "todosgg",
+    tags: ["AI Agents", "Productivity", "iOS & macOS", "API-first"],
+    bgColor: "#14121f",
+  },
   {
     id: "hearth",
     tags: ["Urban Data", "Civic Tech", "Data Visualization", "Mapping"],
@@ -80,7 +137,7 @@ export function HomePage() {
   useGSAP(
     () => {
       const featuredTransitions = featuredProjects.length - 1; // 5 transitions between 6 panels
-      const buffer = 200; // px of scroll pause between each transition
+      const buffer = PANEL_BUFFER;
       // Total = featured transitions + showcase slide-in + showcase cycling
       const allSlideTransitions = featuredTransitions + 1; // +1 for showcase sliding in
       const totalPinScroll =
@@ -93,10 +150,14 @@ export function HomePage() {
       let wasInAbout = false;
       const heroExitTl = gsap.timeline({
         scrollTrigger: {
+          id: "home-intro",
           trigger: "#home-intro",
           start: "top top",
-          end: "+=2000",
+          end: `+=${INTRO_PIN_DISTANCE}`,
           pin: true,
+          // Re-measure the logo/nav/line targets on refresh (fonts loading
+          // after setup shifted the centered mobile nav off its target).
+          invalidateOnRefresh: true,
           pinReparent: false,
           scrub: 0.3,
           onUpdate: (self) => {
@@ -117,7 +178,7 @@ export function HomePage() {
 
       // Phase 1: Hero text, SVG, nav links fade out + up; vertical line slides left
       heroExitTl.to(
-        ["#hero-name", "#hero-tagline", "#hero-scroll-indicator"],
+        ["#hero-name", "#hero-tagline", "#hero-scroll-indicator", "#hero-scroll-chevron"],
         { y: -60, opacity: 0, duration: 0.2, ease: "none" },
         0
       );
@@ -146,11 +207,15 @@ export function HomePage() {
 
         if (hLine && aboutLineTop && isTablet) {
           // Measure actual positions for precise alignment
-          const hLineY = hLine.getBoundingClientRect().top;
-          const aboutLineY = aboutLineTop.getBoundingClientRect().top;
           heroExitTl.to(
             "#hero-horizontal-line",
-            { y: aboutLineY - hLineY - 8, paddingLeft: 16, paddingRight: 16, duration: 0.12, ease: "none" },
+            {
+              y: () => aboutLineTop.getBoundingClientRect().top - untransformedRect(hLine).top - 8,
+              paddingLeft: 16,
+              paddingRight: 16,
+              duration: 0.12,
+              ease: "none",
+            },
             0.4
           );
           // Transition line color to match about line
@@ -177,33 +242,43 @@ export function HomePage() {
         const navTarget = document.getElementById("about-nav-target");
 
         if (logo && logoTarget) {
-          const logoRect = logo.getBoundingClientRect();
-          const targetRect = logoTarget.getBoundingClientRect();
           heroExitTl.to(
             "#nav-logo",
-            { x: targetRect.left - logoRect.left, y: targetRect.top - logoRect.top, duration: 0.24, ease: "none" },
+            {
+              x: () => logoTarget.getBoundingClientRect().left - untransformedRect(logo).left,
+              y: () => logoTarget.getBoundingClientRect().top - untransformedRect(logo).top,
+              duration: 0.24,
+              ease: "none",
+            },
             0.12
           );
         }
 
         if (navLinks && navTarget) {
-          const navRect = navLinks.getBoundingClientRect();
-          const targetRect = navTarget.getBoundingClientRect();
           heroExitTl.to(
             "#nav-links",
-            { x: targetRect.right - navRect.right, y: targetRect.top - navRect.top, duration: 0.24, ease: "none" },
+            {
+              x: () => navTarget.getBoundingClientRect().right - untransformedRect(navLinks).right,
+              y: () => navTarget.getBoundingClientRect().top - untransformedRect(navLinks).top,
+              duration: 0.24,
+              ease: "none",
+            },
             0.12
           );
         }
       }
 
-      // Phase 2: Project list collapses toward line between items 3 and 4
-      heroExitTl.to("#selected-project-0", { y: 120, opacity: 0, duration: 0.28, ease: "none" }, 0.08);
-      heroExitTl.to("#selected-project-1", { y: 80, opacity: 0, duration: 0.28, ease: "none" }, 0.08);
-      heroExitTl.to("#selected-project-2", { y: 40, opacity: 0, duration: 0.28, ease: "none" }, 0.08);
-      heroExitTl.to("#selected-project-3", { y: -40, opacity: 0, duration: 0.28, ease: "none" }, 0.08);
-      heroExitTl.to("#selected-project-4", { y: -80, opacity: 0, duration: 0.28, ease: "none" }, 0.08);
-      heroExitTl.to("#selected-project-5", { y: -120, opacity: 0, duration: 0.28, ease: "none" }, 0.08);
+      // Phase 2: Project list collapses toward its middle. Items move 40px per
+      // step away from the center (six items: 120, 80, 40, -40, -80, -120),
+      // so the list can grow or shrink without re-tuning offsets.
+      {
+        const items = document.querySelectorAll('[id^="selected-project-"]');
+        const center = (items.length - 1) / 2;
+        items.forEach((item, i) => {
+          const d = center - i;
+          heroExitTl.to(item, { y: (d + Math.sign(d) * 0.5) * 40, opacity: 0, duration: 0.28, ease: "none" }, 0.08);
+        });
+      }
 
       // "Selected Projects" header fades out
       heroExitTl.to("#selected-projects-header", { opacity: 0, duration: 0.2, ease: "none" }, 0.12);
@@ -260,6 +335,7 @@ export function HomePage() {
       // Single timeline for all transitions — no gaps, continuous scrub
       const tl = gsap.timeline({
         scrollTrigger: {
+          id: "featured",
           trigger: "#featured-wrapper",
           start: "top top",
           end: `+=${totalPinScroll}`,
@@ -325,6 +401,7 @@ export function HomePage() {
           },
           position
         );
+        tl.addLabel(`panel-${i}`, position + 1);
 
         // Trigger title animation at 1/3 through the slide-in
         tl.call(
@@ -346,6 +423,9 @@ export function HomePage() {
         );
       });
 
+      // Keyboard stop for the first panel: fully in view as the pin begins
+      tl.addLabel("panel-0", 0);
+
       // Showcase slides up from below after the last featured panel
       const showcasePosition = featuredTransitions * (1 + bufferRatio) + bufferRatio;
       tl.to(
@@ -361,26 +441,49 @@ export function HomePage() {
     { scope: containerRef }
   );
 
+  // Arrow up/down step between sections. Native arrow scrolling only nudges
+  // the pinned timelines ~40px, which reads as nothing happening.
+  useEffect(() => {
+    let target: number | null = null;
+    let targetSetAt = 0;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+      if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey || e.defaultPrevented) return;
+      if (e.target instanceof Element && e.target.closest("input, textarea, select, [contenteditable='true']")) return;
+
+      e.preventDefault();
+      // While a previous smooth scroll is still travelling, step from where
+      // it's headed so repeated presses move one stop each
+      const inFlight = target !== null && Date.now() - targetSetAt < 1200 && Math.abs(window.scrollY - target) > 2;
+      const from = inFlight ? target! : window.scrollY;
+      const stops = getKeyboardStops();
+      const next =
+        e.key === "ArrowDown"
+          ? stops.find((y) => y > from + 2)
+          : [...stops].reverse().find((y) => y < from - 2);
+      if (next === undefined) return;
+
+      target = next;
+      targetSetAt = Date.now();
+      window.scrollTo({ top: next, behavior: "smooth" });
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
   // Scroll to section if URL has a hash on mount
   useEffect(() => {
     if (window.location.hash === "#about") {
-      requestAnimationFrame(() => {
-        window.scrollTo({ top: 1500 });
-      });
+      requestAnimationFrame(() => scrollToAbout("auto"));
     } else if (window.location.hash === "#projects") {
-      requestAnimationFrame(() => {
-        const spacer = document.getElementById("featured-spacer");
-        if (spacer) window.scrollTo({ top: spacer.offsetTop + spacer.offsetHeight - window.innerHeight * 2 });
-      });
+      requestAnimationFrame(scrollToProjects);
     }
   }, []);
 
   return (
     <div ref={containerRef} className="overflow-x-hidden" style={{ backgroundColor: "#0a0a0a" }}>
-      {/* Migration banner */}
-      <div className="w-full py-2 px-4 text-center font-['Space_Mono'] text-xs" style={{ backgroundColor: "#1a1a1a", color: "#999" }}>
-        Migrating content over from previous website, please excuse empty pages! Check back daily for new migrated content.
-      </div>
       {/* Intro section — gets pinned */}
       <div
         id="home-intro"
@@ -394,6 +497,10 @@ export function HomePage() {
           <img
             src={AustinSvg}
             alt=""
+            // lazy: this wrapper is display:none on desktop, so the browser
+            // skips the fetch there instead of downloading the map twice
+            loading="lazy"
+            decoding="async"
             className="absolute"
             style={{
 
@@ -505,7 +612,7 @@ export function HomePage() {
           </span>
         </div>
         {/* Mobile bouncing chevron */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 lg:hidden">
+        <div id="hero-scroll-chevron" className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 lg:hidden">
           <svg
             width="20"
             height="12"
@@ -546,11 +653,12 @@ export function HomePage() {
         </div>
       </div>
 
-      {/* Manual spacer — provides scroll distance for the pinned section */}
+      {/* Manual spacer — provides scroll distance for the pinned section.
+          Matches totalPinScroll so the footer follows the showcase directly. */}
       <div
         id="featured-spacer"
         style={{
-          height: `calc(${featuredProjects.length} * 100vh + ${(featuredProjects.length + 3) * 200}px + ${SHOWCASE_CYCLE_DISTANCE}px)`,
+          height: `calc(${featuredProjects.length} * 100vh + ${(featuredProjects.length + 2) * PANEL_BUFFER}px + ${SHOWCASE_CYCLE_DISTANCE}px)`,
           backgroundColor: "#0a0a0a",
         }}
       />
@@ -586,17 +694,14 @@ function Nav() {
         </button>
         <nav id="nav-links" className="flex items-center gap-8 mx-auto sm:mx-0 sm:ml-auto">
           <button
-            onClick={() => window.scrollTo({ top: 1500, behavior: "smooth" })}
+            onClick={() => scrollToAbout()}
             className="text-xs font-[Inter] font-normal transition-opacity hover:opacity-50 cursor-pointer"
             style={{ color: "#1a1a1a", background: "none", border: "none", padding: 0 }}
           >
             about
           </button>
           <button
-            onClick={() => {
-              const spacer = document.getElementById("featured-spacer");
-              if (spacer) window.scrollTo({ top: spacer.offsetTop + spacer.offsetHeight - window.innerHeight * 2 });
-            }}
+            onClick={scrollToProjects}
             className="text-xs font-[Inter] font-normal transition-opacity hover:opacity-50 cursor-pointer"
             style={{ color: "#1a1a1a", background: "none", border: "none", padding: 0 }}
           >
@@ -733,15 +838,25 @@ function Footer() {
             >
               Site
             </p>
+            {/* Already on the home page, so these scroll to the section rather
+                than routing (a same-path Link wouldn't move the page) */}
             <Link
-              to="/about"
+              to="/#about"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToAbout();
+              }}
               className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
               style={{ color: "#999" }}
             >
               About
             </Link>
             <Link
-              to="/"
+              to="/#projects"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToProjects();
+              }}
               className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
               style={{ color: "#999" }}
             >
@@ -788,46 +903,34 @@ function AustinSvgMap() {
       if (cachedAustinSvg.parentElement !== el) el.appendChild(cachedAustinSvg);
       return;
     }
-    ensureAustinSvgStyleOverride();
-    el.innerHTML = austinSvgRaw;
-    const svgEl = el.querySelector("svg");
-    if (!svgEl) return;
-    svgEl.setAttribute("width", "100%");
-    svgEl.setAttribute("height", "100%");
-    (svgEl as SVGSVGElement).style.pointerEvents = "none";
-    cachedAustinSvg = svgEl as SVGSVGElement;
 
-    // CSS keyframe animations restart whenever the browser's renderer state
-    // resets — ScrollTrigger pinning appendChild's the pinned element into
-    // its pinSpacer, and the auto-refresh that fires after fonts/images
-    // finish loading (~1s after first paint) was the visible trigger. GSAP
-    // tweens live in JS state and don't care about DOM moves.
-    gsap.fromTo(
-      svgEl.querySelectorAll(".layer-water path"),
-      { strokeDashoffset: (_i: number, t: SVGPathElement) => parseFloat(t.style.getPropertyValue("--len")) || 0 },
-      { strokeDashoffset: 0, duration: 8, ease: "power2.inOut" }
-    );
-    gsap.fromTo(
-      svgEl.querySelectorAll(".layer-highways path, .layer-roads path"),
-      { strokeDashoffset: (_i: number, t: SVGPathElement) => parseFloat(t.style.getPropertyValue("--len")) || 0 },
-      {
-        strokeDashoffset: 0,
-        duration: (_i: number, t: SVGPathElement) => parseFloat(t.style.getPropertyValue("--dur")) || 0.3,
-        delay: (_i: number, t: SVGPathElement) => parseFloat(t.style.getPropertyValue("--del")) || 0,
-        ease: "power2.inOut",
-      }
-    );
-    gsap.to(svgEl.querySelector(".layer-residential"), {
-      opacity: 0.25,
-      duration: 5,
-      delay: 1,
-      ease: "power2.inOut",
-    });
-    gsap.fromTo(
-      svgEl.querySelectorAll(".title-text"),
-      { opacity: 0 },
-      { opacity: 0.25, duration: 2, delay: 10, ease: "power2.inOut" }
-    );
+    // The map only renders at lg+ (its wrapper is display:none below that).
+    // Skipping it on phones/tablets avoids injecting ~10k paths and running
+    // thousands of draw-in tweens on elements nobody can see.
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    let cancelled = false;
+    const mount = () => {
+      loadAustinSvgMarkup().then((markup) => {
+        if (cancelled) return;
+        if (cachedAustinSvg) {
+          if (cachedAustinSvg.parentElement !== el) el.appendChild(cachedAustinSvg);
+          return;
+        }
+        injectAustinSvg(el, markup);
+      });
+    };
+    const onChange = (e: MediaQueryListEvent) => {
+      if (!e.matches) return;
+      desktop.removeEventListener("change", onChange);
+      mount();
+    };
+    if (desktop.matches) mount();
+    else desktop.addEventListener("change", onChange);
+
+    return () => {
+      cancelled = true;
+      desktop.removeEventListener("change", onChange);
+    };
   }, []);
 
   return (
@@ -845,3 +948,54 @@ function AustinSvgMap() {
   );
 }
 
+function injectAustinSvg(el: HTMLDivElement, markup: string) {
+  ensureAustinSvgStyleOverride();
+  el.innerHTML = markup;
+  const svgEl = el.querySelector("svg");
+  if (!svgEl) return;
+  svgEl.setAttribute("width", "100%");
+  svgEl.setAttribute("height", "100%");
+  (svgEl as SVGSVGElement).style.pointerEvents = "none";
+  cachedAustinSvg = svgEl as SVGSVGElement;
+
+  // CSS keyframe animations restart whenever the browser's renderer state
+  // resets — ScrollTrigger pinning appendChild's the pinned element into
+  // its pinSpacer, and the auto-refresh that fires after fonts/images
+  // finish loading (~1s after first paint) was the visible trigger. GSAP
+  // tweens live in JS state and don't care about DOM moves.
+  gsap.fromTo(
+    svgEl.querySelectorAll(".layer-water path"),
+    { strokeDashoffset: (_i: number, t: SVGPathElement) => parseFloat(t.style.getPropertyValue("--len")) || 0 },
+    { strokeDashoffset: 0, duration: 8, ease: "power2.inOut" }
+  );
+  gsap.fromTo(
+    svgEl.querySelectorAll(".layer-highways path, .layer-roads path"),
+    { strokeDashoffset: (_i: number, t: SVGPathElement) => parseFloat(t.style.getPropertyValue("--len")) || 0 },
+    {
+      strokeDashoffset: 0,
+      duration: (_i: number, t: SVGPathElement) => parseFloat(t.style.getPropertyValue("--dur")) || 0.3,
+      delay: (_i: number, t: SVGPathElement) => parseFloat(t.style.getPropertyValue("--del")) || 0,
+      ease: "power2.inOut",
+    }
+  );
+  gsap.to(svgEl.querySelector(".layer-residential"), {
+    opacity: 0.25,
+    duration: 5,
+    delay: 1,
+    ease: "power2.inOut",
+  });
+  gsap.fromTo(
+    svgEl.querySelectorAll(".title-text"),
+    { opacity: 0 },
+    { opacity: 0.25, duration: 2, delay: 10, ease: "power2.inOut" }
+  );
+}
+
+// Bounding rect with any GSAP x/y on the element backed out, so measurements
+// taken mid-scroll (or on refresh) are relative to its laid-out position.
+function untransformedRect(el: HTMLElement) {
+  const r = el.getBoundingClientRect();
+  const x = Number(gsap.getProperty(el, "x")) || 0;
+  const y = Number(gsap.getProperty(el, "y")) || 0;
+  return { left: r.left - x, right: r.right - x, top: r.top - y, bottom: r.bottom - y };
+}

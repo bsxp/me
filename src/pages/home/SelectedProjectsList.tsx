@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { projects } from "@/data/projects";
 
 const SELECTED_PROJECT_IDS = [
+  "todosgg",
   "hearth",
   "labbook",
   "foundry",

@@ -1,3 +1,4 @@
+import TodosggCover from "@/assets/projects/todosgg/todosgg-cover.webp";
 import HearthCover from "@/assets/projects/hearth/hearth-cover.webp";
 import FoundryCover from "@/assets/projects/foundry/foundry-cover.webp";
 import LabbookCover from "@/assets/projects/labbook/labbook-landing.png";
@@ -57,9 +58,155 @@ type Project = {
   body: string | React.ReactNode;
   href: string;
   repoUrl?: string;
+  // Shown in the Role / Date columns on the home page's featured panels;
+  // a column is hidden when its value isn't set
+  role?: string;
+  year?: string;
 };
 
 const projects: Project[] = [
+  {
+    id: "todosgg",
+    title: "todos.gg",
+    description: "One ordered list of what actually needs me",
+    coverImage: TodosggCover,
+    coverImageDark: true,
+    year: "2026",
+
+    overview: (
+      <span>
+        A year after OneFeed I was still living with the same problem, just
+        bigger. My commitments were arriving through email, my calendar,
+        GitHub, Slack, and Notion, and the personal ones (the prescription to
+        pick up, the appointment to confirm) were scattered through the same
+        places. OneFeed had tried to fix that by relaying notifications into
+        one feed, but a notification isn't a task, and a louder inbox isn't a
+        plan.
+        <br />
+        <br />
+        todos.gg is the grown-up version of that idea. It connects to the
+        places my work and life already happen, lets agents decide what
+        genuinely needs me, and hands back one calm, ordered list on the web,
+        my iPhone, and my Mac. It's live at{" "}
+        <a
+          href="https://todos.gg"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 underline"
+        >
+          todos.gg
+        </a>
+        .
+      </span>
+    ),
+    body: (
+      <>
+        <section id="not-a-task" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Most of what arrives isn't a task
+          </Typography>
+          <br />
+          The first thing I learned building OneFeed was that volume is the
+          real enemy. Receipts, FYIs, calendar confirmations, and threads that
+          quietly resolve themselves all look urgent in an inbox and almost
+          none of them need me. So in todos.gg, everything that comes in from
+          a connected source is read by an agent whose whole job is to decide
+          whether it's actually actionable. Most things get dropped. What's
+          left becomes a clean task with a proper title, a sense of when it's
+          due, and how much it matters.
+          <br />
+          <br />
+          The part I care about most is that none of this is a black box.
+          Every task shows where it came from and why it was surfaced, along
+          with how confident the agent was. I'd rather see that something was
+          a guess than have a guess quietly sit above something I know is
+          real, and being able to see the reasoning is what lets me trust the
+          top of the list without double-checking my email behind it.
+        </section>
+        <section id="an-order" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            One list, with an order to it
+          </Typography>
+          <br />
+          A pile of correct tasks is still a pile, so the list has a shape. A
+          short Focus set sits at the top with whatever is Now first, the rest
+          stays quiet until it matters, and I can drag things around when my
+          day disagrees with the plan. Work and personal share the same
+          stream on purpose, because the contract to sign and the dentist to
+          book compete for the same afternoon.
+          <br />
+          <br />
+          One distinction turned out to matter more than I expected: things I
+          owe versus things I'm waiting on. When the next move belongs to
+          someone else, the task files itself under Waiting, which takes it
+          off my plate without taking it off my radar. For anything that
+          doesn't come from a connected tool, I can forward an email to a
+          private address and it goes through the same triage as everything
+          else.
+        </section>
+        <section id="every-screen" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            On every screen
+          </Typography>
+          <br />
+          A to-do list only works if it's where I am, so alongside the web
+          app there are native SwiftUI apps for iPhone and the Mac menu bar
+          (OneFeed's old home), plus a home-screen widget. They're built to
+          match the web app's design system rather than approximate it, and
+          they stay in lockstep in real time: checking something off on my
+          phone means it's gone from my Mac before I've switched screens.
+        </section>
+        <section id="for-agents" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Built for agents, not just by them
+          </Typography>
+          <br />
+          todos.gg is API-first. The same set of schemas defines what a task
+          is for the app, the public API, and the tools agents use, so there's
+          one contract rather than three that slowly drift apart. That also
+          means my list isn't locked inside my own apps. There are public
+          docs, a published SDK, and an MCP server, so other agents I use can
+          read from and add to the same list with the same rules.
+        </section>
+        <section id="whats-next" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Where it's headed
+          </Typography>
+          <br />
+          The list is the visible part. What I'm really interested in is
+          whether a system like this can get better at understanding how one
+          specific person organizes their life: what I tend to put off, who I
+          answer first, and what "later" actually means to me. There's early
+          work on that running today, and it's the part of todos.gg I'm
+          keeping closest to my chest for now.
+        </section>
+        <section id="todosgg-stack" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            The Stack
+          </Typography>
+          <br />
+          The web app is{" "}
+          <TechChip name="React" logo="/logos/react.svg" href="https://react.dev/" />{" "}
+          and{" "}
+          <TechChip
+            name="TypeScript"
+            logo="/logos/typescript.svg"
+            href="https://www.typescriptlang.org/"
+          />{" "}
+          on Vite, styled with{" "}
+          <TechChip
+            name="Tailwind"
+            logo="/logos/tailwind.svg"
+            href="https://tailwindcss.com/"
+          />{" "}
+          and its own component library. The iPhone and Mac apps are native
+          SwiftUI, the API is TypeScript running on AWS, and shared Zod
+          schemas tie all of them together.
+        </section>
+      </>
+    ),
+    href: "",
+  },
   {
     id: "hearth",
     title: "Hearth",
@@ -2054,9 +2201,162 @@ const projects: Project[] = [
       "A unified feed of all notifications that a developer might need",
     coverImage: "",
     coverVideo: OneFeedVideo,
+    year: "2025",
 
-    overview: "",
-    body: "",
+    overview: (
+      <span>
+        At work my attention was split across GitHub, Slack, and Jira, and
+        each of them had its own idea of what deserved it. Pull requests
+        waited in one tab, mentions in another, new tickets in a third, and
+        the things that actually needed me were buried under everything that
+        didn't.
+        <br />
+        <br />
+        OneFeed was my attempt to pull just the important bits into one quiet
+        list that lives in the macOS menu bar, with a single number telling
+        me how much I haven't looked at yet. I built it over a couple of weeks
+        in March 2025, mostly to see how small that idea could get and still
+        be useful.
+      </span>
+    ),
+    body: (
+      <>
+        <section id="only-whats-mine" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Only what's actually mine
+          </Typography>
+          <br />
+          The most important decision in OneFeed was what to leave out. Every
+          tool I was trying to consolidate already had a notifications panel,
+          and the problem with all of them was volume. Piping all of it into
+          one place would have just made a louder version of the same thing.
+          <br />
+          <br />
+          So each source got a narrow filter. From Slack, OneFeed only keeps
+          messages that @mention me, and ignores the rest of the channel
+          chatter. From GitHub, it keeps pull request activity and the comments
+          on it. From Jira, it listens for issue notifications and fetches the
+          ticket's current details from Jira's API, so each event shows the
+          latest summary and status rather than whatever the notification
+          happened to include. Anything outside of that never makes it into
+          the feed at all, which meant the unread count in the menu bar was a
+          number I could actually trust.
+        </section>
+        <section id="one-shape" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Three services, one shape
+          </Typography>
+          <br />
+          Under the hood there's a small Express server with one webhook
+          endpoint per service. GitHub, Slack, and Jira each describe the
+          world differently, so the server's main job is translation: every
+          incoming payload gets reduced to the same document with a type
+          (like <code>github:pull_request_opened</code> or{" "}
+          <code>slack:message</code>), a timestamp, a read flag, and only the
+          fields the feed needs to render it. Those documents land in a
+          single{" "}
+          <TechChip
+            name="Firestore"
+            logo="/logos/firebase.svg"
+            href="https://firebase.google.com/docs/firestore"
+          />{" "}
+          collection keyed by ULIDs, which sort by time on their own.
+          <br />
+          <br />
+          Slack needed a little extra care. Its events only reference users
+          and channels by ID, so the first time OneFeed sees a new one it
+          looks up the real name through Slack's API and caches it in
+          Firestore. After that, a message from someone in #engineering reads
+          like a message from a person in a channel, not a pair of opaque IDs,
+          and I'm not hitting Slack's API for every single mention.
+          <br />
+          <br />
+          Keeping one shared shape meant the apps never had to know about
+          webhooks at all. They subscribe to one collection and hand each
+          event to a small view for its type.
+        </section>
+        <section id="menu-bar" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Living in the menu bar
+          </Typography>
+          <br />
+          I wanted OneFeed to be somewhere I'd glance at, not somewhere I'd go
+          to, so the main app is a native macOS menu bar extra written in
+          SwiftUI. The icon carries the unread count, and clicking it drops
+          down the feed with a "Mark All as Read" button at the top. There's
+          also a compact mode that squeezes each event down to a single line
+          for days when the list gets long, and it remembers which mode I
+          left it in.
+          <br />
+          <br />
+          Partway through I also started a cross-platform version in{" "}
+          <TechChip
+            name="Expo"
+            logo="/logos/expo.svg"
+            href="https://expo.dev/"
+          />{" "}
+          so the feed could follow me onto my phone. It reads from the same
+          Firestore collection and got as far as a timeline grouped into
+          Today, Yesterday, and earlier days, with each service's events
+          normalized on the client before rendering. I didn't take it further
+          than that, but it was a good check that the shared event shape
+          really was portable.
+        </section>
+        <section id="where-it-stopped" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            Where I left it
+          </Typography>
+          <br />
+          OneFeed stayed a personal prototype. It was wired to my own
+          accounts through webhooks rather than proper per-user sign-in, so
+          turning it into something other people could install would mean
+          OAuth for every service, per-user filters, and syncing read state
+          back to the source (marking a Slack mention as read in OneFeed
+          should really mean something in Slack too).
+          <br />
+          <br />
+          When I came back to it in March 2026 to record the demo above, I
+          sketched views for Linear issues and email alongside the original
+          three, and the demo runs on sample data rather than my real
+          accounts. Those two are designs rather than live
+          integrations, but they fit into the same event shape without any
+          changes to the feed itself, which is the part of OneFeed I'm still
+          happiest with.
+        </section>
+        <section id="onefeed-stack" className="pb-20">
+          <Typography variant="h3" className="pb-4">
+            The Stack
+          </Typography>
+          <br />
+          The menu bar app is Swift and SwiftUI. The ingest server is
+          Express on Node with{" "}
+          <TechChip
+            name="TypeScript"
+            logo="/logos/typescript.svg"
+            href="https://www.typescriptlang.org/"
+          />
+          , using Octokit's webhook types for{" "}
+          <TechChip
+            name="GitHub"
+            logo="/logos/github.svg"
+            href="https://docs.github.com/en/webhooks"
+          />{" "}
+          payloads and the Slack Web API for name lookups, with{" "}
+          <TechChip
+            name="Firebase"
+            logo="/logos/firebase.svg"
+            href="https://firebase.google.com/"
+          />{" "}
+          as the only datastore. The mobile experiment is{" "}
+          <TechChip
+            name="React Native"
+            logo="/logos/react.svg"
+            href="https://reactnative.dev/"
+          />{" "}
+          on Expo with Zustand holding the live Firestore subscription.
+        </section>
+      </>
+    ),
     href: "",
   },
   {

@@ -1,6 +1,6 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { aboutPageGridItems } from "./aboutPageGridItems";
 import {
@@ -17,20 +17,7 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
 const items = aboutPageGridItems;
 
 export function AboutPage() {
-  const [scrollPosition, setScrollPosition] = useState(0);
   const isAutoScrollingProjectsRef = useRef(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollPosition(window.scrollY);
-    };
-
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   // Lock scrolling until the initial fade-in animations finish
   useEffect(() => {
@@ -215,9 +202,6 @@ export function AboutPage() {
 
   return (
     <div className="w-full h-[10000px] relative">
-      <div className="fixed top-2 right-2 z-120 bg-white/90 text-gray-800 border border-gray-200 shadow-sm px-2 py-1 rounded text-xs font-mono">
-        scrollY: {Math.round(scrollPosition)}px
-      </div>
       <HeroPanel />
       <MissionPanel />
       <ProjectsPanel />

@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
 import { projects } from "@/data/projects";
+import { projectHref, hasWriteUp } from "@/data/project-utils";
 
 // All projects for the showcase list
 const ALL_PROJECTS = projects;
 export const NUM_SHOWCASE_PROJECTS = ALL_PROJECTS.length;
 export const SHOWCASE_CYCLE_DISTANCE = ALL_PROJECTS.length * 150;
+// Rough width of the longest title in ems (uppercase Inter bold, tight
+// tracking, measures ≈ 0.45em/char; 0.5 leaves a little slack)
+const LONGEST_TITLE_EMS = Math.max(...ALL_PROJECTS.map((p) => p.title.length)) * 0.5;
 
 interface ProjectsShowcaseProps {
   activeIndex: number;
@@ -51,13 +55,15 @@ export function ProjectsShowcase({ activeIndex }: ProjectsShowcaseProps) {
           >
             {activeProject.description}
           </p>
-          <Link
-            to={`/projects/${activeProject.id}`}
-            className="font-[Inter] text-xs font-normal uppercase tracking-widest no-underline transition-opacity hover:opacity-70"
-            style={{ color: "#555" }}
-          >
-            View project →
-          </Link>
+          {hasWriteUp(activeProject) && (
+            <Link
+              to={projectHref(activeProject)}
+              className="font-[Inter] text-xs font-normal uppercase tracking-widest no-underline transition-opacity hover:opacity-70"
+              style={{ color: "#555" }}
+            >
+              View project →
+            </Link>
+          )}
         </div>
 
         {/* Desktop: scroll down indicator */}
@@ -98,20 +104,16 @@ export function ProjectsShowcase({ activeIndex }: ProjectsShowcaseProps) {
           className="flex flex-col justify-center"
           style={{
             gap: 0,
-            fontSize: `calc(100vh / ${ALL_PROJECTS.length})`,
+            // Fit the whole list to the viewport height, but never so large
+            // that the longest name wraps on narrow screens (a wrap pushes
+            // the list past the viewport and hides the active item).
+            fontSize: `min(calc(100vh / ${ALL_PROJECTS.length}), calc((100vw - 96px) / ${LONGEST_TITLE_EMS}))`,
           }}
         >
-          {ALL_PROJECTS.map((project, i) => (
-            <Link
-              key={project.id}
-              to={`/projects/${project.id}`}
-              className="no-underline block transition-all duration-300"
-              style={{
-                opacity: i === activeIndex ? 1 : 0.15,
-              }}
-            >
+          {ALL_PROJECTS.map((project, i) => {
+            const name = (
               <span
-                className="font-[Inter] font-bold uppercase tracking-tight block leading-none"
+                className="font-[Inter] font-bold uppercase tracking-tight block leading-none whitespace-nowrap"
                 style={{
                   fontSize: "1em",
                   color: "#fff",
@@ -119,8 +121,26 @@ export function ProjectsShowcase({ activeIndex }: ProjectsShowcaseProps) {
               >
                 {project.title}
               </span>
-            </Link>
-          ))}
+            );
+            const style = { opacity: i === activeIndex ? 1 : 0.15 };
+
+            // Projects still waiting on a write-up stay in the list (it's the
+            // full body of work) but don't link to an empty placeholder page
+            return hasWriteUp(project) ? (
+              <Link
+                key={project.id}
+                to={projectHref(project)}
+                className="no-underline block transition-all duration-300"
+                style={style}
+              >
+                {name}
+              </Link>
+            ) : (
+              <div key={project.id} className="block transition-all duration-300" style={style}>
+                {name}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
