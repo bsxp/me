@@ -20,7 +20,7 @@ export function ProjectsShowcase({ activeIndex }: ProjectsShowcaseProps) {
   return (
     <div
       className="w-full h-full relative overflow-hidden"
-      style={{ backgroundColor: "#0a0a0a" }}
+      style={{ backgroundColor: "var(--color-night)" }}
     >
       {/* Background image for active project */}
       <div className="absolute inset-0 z-0">
@@ -51,7 +51,7 @@ export function ProjectsShowcase({ activeIndex }: ProjectsShowcaseProps) {
         >
           <p
             className="font-[Inter] text-sm font-normal text-right leading-relaxed transition-opacity duration-300"
-            style={{ color: "#888" }}
+            style={{ color: "var(--color-faint)" }}
           >
             {activeProject.description}
           </p>
@@ -59,7 +59,7 @@ export function ProjectsShowcase({ activeIndex }: ProjectsShowcaseProps) {
             <Link
               to={projectHref(activeProject)}
               className="font-[Inter] text-xs font-normal uppercase tracking-widest no-underline transition-opacity hover:opacity-70"
-              style={{ color: "#555" }}
+              style={{ color: "var(--color-night-faint)" }}
             >
               View project →
             </Link>
@@ -70,15 +70,15 @@ export function ProjectsShowcase({ activeIndex }: ProjectsShowcaseProps) {
         <div className="absolute bottom-12 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-3">
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center"
-            style={{ border: "1px solid #333" }}
+            style={{ border: "1px solid var(--color-night-line)" }}
           >
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M6 1V11M6 11L1 6M6 11L11 6" stroke="#555" strokeWidth="1.5" />
+              <path d="M6 1V11M6 11L1 6M6 11L11 6" stroke="var(--color-night-faint)" strokeWidth="1.5" />
             </svg>
           </div>
           <span
             className="font-[Inter] text-[10px] font-normal lowercase tracking-[0.2em]"
-            style={{ color: "#555" }}
+            style={{ color: "var(--color-night-faint)" }}
           >
             scroll down
           </span>

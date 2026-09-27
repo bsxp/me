@@ -8,7 +8,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import gsap from "gsap";
 import { TableOfContents } from "@/pages/project/TableOfContents";
 import { useRef } from "react";
-import { NavBar } from "./NavBar";
+import { SiteHeader } from "@/components/site/SiteHeader";
+import { SiteFooter } from "@/components/site/SiteFooter";
 import { usePageMeta } from "@/hooks/use-page-meta";
 import { NotFoundPage } from "../NotFoundPage";
 
@@ -20,11 +21,10 @@ function ProjectDetailsPage_1() {
   usePageMeta(project?.title, project?.description);
   const bodyRef = useRef<HTMLDivElement>(null);
   const headerLineRef = useRef<HTMLDivElement>(null);
-  const headerLineCompleted = useRef(false);
   useGSAP(() => {
     const mm = gsap.matchMedia();
 
-    // The split-screen header (pinned, image slides away, nav widens) only
+    // The split-screen header (pinned, image slides away) only
     // exists at lg+. Below that the header stacks and scrolls normally.
     mm.add("(min-width: 1024px)", () => {
     const headerTimeline = gsap.timeline({
@@ -80,31 +80,6 @@ function ProjectDetailsPage_1() {
       "0"
     );
 
-    const headerTimeline3 = gsap.timeline({
-      scrollTrigger: {
-        trigger: "#about-projects-header",
-        start: "top top",
-        end: "+=300px", // change pin duration as needed
-        scrub: true,
-        // pin: true,
-        anticipatePin: 0.5,
-        once: true,
-      },
-    });
-
-    headerTimeline3.fromTo(
-      "#nav-bar-container",
-      { left: 0, width: '40%' },
-      { left: 0, width: '100%', ease: "power2.inOut", duration: 0.5 },
-      "0"
-    );
-
-    headerTimeline3.fromTo(
-      "#navbar-me-label",
-      { opacity: 0 },
-      { opacity: 1 },
-      "100px"
-    );
     });
 
     const tableOfContentsTimeline = gsap.timeline({
@@ -131,106 +106,22 @@ function ProjectDetailsPage_1() {
       "0"
     );
 
-    // When the user scrolls to the end of the last article, we should fade in the footer
-    const footerTimeline = gsap.timeline({
-      scrollTrigger: {
-        trigger: "#article-body",
-        start: "bottom bottom",
-        end: "+=300px",
-        scrub: true,
-      },
-    });
-
-    footerTimeline.fromTo(
-      "#footer",
-      {
-        autoAlpha: 0,
-        y: 100,
-      },
-      {
-        autoAlpha: 1,
-        y: 0,
-        duration: 0.5,
-        ease: "power2.inOut",
-      },
-      "0"
-    );
   }, []);
 
   useGSAP(() => {
     if (!headerLineRef.current) return;
 
-    // Expands the header line as the user scrolls down, that's it
+    // Expands the line under the title as the user scrolls down
     const headerLineTimeline = gsap.timeline({
       scrollTrigger: {
         trigger: "#about-projects-header",
         start: `top+=300px 300px`,
-        end: `+=300px`, // change pin duration as needed
+        end: `+=300px`,
         scrub: true,
       },
-
-      onComplete: () => {
-        if (headerLineCompleted.current) return;
-        headerLineCompleted.current = true;
-
-        const width = headerLineRef?.current?.getBoundingClientRect().width;
-
-        if (!width) return;
-
-        gsap.set("#fixed-header-line", {
-          autoAlpha: 1,
-          width,
-          left: "50%",
-          transform: "translateX(-50%)",
-          top: 64,
-        });
-      },
     });
 
-    // Animate the first expansion of the header line
-    headerLineTimeline.fromTo(
-      "#header-line",
-      { width: "100px" },
-      { width: "100%" },
-      "0"
-    );
-
-    const headerLineTimeline2 = gsap.timeline({
-      scrollTrigger: {
-        trigger: "#about-projects-header",
-        start: `top+=600px 300px`,
-        end: `+=300px`, // change pin duration as needed
-        // scrub: true,
-        once: true,
-      },
-    });
-
-    headerLineTimeline2.set(
-      "#fixed-header-line",
-      {
-        opacity: 1,
-        position: "fixed",
-        left: "50%",
-        transform: "translateX(-50%)",
-        top: 64,
-      },
-      "0"
-    );
-    
-    // Animate the full expansion across the page of the nav bar bottom border line
-    headerLineTimeline2.fromTo(
-      "#fixed-header-line",
-      { width: "656px" },
-      {
-        width: "100svw",
-        top: 64,
-        duration: 1,
-        ease: "power2.out",
-      },
-      "0"
-    );
-
-    // headerLineTimeline2
+    headerLineTimeline.fromTo("#header-line", { width: "100px" }, { width: "100%" }, "0");
   }, [headerLineRef]);
 
   if (!project) {
@@ -243,24 +134,24 @@ function ProjectDetailsPage_1() {
     return (
       <div
         className="min-h-screen flex flex-col items-center justify-center"
-        style={{ backgroundColor: "#fafafa" }}
+        style={{ backgroundColor: "var(--color-paper)" }}
       >
         <h1
           className="font-[Inter] font-bold tracking-tight"
-          style={{ fontSize: "clamp(32px, 5vw, 48px)", color: "#1a1a1a" }}
+          style={{ fontSize: "clamp(32px, 5vw, 48px)", color: "var(--color-ink)" }}
         >
           {project.title}
         </h1>
         <p
           className="font-[Inter] font-normal mt-4"
-          style={{ fontSize: 16, color: "#999" }}
+          style={{ fontSize: 16, color: "var(--color-faint)" }}
         >
           The write-up for this one is still in progress.
         </p>
         <Link
           to="/"
           className="font-[Inter] text-sm font-normal no-underline mt-8 px-6 py-2.5 rounded-full transition-colors hover:bg-neutral-800 text-white"
-          style={{ backgroundColor: "#1a1a1a" }}
+          style={{ backgroundColor: "var(--color-ink)" }}
         >
           Back to home
         </Link>
@@ -270,9 +161,7 @@ function ProjectDetailsPage_1() {
 
   return (
     <div>
-      <div id="nav-bar-container" className="fixed top-0 z-999 w-full lg:w-[40%]">
-        <NavBar />
-      </div>
+      <SiteHeader />
       <div className="w-full flex justify-center">
         <div
           id="about-projects-header"
@@ -334,7 +223,7 @@ function ProjectDetailsPage_1() {
             </div>
           </div>
           <div
-            className={`relative mt-16 lg:mt-0 h-[45svh] lg:h-auto flex-none lg:flex-1 ${project.coverImageBorder ? "lg:border-l border-gray-300" : ""}`}
+            className={`relative h-[45svh] lg:h-auto flex-none lg:flex-1 ${project.coverImageBorder ? "lg:border-l border-gray-300" : ""}`}
             id="image-container"
           >
             {project.coverComponent ? (
@@ -378,74 +267,11 @@ function ProjectDetailsPage_1() {
           </Typography>
         </div>
       </div>
-      {/* Full footer */}
-      <footer className="w-full py-16 px-8 sm:px-12" style={{ backgroundColor: "#0a0a0a" }}>
-        <div className="max-w-2xl mx-auto">
-          <div className="w-full h-px mb-12" style={{ backgroundColor: "#333" }} />
-          <div className="flex flex-col lg:flex-row justify-between gap-12">
-            <div>
-              <p className="font-[Inter] font-bold text-lg" style={{ color: "#fafafa" }}>
-                Chris Porter
-              </p>
-              <p className="font-['Space_Mono'] text-xs mt-2" style={{ color: "#666" }}>
-                Austin, Texas
-              </p>
-            </div>
-            <div className="flex flex-col gap-2">
-              <p className="font-[Inter] text-xs uppercase tracking-widest mb-2" style={{ color: "#666" }}>
-                Social
-              </p>
-              <Link to="/contact" className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity" style={{ color: "#999" }}>
-                Email
-              </Link>
-              <a href="https://linkedin.com/in/chris-porterwa" target="_blank" rel="noopener noreferrer" className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity" style={{ color: "#999" }}>
-                LinkedIn
-              </a>
-              <a href="https://github.com/bsxp" target="_blank" rel="noopener noreferrer" className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity" style={{ color: "#999" }}>
-                GitHub
-              </a>
-            </div>
-            <div className="flex flex-col gap-2">
-              <p className="font-[Inter] text-xs uppercase tracking-widest mb-2" style={{ color: "#666" }}>
-                Site
-              </p>
-              <Link to="/#about" className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity" style={{ color: "#999" }}>
-                About
-              </Link>
-              <Link to="/" className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity" style={{ color: "#999" }}>
-                Projects
-              </Link>
-              <Link to="/blog" className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity" style={{ color: "#999" }}>
-                Blog
-              </Link>
-            </div>
-          </div>
-          <div className="w-full h-px mt-12 mb-6" style={{ backgroundColor: "#333" }} />
-          <div className="flex items-center justify-between">
-            <p className="font-['Space_Mono'] text-xs" style={{ color: "#444" }}>
-              &copy; {new Date().getFullYear()} Chris Porter
-            </p>
-            <button
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="font-['Space_Mono'] text-xs cursor-pointer transition-opacity hover:opacity-70"
-              style={{ color: "#666", background: "none", border: "none", padding: 0 }}
-            >
-              Take me to the top &uarr;
-            </button>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
 
       <div id="table-of-contents" className="hidden lg:block fixed right-20 top-20 pointer-events-none">
         <TableOfContents bodyRef={bodyRef} />
       </div>
-      <div
-        id="fixed-header-line"
-        className="fixed top-16 h-px bg-gray-400 left-1/2 -translate-x-1/2 z-1000"
-        style={{
-          opacity: 0,
-        }}
-      />
     </div>
   );
 }

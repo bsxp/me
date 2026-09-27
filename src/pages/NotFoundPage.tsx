@@ -1,5 +1,7 @@
 import { Link, isRouteErrorResponse, useRouteError } from "react-router-dom";
 import { usePageMeta } from "@/hooks/use-page-meta";
+import { SiteHeader } from "@/components/site/SiteHeader";
+import { SiteFooter } from "@/components/site/SiteFooter";
 
 // Used for unknown URLs (as the catch-all route), for missing posts/projects,
 // and as the router's errorElement — in which case a thrown error that isn't
@@ -13,29 +15,23 @@ function NotFoundPage({ title = "Page not found" }: { title?: string }) {
   usePageMeta(heading);
 
   return (
-    <div className="min-h-svh flex flex-col" style={{ backgroundColor: "#fafafa" }}>
-      <header className="w-full" style={{ height: 80 }}>
-        <div className="max-w-[1000px] mx-auto px-8 sm:px-12 h-full flex items-center">
-          <Link to="/" className="font-[Inter] text-sm font-normal no-underline" style={{ color: "#1a1a1a" }}>
-            chris.
-          </Link>
-        </div>
-      </header>
+    <div className="min-h-svh flex flex-col" style={{ backgroundColor: "var(--color-paper)" }}>
+      <SiteHeader />
 
       <main className="flex-1 flex items-center">
-        <div className="w-full max-w-[1000px] mx-auto px-8 sm:px-12 pb-24">
-          <span className="font-['Space_Mono'] text-xs uppercase tracking-widest" style={{ color: "#6b6b6b" }}>
+        <div className="w-full max-w-[1400px] mx-auto px-8 sm:px-12 pb-24">
+          <span className="font-['Space_Mono'] text-xs uppercase tracking-widest" style={{ color: "var(--color-dim)" }}>
             {isCrash ? "Error" : "404"}
           </span>
           <h1
             className="font-[Inter] font-bold leading-[0.95] tracking-tight mt-4"
-            style={{ fontSize: "clamp(40px, 7vw, 88px)", color: "#1a1a1a" }}
+            style={{ fontSize: "clamp(40px, 7vw, 88px)", color: "var(--color-ink)" }}
           >
             {heading}.
           </h1>
           <p
             className="font-['Space_Mono'] mt-6"
-            style={{ fontSize: 14, lineHeight: 1.7, color: "#6b6b6b", maxWidth: 420 }}
+            style={{ fontSize: 14, lineHeight: 1.7, color: "var(--color-dim)", maxWidth: 420 }}
           >
             {isCrash
               ? "Something went wrong loading this page. Try again, or head somewhere else."
@@ -52,7 +48,7 @@ function NotFoundPage({ title = "Page not found" }: { title?: string }) {
                 key={link.to}
                 to={link.to}
                 className="font-[Inter] text-sm underline underline-offset-4 transition-opacity hover:opacity-60"
-                style={{ color: "#1a1a1a" }}
+                style={{ color: "var(--color-ink)" }}
               >
                 {link.label}
               </Link>
@@ -60,6 +56,7 @@ function NotFoundPage({ title = "Page not found" }: { title?: string }) {
           </nav>
         </div>
       </main>
+      <SiteFooter />
     </div>
   );
 }

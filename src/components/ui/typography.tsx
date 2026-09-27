@@ -1,4 +1,4 @@
-import { createElement, useState } from "react";
+import { createElement } from "react";
 import { cn } from "@/lib/utils";
 
 type TypographyVariants =
@@ -48,32 +48,11 @@ function Typography({
   children,
   ...props
 }: React.ComponentProps<"p"> & { variant: TypographyVariants }) {
-  const [, setHovered] = useState<boolean>(false);
-
   if (!validVariants.includes(variant)) {
     throw new Error(`Invalid typography variant: ${variant}`);
   }
 
-  const handleHover = () => {
-    setHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setHovered(false);
-  };
-
-  let childrenArray = Array.isArray(children) ? children : [children];
-
-  // TODO do as pseudo classes
-  // if (displayElementName && hovered) {
-  //   childrenArray.push(
-  //     createElement("span", {
-  //       className:
-  //         "text-white text-xs text-right absolute -top-6 right-0 bg-blue-500 px-1 py-0.5 normal-case",
-  //       children: variant,
-  //     })
-  //   );
-  // }
+  const childrenArray = Array.isArray(children) ? children : [children];
 
   const baseElement = createElement(
     variantElements[variant],
@@ -93,9 +72,6 @@ function Typography({
         className,
       ),
 
-      // Handle making the tag appear
-      onMouseEnter: handleHover,
-      onMouseLeave: handleMouseLeave,
       ...props,
     },
     childrenArray

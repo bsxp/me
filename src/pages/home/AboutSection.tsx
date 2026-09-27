@@ -19,7 +19,7 @@ export function AboutOverlay() {
           <div id="about-logo-target" className="font-[Inter] text-sm" style={{ color: "transparent" }}>chris.</div>
           <div id="about-nav-target" className="font-[Inter] text-sm" style={{ color: "transparent" }}>Contact</div>
         </div>
-        <div id="about-line-top" className="about-line w-full h-px" style={{ backgroundColor: "#d0d0d0", marginBottom: 16, opacity: 0 }} />
+        <div id="about-line-top" className="about-line w-full h-px" style={{ backgroundColor: "var(--color-line-strong)", marginBottom: 16, opacity: 0 }} />
 
         {/* 5-column grid filling the remaining height */}
         <div
@@ -92,17 +92,17 @@ export function AboutOverlay() {
                 className="font-['Bebas_Neue'] font-normal uppercase leading-[0.95] tracking-tight mb-3 sm:mb-4"
                 style={{
                   fontSize: "clamp(28px, 4vw, 48px)",
-                  color: "#1a1a1a",
+                  color: "var(--color-ink)",
                 }}
               >
                 We can pave the future we want.
                 <br />
-                <span className="text-[#b9c6ca]">I build to make dreams come alive.</span>
+                <span className="text-mist">I build to make dreams come alive.</span>
               </h2>
               <p
                 className="font-['Space_Mono'] text-[13px] sm:text-sm font-normal leading-relaxed"
                 style={{
-                  color: "#1a1a1a",
+                  color: "var(--color-ink)",
                 }}
               >
                 I'm an engineer, urbanist, and former entrepreneur based in Austin, TX.
@@ -123,13 +123,13 @@ export function AboutOverlay() {
                 </div>
                 <span
                   className="font-['Space_Mono'] text-xs"
-                  style={{ color: "#999" }}
+                  style={{ color: "var(--color-faint)" }}
                 >
                   X / Twitter — nope, don't have it
                 </span>
                 <span
                   className="font-['Space_Mono'] text-xs"
-                  style={{ color: "#999" }}
+                  style={{ color: "var(--color-faint)" }}
                 >
                   My Site — you're already here, silly
                 </span>
@@ -139,7 +139,7 @@ export function AboutOverlay() {
         </div>
 
         {/* Bottom line */}
-        <div className="about-line w-full h-px" style={{ backgroundColor: "#d0d0d0", marginTop: 16, opacity: 0 }} />
+        <div className="about-line w-full h-px" style={{ backgroundColor: "var(--color-line-strong)", marginTop: 16, opacity: 0 }} />
       </div>
     </div>
   );
@@ -163,7 +163,7 @@ function ContactLink({
       <span className="underline underline-offset-2">{label}</span>
       <span
         className="hidden sm:inline opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-        style={{ color: "#999", textDecoration: "none" }}
+        style={{ color: "var(--color-faint)", textDecoration: "none" }}
       >
         — {slug}
       </span>
@@ -173,14 +173,14 @@ function ContactLink({
   // Internal links go through the router so they don't trigger a full reload
   if (!external) {
     return (
-      <Link to={href} className={className} style={{ color: "#1a1a1a" }}>
+      <Link to={href} className={className} style={{ color: "var(--color-ink)" }}>
         {content}
       </Link>
     );
   }
 
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className={className} style={{ color: "#1a1a1a" }}>
+    <a href={href} target="_blank" rel="noopener noreferrer" className={className} style={{ color: "var(--color-ink)" }}>
       {content}
     </a>
   );

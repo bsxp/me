@@ -1,5 +1,5 @@
 #root {
-  background-color: #e9f0f1;
+  background-color: var(--color-paper);
   width: 100%;
   min-height: 100vh;
   overflow-x: hidden;
@@ -13,29 +13,6 @@
   /* margin: 0 auto; */
 }
 
-@keyframes blob1Opacity {
-  0% {
-    opacity: 0.1;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.1;
-  }
-}
-
-@keyframes blob2Opacity {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.1;
-  }
-  100% {
-    opacity: 1;
-  }
-}
 /* Route enter: a short opacity-only fade (no transform, so fixed/pinned
    children and ScrollTrigger measurements are unaffected). */
 @keyframes page-enter {

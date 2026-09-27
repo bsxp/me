@@ -5,6 +5,8 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { getPostBySlug, type Post } from "./posts";
 import { usePageMeta } from "@/hooks/use-page-meta";
+import { SiteHeader } from "@/components/site/SiteHeader";
+import { SiteFooter } from "@/components/site/SiteFooter";
 import { NotFoundPage } from "../NotFoundPage";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -85,40 +87,26 @@ function BlogPostContent({ post }: { post: Post }) {
   }, { scope: containerRef });
 
   return (
-    <div ref={containerRef} className="min-h-screen" style={{ backgroundColor: "#fafafa" }}>
-      {/* Nav */}
-      <header className="w-full" style={{ height: 80 }}>
-        <div className="max-w-[700px] mx-auto px-8 sm:px-12 h-full flex items-center">
-          <div className="flex flex-col">
-            <Link
-              to="/"
-              className="font-[Inter] text-sm font-normal no-underline"
-              style={{ color: "#1a1a1a" }}
-            >
-              chris.
-            </Link>
-            <Link
-              to="/blog"
-              className="font-['Space_Mono'] text-xs no-underline transition-opacity hover:opacity-50 mt-2"
-              style={{ color: "#999" }}
-            >
-              &larr; back to blog
-            </Link>
-          </div>
-        </div>
-      </header>
+    <div ref={containerRef} className="min-h-screen" style={{ backgroundColor: "var(--color-paper)" }}>
+      <SiteHeader />
 
       {/* Post header */}
       <section id="post-header" className="w-full" style={{ marginTop: 48, marginBottom: 40, opacity: 0 }}>
         <div className="max-w-[700px] mx-auto px-8 sm:px-12">
+          <Link
+            to="/blog"
+            className="inline-block font-['Space_Mono'] text-xs text-faint no-underline transition-opacity hover:opacity-50 mb-8"
+          >
+            &larr; back to blog
+          </Link>
           <div className="flex gap-2 mb-4">
             {meta.tags.map((tag) => (
               <span
                 key={tag}
                 className="font-['Space_Mono'] text-xs font-normal px-2 py-0.5 rounded-full"
                 style={{
-                  color: "#6b6b6b",
-                  backgroundColor: "#f0f0f0",
+                  color: "var(--color-dim)",
+                  backgroundColor: "var(--color-wash)",
                 }}
               >
                 {tag}
@@ -127,13 +115,13 @@ function BlogPostContent({ post }: { post: Post }) {
           </div>
           <h1
             className="font-[Inter] font-semibold leading-tight"
-            style={{ fontSize: "clamp(28px, 4vw, 40px)", color: "#1a1a1a" }}
+            style={{ fontSize: "clamp(28px, 4vw, 40px)", color: "var(--color-ink)" }}
           >
             {meta.title}
           </h1>
           <p
             className="font-['Space_Mono'] font-normal mt-3"
-            style={{ fontSize: 13, color: "#999" }}
+            style={{ fontSize: 13, color: "var(--color-faint)" }}
           >
             {meta.date.toLocaleDateString("en-US", {
               year: "numeric",
@@ -147,8 +135,8 @@ function BlogPostContent({ post }: { post: Post }) {
       {/* Post body */}
       <section id="post-body" className="w-full" style={{ paddingBottom: 64 }}>
         <div className="max-w-[700px] mx-auto px-8 sm:px-12">
-          <div id="post-body-divider" className="w-full h-px mb-10" style={{ backgroundColor: "#e5e5e5", opacity: 0 }} />
-            <div className="blog-post-content font-[Inter] text-base leading-relaxed" style={{ color: "#333" }}>
+          <div id="post-body-divider" className="w-full h-px mb-10" style={{ backgroundColor: "var(--color-line)", opacity: 0 }} />
+            <div className="blog-post-content font-[Inter] text-base leading-relaxed" style={{ color: "var(--color-night-line)" }}>
               <style>{`
                 .blog-post-content > *:not(style) {
                   opacity: 0;
@@ -160,7 +148,7 @@ function BlogPostContent({ post }: { post: Post }) {
                 .blog-post-content h2 {
                   font-size: 1.35rem;
                   font-weight: 600;
-                  color: #1a1a1a;
+                  color: var(--color-ink);
                   margin-top: 2.5rem;
                   margin-bottom: 1rem;
                 }
@@ -187,14 +175,14 @@ function BlogPostContent({ post }: { post: Post }) {
                 }
                 .blog-post-content strong {
                   font-weight: 600;
-                  color: #1a1a1a;
+                  color: var(--color-ink);
                 }
                 .blog-post-content blockquote {
-                  border-left: 3px solid #e5e5e5;
+                  border-left: 3px solid var(--color-line);
                   padding-left: 1.25rem;
                   margin: 1.5rem 0;
                   font-style: italic;
-                  color: #666;
+                  color: var(--color-dim);
                 }
                 .blog-post-content img {
                   max-width: 100%;
@@ -206,121 +194,15 @@ function BlogPostContent({ post }: { post: Post }) {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="w-full py-16 px-8 sm:px-12">
-        <div className="max-w-[700px] mx-auto">
-          <div className="w-full h-px mb-12" style={{ backgroundColor: "#e5e5e5" }} />
-          <div className="flex flex-col lg:flex-row justify-between gap-12">
-            {/* Left — name + location */}
-            <div>
-              <p
-                className="font-[Inter] font-bold text-lg"
-                style={{ color: "#1a1a1a" }}
-              >
-                Chris Porter
-              </p>
-              <p
-                className="font-['Space_Mono'] text-xs mt-2"
-                style={{ color: "#999" }}
-              >
-                Austin, Texas
-              </p>
-            </div>
-
-            {/* Middle — social links */}
-            <div className="flex flex-col gap-2">
-              <p
-                className="font-[Inter] text-xs uppercase tracking-widest mb-2"
-                style={{ color: "#999" }}
-              >
-                Social
-              </p>
-              <Link
-                to="/contact"
-                className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
-                style={{ color: "#666" }}
-              >
-                Email
-              </Link>
-              <a
-                href="https://linkedin.com/in/chris-porterwa"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
-                style={{ color: "#666" }}
-              >
-                LinkedIn
-              </a>
-              <a
-                href="https://github.com/bsxp"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
-                style={{ color: "#666" }}
-              >
-                GitHub
-              </a>
-            </div>
-
-            {/* Right — site links */}
-            <div className="flex flex-col gap-2">
-              <p
-                className="font-[Inter] text-xs uppercase tracking-widest mb-2"
-                style={{ color: "#999" }}
-              >
-                Site
-              </p>
-              <Link
-                to="/#about"
-                className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
-                style={{ color: "#666" }}
-              >
-                About
-              </Link>
-              <Link
-                to="/"
-                className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
-                style={{ color: "#666" }}
-              >
-                Projects
-              </Link>
-              <Link
-                to="/blog"
-                className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
-                style={{ color: "#666" }}
-              >
-                Blog
-              </Link>
-            </div>
-          </div>
-
-          <div className="w-full h-px mt-12 mb-6" style={{ backgroundColor: "#e5e5e5" }} />
-          <div className="flex items-center justify-between">
-            <p
-              className="font-['Space_Mono'] text-xs"
-              style={{ color: "#999" }}
-            >
-              &copy; {new Date().getFullYear()} Chris Porter
-            </p>
-            <div className="flex flex-col items-end gap-2">
-              <button
-                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                className="font-['Space_Mono'] text-xs cursor-pointer transition-opacity hover:opacity-70"
-                style={{ color: "#999", background: "none", border: "none", padding: 0 }}
-              >
-                Take me to the top &uarr;
-              </button>
-              <Link
-                to="/blog"
-                className="font-['Space_Mono'] text-xs no-underline transition-opacity hover:opacity-70"
-                style={{ color: "#999" }}
-              >
-                Take me back to the blog &larr;
-              </Link>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <div className="max-w-[700px] mx-auto px-8 sm:px-12 pb-20">
+        <Link
+          to="/blog"
+          className="font-['Space_Mono'] text-xs text-faint no-underline transition-opacity hover:opacity-50"
+        >
+          &larr; back to blog
+        </Link>
+      </div>
+      <SiteFooter />
     </div>
   );
 }

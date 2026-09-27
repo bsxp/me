@@ -22,7 +22,7 @@ export function SelectedProjectsList() {
       <span
         id="selected-projects-header"
         className="font-[Inter] text-xs font-normal uppercase tracking-widest block mb-4 lg:mb-6"
-        style={{ color: "#999" }}
+        style={{ color: "var(--color-faint)" }}
       >
         Selected Projects
       </span>
@@ -37,25 +37,25 @@ export function SelectedProjectsList() {
             <div className="flex items-center justify-between">
               <span
                 className="font-[Inter] text-base font-normal"
-                style={{ color: "#1a1a1a" }}
+                style={{ color: "var(--color-ink)" }}
               >
                 {project.title}
               </span>
               <ArrowRight
                 size={16}
                 className="opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0"
-                style={{ color: "#1a1a1a" }}
+                style={{ color: "var(--color-ink)" }}
               />
             </div>
             {/* Base line */}
             <span
               className={`absolute bottom-0 left-0 w-full h-px ${i === 3 ? "selected-project-collapse-line" : ""}`}
-              style={{ backgroundColor: "#e5e5e5" }}
+              style={{ backgroundColor: "var(--color-line)" }}
             />
             {/* Black line that sweeps LTR on hover */}
             <span
               className="absolute bottom-0 left-0 h-px w-full origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-400 ease-out"
-              style={{ backgroundColor: "#1a1a1a" }}
+              style={{ backgroundColor: "var(--color-ink)" }}
             />
           </Link>
         ))}

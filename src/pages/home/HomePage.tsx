@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { SiteHeader } from "@/components/site/SiteHeader";
+import { SiteFooter } from "@/components/site/SiteFooter";
 import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -32,6 +33,12 @@ function scrollToAbout(behavior: ScrollBehavior = "smooth") {
   const intro = ScrollTrigger.getById("home-intro");
   const top = intro ? intro.start + INTRO_PIN_DISTANCE * 0.85 : 1500;
   window.scrollTo({ top, behavior });
+}
+
+// From the about section, glide back up so the hero animation plays in
+// reverse; from near the top, just jump
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: window.scrollY > 500 ? "smooth" : "auto" });
 }
 
 function scrollToProjects() {
@@ -98,7 +105,7 @@ const FEATURED = [
   {
     id: "hearth",
     tags: ["Urban Data", "Civic Tech", "Data Visualization", "Mapping"],
-    bgColor: "#0a0a0a",
+    bgColor: "var(--color-night)",
   },
   {
     id: "labbook",
@@ -221,7 +228,7 @@ export function HomePage() {
           // Transition line color to match about line
           heroExitTl.to(
             "#hero-hline-left, #hero-hline-right",
-            { backgroundColor: "#d0d0d0", opacity: 1, duration: 0.12, ease: "none" },
+            { backgroundColor: "var(--color-line-strong)", opacity: 1, duration: 0.12, ease: "none" },
             0.4
           );
           // Hide about-line-top visually but keep its space
@@ -483,12 +490,12 @@ export function HomePage() {
   }, []);
 
   return (
-    <div ref={containerRef} className="overflow-x-hidden" style={{ backgroundColor: "#0a0a0a" }}>
+    <div ref={containerRef} className="overflow-x-hidden" style={{ backgroundColor: "var(--color-night)" }}>
       {/* Intro section — gets pinned */}
       <div
         id="home-intro"
         className="min-h-screen relative overflow-hidden"
-        style={{ backgroundColor: "#fafafa" }}
+        style={{ backgroundColor: "var(--color-paper)" }}
       >
         {/* Austin infrastructure SVG underlay — full width on mobile */}
         <div
@@ -533,7 +540,11 @@ export function HomePage() {
         </div>
         {/* Nav sits above about overlay (z-20) so buttons remain clickable */}
         <div className="absolute top-0 left-0 right-0 z-30">
-          <Nav />
+          <SiteHeader
+            onLogoClick={scrollToTop}
+            onAbout={() => scrollToAbout()}
+            onProjects={scrollToProjects}
+          />
         </div>
         <div className="relative z-10">
           <div style={{ height: 80 }} /> {/* Spacer for nav */}
@@ -546,7 +557,7 @@ export function HomePage() {
           style={{ left: "calc((max(0px, (100vw - 1400px) / 2) + 48px) / 2)" }}
         >
           {/* Top line segment */}
-          <div style={{ width: 1, flex: "1 1 0%", backgroundColor: "#1a1a1a", opacity: 0.5 }} />
+          <div style={{ width: 1, flex: "1 1 0%", backgroundColor: "var(--color-ink)", opacity: 0.5 }} />
           {/* Coordinates — rotated 90°, explicit height to create gap */}
           <div
             className="relative shrink-0"
@@ -555,7 +566,7 @@ export function HomePage() {
             <span
               className="absolute left-1/2 top-1/2 font-['Space_Mono'] text-[10px] tracking-[0.15em] uppercase whitespace-nowrap cursor-pointer"
               style={{
-                color: "#1a1a1a",
+                color: "var(--color-ink)",
                 opacity: 0.6,
                 transform: "translate(-50%, -50%) rotate(-90deg)",
                 pointerEvents: "auto",
@@ -573,7 +584,7 @@ export function HomePage() {
             </span>
           </div>
           {/* Bottom line segment */}
-          <div style={{ width: 1, flex: "0 0 18%", backgroundColor: "#1a1a1a", opacity: 0.5 }} />
+          <div style={{ width: 1, flex: "0 0 18%", backgroundColor: "var(--color-ink)", opacity: 0.5 }} />
         </div>
         {/* Horizontal line — tablet only (sm to lg) */}
         <div
@@ -581,16 +592,16 @@ export function HomePage() {
           className="absolute left-0 right-0 z-30 pointer-events-none hidden sm:flex lg:hidden items-center"
           style={{ top: 80, paddingLeft: 48, paddingRight: 48 }}
         >
-          <div id="hero-hline-left" style={{ flex: 1, height: 1, backgroundColor: "#1a1a1a", opacity: 0.5 }} />
+          <div id="hero-hline-left" style={{ flex: 1, height: 1, backgroundColor: "var(--color-ink)", opacity: 0.5 }} />
           <div id="hero-hline-coords" className="shrink-0 overflow-hidden" style={{ padding: "0 16px" }}>
             <span
               className="font-['Space_Mono'] text-[10px] tracking-[0.15em] uppercase whitespace-nowrap"
-              style={{ color: "#1a1a1a", opacity: 0.6 }}
+              style={{ color: "var(--color-ink)", opacity: 0.6 }}
             >
               30.2617°N — 97.7452°W
             </span>
           </div>
-          <div id="hero-hline-right" style={{ flex: 1, height: 1, backgroundColor: "#1a1a1a", opacity: 0.5 }} />
+          <div id="hero-hline-right" style={{ flex: 1, height: 1, backgroundColor: "var(--color-ink)", opacity: 0.5 }} />
         </div>
         {/* About overlay — fades in after hero elements exit */}
         <AboutOverlay />
@@ -598,15 +609,15 @@ export function HomePage() {
         <div id="hero-scroll-indicator" className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 hidden lg:flex flex-col items-center gap-3">
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center"
-            style={{ border: "1px solid #ccc", backgroundColor: "rgb(250, 250, 250)" }}
+            style={{ border: "1px solid var(--color-line-strong)", backgroundColor: "var(--color-paper)" }}
           >
             <svg width="12" height="12" viewBox="0 0 12 12">
-              <path d="M6 1V11M6 11L1 6M6 11L11 6" stroke="#999" strokeWidth="1.5" />
+              <path d="M6 1V11M6 11L1 6M6 11L11 6" stroke="var(--color-faint)" strokeWidth="1.5" />
             </svg>
           </div>
           <span
             className="font-[Inter] text-[10px] font-normal lowercase tracking-[0.2em]"
-            style={{ color: "#999" }}
+            style={{ color: "var(--color-faint)" }}
           >
             scroll down
           </span>
@@ -620,13 +631,13 @@ export function HomePage() {
             fill="none"
             style={{ animation: "arrow-bounce 2s ease-in-out infinite" }}
           >
-            <path d="M2 2L10 10L18 2" stroke="#999" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M2 2L10 10L18 2" stroke="var(--color-faint)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
       </div>
 
       {/* Featured projects + showcase wrapper — all panels stacked, pinned as a group */}
-      <div id="featured-wrapper" className="relative z-10" style={{ height: "100vh", backgroundColor: "#0a0a0a" }}>
+      <div id="featured-wrapper" className="relative z-10" style={{ height: "100vh", backgroundColor: "var(--color-night)" }}>
         {featuredProjects.map((f, i) => (
           <div
             key={f.id}
@@ -659,73 +670,17 @@ export function HomePage() {
         id="featured-spacer"
         style={{
           height: `calc(${featuredProjects.length} * 100vh + ${(featuredProjects.length + 2) * PANEL_BUFFER}px + ${SHOWCASE_CYCLE_DISTANCE}px)`,
-          backgroundColor: "#0a0a0a",
+          backgroundColor: "var(--color-night)",
         }}
       />
 
       {/* Footer */}
-      <Footer />
+      <SiteFooter onAbout={() => scrollToAbout()} onProjects={scrollToProjects} />
     </div>
   );
 }
 
 
-function Nav() {
-  const handleLogoClick = () => {
-    // If in the about section (scroll > 500), smooth scroll to reverse animation
-    // Otherwise, instant scroll to top
-    if (window.scrollY > 500) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      window.scrollTo({ top: 0 });
-    }
-  };
-
-  return (
-    <header className="w-full" style={{ height: 80 }}>
-      <div className="max-w-[1400px] mx-auto px-8 sm:px-12 h-full flex items-center">
-        <button
-          id="nav-logo"
-          onClick={handleLogoClick}
-          className="hidden sm:flex font-[Inter] text-sm font-normal items-center gap-2 cursor-pointer"
-          style={{ color: "#1a1a1a", background: "none", border: "none", padding: 0 }}
-        >
-          chris.
-        </button>
-        <nav id="nav-links" className="flex items-center gap-8 mx-auto sm:mx-0 sm:ml-auto">
-          <button
-            onClick={() => scrollToAbout()}
-            className="text-xs font-[Inter] font-normal transition-opacity hover:opacity-50 cursor-pointer"
-            style={{ color: "#1a1a1a", background: "none", border: "none", padding: 0 }}
-          >
-            about
-          </button>
-          <button
-            onClick={scrollToProjects}
-            className="text-xs font-[Inter] font-normal transition-opacity hover:opacity-50 cursor-pointer"
-            style={{ color: "#1a1a1a", background: "none", border: "none", padding: 0 }}
-          >
-            projects
-          </button>
-          <Link
-            to="/blog"
-            className="text-xs font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
-            style={{ color: "#1a1a1a" }}
-          >
-            blog
-          </Link>
-          <Link
-            to="/contact"
-            className="text-xs font-[Inter] font-normal no-underline transition-opacity hover:opacity-50"
-            style={{ color: "#1a1a1a" }}
-          >
-            contact
-          </Link>
-        </nav>
-      </div>
-    </header>
-  );
-}
 
 function Hero() {
   return (
@@ -739,7 +694,7 @@ function Hero() {
               className="font-[Inter] font-bold leading-[0.95] tracking-tight"
               style={{
                 fontSize: "clamp(56px, 9vw, 120px)",
-                color: "#1a1a1a",
+                color: "var(--color-ink)",
               }}
             >
               Chris
@@ -751,7 +706,7 @@ function Hero() {
               className="font-[Inter] font-normal mt-12"
               style={{
                 fontSize: "clamp(20px, 2.5vw, 28px)",
-                color: "#1a1a1a",
+                color: "var(--color-ink)",
                 lineHeight: 1.4,
                 maxWidth: 600,
               }}
@@ -770,128 +725,6 @@ function Hero() {
   );
 }
 
-function Footer() {
-  return (
-    <footer
-      className="w-full py-16 px-8 sm:px-12"
-      style={{ backgroundColor: "#0a0a0a" }}
-    >
-      <div className="max-w-[1400px] mx-auto">
-        <div className="w-full h-px mb-12" style={{ backgroundColor: "#333" }} />
-        <div className="flex flex-col lg:flex-row justify-between gap-12">
-          {/* Left — name + location */}
-          <div>
-            <p
-              className="font-[Inter] font-bold text-lg"
-              style={{ color: "#fafafa" }}
-            >
-              Chris Porter
-            </p>
-            <p
-              className="font-['Space_Mono'] text-xs mt-2"
-              style={{ color: "#666" }}
-            >
-              Austin, Texas
-            </p>
-          </div>
-
-          {/* Middle — social links */}
-          <div className="flex flex-col gap-2">
-            <p
-              className="font-[Inter] text-xs uppercase tracking-widest mb-2"
-              style={{ color: "#666" }}
-            >
-              Social
-            </p>
-            <Link
-              to="/contact"
-              className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
-              style={{ color: "#999" }}
-            >
-              Email
-            </Link>
-            <a
-              href="https://linkedin.com/in/chris-porterwa"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
-              style={{ color: "#999" }}
-            >
-              LinkedIn
-            </a>
-            <a
-              href="https://github.com/bsxp"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
-              style={{ color: "#999" }}
-            >
-              GitHub
-            </a>
-          </div>
-
-          {/* Right — site links */}
-          <div className="flex flex-col gap-2">
-            <p
-              className="font-[Inter] text-xs uppercase tracking-widest mb-2"
-              style={{ color: "#666" }}
-            >
-              Site
-            </p>
-            {/* Already on the home page, so these scroll to the section rather
-                than routing (a same-path Link wouldn't move the page) */}
-            <Link
-              to="/#about"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToAbout();
-              }}
-              className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
-              style={{ color: "#999" }}
-            >
-              About
-            </Link>
-            <Link
-              to="/#projects"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToProjects();
-              }}
-              className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
-              style={{ color: "#999" }}
-            >
-              Projects
-            </Link>
-            <Link
-              to="/blog"
-              className="font-['Space_Mono'] text-xs no-underline hover:opacity-70 transition-opacity"
-              style={{ color: "#999" }}
-            >
-              Blog
-            </Link>
-          </div>
-        </div>
-
-        <div className="w-full h-px mt-12 mb-6" style={{ backgroundColor: "#333" }} />
-        <div className="flex items-center justify-between">
-          <p
-            className="font-['Space_Mono'] text-xs"
-            style={{ color: "#444" }}
-          >
-            &copy; {new Date().getFullYear()} Chris Porter
-          </p>
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="font-['Space_Mono'] text-xs cursor-pointer transition-opacity hover:opacity-70"
-            style={{ color: "#666", background: "none", border: "none", padding: 0 }}
-          >
-            Take me to the top &uarr;
-          </button>
-        </div>
-      </div>
-    </footer>
-  );
-}
 
 function AustinSvgMap() {
   const containerRef = useRef<HTMLDivElement>(null);

@@ -11,7 +11,7 @@ export function FeaturedProject({
   index,
   total,
   tags,
-  bgColor = "#0a0a0a",
+  bgColor = "var(--color-night)",
   overlay,
 }: {
   project: Project;
@@ -22,11 +22,7 @@ export function FeaturedProject({
   overlay?: React.ReactNode;
 }) {
   const number = String(index + 1).padStart(2, "0");
-  const meta = [
-    { label: "Project", value: project.title },
-    { label: "Role", value: project.role },
-    { label: "Date", value: project.year },
-  ].filter((m): m is { label: string; value: string } => Boolean(m.value));
+  const metaLine = [project.year, project.role].filter(Boolean).join(" · ");
   const totalStr = String(total).padStart(2, "0");
   const titleRef = useRef<HTMLDivElement>(null);
   const { atLeast } = useBreakpoint();
@@ -84,12 +80,13 @@ export function FeaturedProject({
             style={{ color: "#fff" }}
           >
             <span className="font-medium">{number}</span>
-            <span style={{ color: "#555" }}> / {totalStr}</span>
+            <span style={{ color: "var(--color-night-faint)" }}> / {totalStr}</span>
           </span>
         </div>
 
         {/* Main content area */}
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 flex-1 min-h-0">
+        {/* Sized to its content so the cover below gets the rest of the panel */}
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-16 shrink-0">
           {/* Left — title + meta */}
           <div className="flex-1 min-w-0 flex flex-col">
             <Link
@@ -122,34 +119,10 @@ export function FeaturedProject({
               </div>
             </Link>
 
-            {/* Project / Role / Date row */}
-            <div className="mt-auto pt-12">
-              <div
-                className="grid gap-8 pb-3 mb-3"
-                style={{ gridTemplateColumns: `repeat(${meta.length}, minmax(0, 1fr))`, borderBottom: "1px solid #333" }}
-              >
-                {meta.map(({ label }) => (
-                  <span
-                    key={label}
-                    className="font-[Inter] text-xs font-normal uppercase tracking-widest"
-                    style={{ color: "#555" }}
-                  >
-                    {label}
-                  </span>
-                ))}
-              </div>
-              <div className="grid gap-8" style={{ gridTemplateColumns: `repeat(${meta.length}, minmax(0, 1fr))` }}>
-                {meta.map(({ label, value }) => (
-                  <span
-                    key={label}
-                    className="font-[Inter] text-sm font-normal"
-                    style={{ color: "#ccc" }}
-                  >
-                    {value}
-                  </span>
-                ))}
-              </div>
-            </div>
+            {/* Year · role, e.g. "2026 · Founder" */}
+            {metaLine && (
+              <p className="font-[Inter] text-sm text-night-text mt-4">{metaLine}</p>
+            )}
           </div>
 
           {/* Right — tags */}
@@ -159,8 +132,8 @@ export function FeaturedProject({
                 key={tag}
                 className="inline-flex px-5 py-2 rounded-full font-[Inter] text-sm font-normal whitespace-nowrap"
                 style={{
-                  border: "1px solid #444",
-                  color: "#ccc",
+                  border: "1px solid var(--color-night-edge)",
+                  color: "var(--color-night-text)",
                 }}
               >
                 {tag}
@@ -171,7 +144,7 @@ export function FeaturedProject({
 
         {/* Preview media */}
         {(project.coverImage || project.coverVideo) && (
-          <div className="mt-4 min-h-0 flex-1">
+          <div className="mt-8 min-h-0 flex-1">
             <Link
               to={`/projects/${project.id}`}
               className="block no-underline h-full"
