@@ -10,7 +10,7 @@ export const POST_META = {
 export default function AiAndJobs() {
   return (
     <article>
-      <p>Coming soon.</p>
+      <p>Removed for the time being.</p>
     </article>
   );
 }
